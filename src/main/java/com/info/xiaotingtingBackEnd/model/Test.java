@@ -1,4 +1,4 @@
-package com.info.model;
+package com.info.xiaotingtingBackEnd.model;
 
 
 import javax.persistence.*;
@@ -10,11 +10,8 @@ import javax.persistence.*;
 @Table(name = "test")
 public class Test implements java.io.Serializable{
     @Id
-    @Column(name = "id")
     private Long id;
-    @Column(name = "name")
     private String name;
-    @Column(name = "url")
     private String url;
 
     public Test() {

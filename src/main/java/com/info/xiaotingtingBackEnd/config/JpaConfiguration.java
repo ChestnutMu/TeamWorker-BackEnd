@@ -1,4 +1,4 @@
-package com.info.config;
+package com.info.xiaotingtingBackEnd.config;
 
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
-@EnableJpaRepositories(basePackages = "com.info.repository")
-@EntityScan(basePackages = "com.info.model")
+@EnableJpaRepositories(basePackages = "com.info.xiaotingtingBackEnd.repository")
+@EntityScan(basePackages = "com.info.xiaotingtingBackEnd.model")
 public class JpaConfiguration {
 
     @Bean
