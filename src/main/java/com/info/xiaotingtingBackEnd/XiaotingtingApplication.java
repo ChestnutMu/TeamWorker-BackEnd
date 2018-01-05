@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ImportResource;
  * Author: Chestnut
  * CreateTime：at 2017/12/11 15:41:52
  * Description：启动SpringBoot
- * Email: xiaoting233zhang@126.com
+ * Email: xiaoting233zhang@126.coma
  */
 
 @SpringBootApplication
