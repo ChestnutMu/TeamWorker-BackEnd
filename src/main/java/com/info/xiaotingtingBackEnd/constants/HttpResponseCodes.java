@@ -1,4 +1,4 @@
-package com.info.xiaotingtingBackEnd.constans;
+package com.info.xiaotingtingBackEnd.constants;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved

@@ -4,7 +4,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by king on 2017/9/22.
+ * Copyright (c) 2017, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2017/12/11 16:24:47
+ * Description：MD5加密工具类
+ * Email: xiaoting233zhang@126.com
  */
 public class MD5Util {
     public final static String MD5(String pwd) {

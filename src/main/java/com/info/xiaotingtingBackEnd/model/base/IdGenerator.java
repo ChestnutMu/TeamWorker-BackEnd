@@ -11,10 +11,16 @@ import org.hibernate.type.Type;
 
 import java.io.Serializable;
 import java.util.Properties;
+
 /**
- * Created by king on 2017/9/22.
+ * Copyright (c) 2017, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2017/12/11 16:23:06
+ * Description：随机生成UserId
+ * Email: xiaoting233zhang@126.com
  */
-public class UserIdGenerator implements Configurable,IdentifierGenerator {
+
+public class IdGenerator implements Configurable,IdentifierGenerator {
 
     @Override
     public Serializable generate(SessionImplementor sessionImplementor, Object o) throws HibernateException {

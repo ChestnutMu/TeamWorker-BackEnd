@@ -1,7 +1,11 @@
 package com.info.xiaotingtingBackEnd.pojo;
 
 /**
- * Created by king on 2017/9/22.
+ * Copyright (c) 2017, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2017/12/11 15:49:46
+ * Description：接口返回数据
+ * Email: xiaoting233zhang@126.com
  */
 public class ApiResponse<T> {
     private int status; 		// 返回码，0为成功，其他为失败

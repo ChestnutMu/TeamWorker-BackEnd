@@ -4,7 +4,11 @@ import java.sql.Timestamp;
 import java.util.Random;
 
 /**
- * Created by king on 2017/9/22.
+ * Copyright (c) 2017, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2017/12/11 16:24:10
+ * Description：实体工具类
+ * Email: xiaoting233zhang@126.com
  */
 public class EntityUtil {
     private static Random rand;
@@ -62,38 +66,4 @@ public class EntityUtil {
         return sb.toString();
     }
 
-    /**
-     * 计算优惠准确值（10 20 30...以整十倍数）
-     *
-     * @param exchangeCount
-     * @return
-     * @author chaoking
-     */
-    public static long calFavourCount(long exchangeCount) {
-        if (exchangeCount < 10l) {
-            return 10l;
-        } else {
-            if (exchangeCount % 10 < 5) {
-                return (exchangeCount / 10) * 10;
-            } else {
-                return (exchangeCount / 10 + 1) * 10;
-            }
-        }
-    }
-
-    /**
-     * 计算发布速降区商品需要扣除的积分（底价一定比例）
-     *
-     * @param minPrice
-     * @param costIntegralsProportion
-     * @return
-     */
-    public static Long calCostIntegrals(long minPrice, int costIntegralsProportion) {
-        Long costIntegrals = minPrice * costIntegralsProportion / 100;
-        if (costIntegrals <= 0) {
-            return 1l;
-        } else {
-            return costIntegrals;
-        }
-    }
 }

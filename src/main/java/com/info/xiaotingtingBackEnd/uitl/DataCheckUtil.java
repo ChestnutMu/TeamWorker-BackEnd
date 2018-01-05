@@ -5,8 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by lindanpeng on 2017/7/19.
- * 前端数据校验工具
+ * Copyright (c) 2017, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2017/12/11 16:12:29
+ * Description：前段数据校验工具类
+ * Email: xiaoting233zhang@126.com
  */
 public class DataCheckUtil {
 
