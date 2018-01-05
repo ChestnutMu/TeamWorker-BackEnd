@@ -122,8 +122,8 @@ public class BaseRepositoryImpl<T, ID extends Serializable> extends SimpleJpaRep
         return count(specification);
     }
 
-    private Specification<T> generateSpecification(SearchCondition searchCondition) {
-        List<SearchBean> searchBeans = searchCondition.getSearchBeans();
+    private Specification<T> generateSpecification(final SearchCondition searchCondition) {
+        final List<SearchBean> searchBeans = searchCondition.getSearchBeans();
         return new Specification<T>() {
             @Override
             public Predicate toPredicate(Root<T> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {

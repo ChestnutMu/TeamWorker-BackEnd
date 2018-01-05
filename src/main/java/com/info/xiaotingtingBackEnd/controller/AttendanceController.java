@@ -29,7 +29,7 @@ public class AttendanceController {
     public ApiResponse<Attendance> getAttendance(String userId) {
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
-        Attendance lastAttendance = attendanceRep.findTopByUserId(userId);
+        Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(userId);
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         if (lastAttendance != null && lastAttendance.getPunchInTime() != null && FormatDateUtil.isSameDay(today, lastAttendance.getPunchInTime())) {
             apiResponse.setData(lastAttendance);
@@ -44,7 +44,7 @@ public class AttendanceController {
     public ApiResponse<Attendance> punchIn(Attendance attendance) {
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
-        Attendance lastAttendance = attendanceRep.findTopByUserId(attendance.getUserId());
+        Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(attendance.getUserId());
         if (lastAttendance != null && lastAttendance.getPunchOutTime() != null && FormatDateUtil.isSameDay(today, lastAttendance.getPunchOutTime())) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("今天已打过下班卡");
@@ -63,7 +63,7 @@ public class AttendanceController {
     public ApiResponse<Attendance> punchOut(Attendance attendance) {
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
-        Attendance lastAttendance = attendanceRep.findTopByUserId(attendance.getUserId());
+        Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(attendance.getUserId());
         if (lastAttendance != null && lastAttendance.getPunchInTime() != null && FormatDateUtil.isSameDay(today, lastAttendance.getPunchInTime())) {
             lastAttendance.setAltitude(attendance.getAltitude());
             lastAttendance.setLatitude(attendance.getLatitude());

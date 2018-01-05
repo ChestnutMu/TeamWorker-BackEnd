@@ -13,4 +13,6 @@ import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 public interface AttendanceRep extends BaseRepository<Attendance, String> {
 
     Attendance findTopByUserId(String userId);
+
+    Attendance findTopByUserIdOrderByPunchInTimeDesc(String userId);
 }
