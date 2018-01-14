@@ -6,11 +6,10 @@ import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.AttendanceRep;
 import com.info.xiaotingtingBackEnd.uitl.FormatDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -26,7 +25,8 @@ public class AttendanceController {
     AttendanceRep attendanceRep;
 
     @RequestMapping(value = "getAttendance", method = RequestMethod.POST)
-    public ApiResponse<Attendance> getAttendance(String userId) {
+    public ApiResponse<Attendance> getAttendance(@RequestBody Map<String, String> params) {
+        String userId = params.get("userId");
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
         Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(userId);
@@ -41,7 +41,7 @@ public class AttendanceController {
     }
 
     @RequestMapping(value = "punchIn", method = RequestMethod.POST)
-    public ApiResponse<Attendance> punchIn(Attendance attendance) {
+    public ApiResponse<Attendance> punchIn(@RequestBody Attendance attendance) {
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
         Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(attendance.getUserId());
@@ -60,7 +60,7 @@ public class AttendanceController {
     }
 
     @RequestMapping(value = "punchOut", method = RequestMethod.POST)
-    public ApiResponse<Attendance> punchOut(Attendance attendance) {
+    public ApiResponse<Attendance> punchOut(@RequestBody Attendance attendance) {
         ApiResponse<Attendance> apiResponse = new ApiResponse<>();
         Date today = new Date();
         Attendance lastAttendance = attendanceRep.findTopByUserIdOrderByPunchInTimeDesc(attendance.getUserId());

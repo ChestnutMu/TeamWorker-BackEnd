@@ -23,7 +23,6 @@ public interface UserRep extends BaseRepository<User, String> {
 
     User findByAccount(String account);
 
-
     @Query(value = "select u from User u, DepartmentRelation d " +
             "where d.departmentId = :departmentId " +
             "and u.userId = d.userId ",

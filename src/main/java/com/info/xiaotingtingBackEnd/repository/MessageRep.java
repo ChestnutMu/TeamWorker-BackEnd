@@ -24,8 +24,24 @@ public interface MessageRep extends BaseRepository<Message, String> {
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.MessageVo(u.messageId,u.senderId," +
             " us.account, u.receiverId, u.title, u.content, u.time, u.isRead)" +
-            " from Message u,User us where u.receiverId = :userId and u.senderId = us.userId",
+            " from Message u,User us where u.receiverId = :userId and u.senderId = us.userId"+
+            " order by u.time desc",
             countQuery = "select count(u.receiverId) from Message u" +
                     " where u.receiverId = :userId")
     Page<MessageVo> getMessagesByUserId(@Param("userId") String userId, Pageable pageable);
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.MessageVo(u.messageId,u.senderId," +
+            " us.account, u.receiverId, u.title, u.content, u.time, u.isRead)" +
+            " from Message u,User us where u.receiverId = :userId and u.senderId = us.userId"+
+            " group by u.senderId order by u.time asc",
+            countQuery = "select count(u.receiverId) from Message u" +
+                    " where u.receiverId = :userId group by u.senderId")
+    Page<MessageVo> getTopMessagesByUserId(@Param("userId") String userId, Pageable pageable);
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.MessageVo(m.messageId,m.senderId," +
+            " u.account, m.receiverId, m.title, m.content, m.time, m.isRead)" +
+            " from Message m,User u where m.receiverId = :userId and m.isSend = 0 and u.userId = m.senderId",
+            countQuery = "select count(m.receiverId) from Message m" +
+                    " where m.receiverId = :userId and m.isSend = 0")
+    List<MessageVo> getNotSendMessageByUserId(@Param("userId") String userId);
 }

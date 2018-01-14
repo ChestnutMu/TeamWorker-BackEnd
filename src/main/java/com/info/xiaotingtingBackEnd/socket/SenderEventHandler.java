@@ -36,7 +36,7 @@ public class SenderEventHandler extends BaseSocketEventHandler {
 
         SocketIOClient socketIOClient = clientHashMap.get(uid);
         if (socketIOClient == null) {
-            logger.info("sendOderResultToUser socketIOClient不存在");
+            logger.info("Class SenderEventHandler:socketIOClient不存在");
             return;
         }
 
@@ -60,17 +60,26 @@ public class SenderEventHandler extends BaseSocketEventHandler {
         socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_NORMAL_MESSAGE, message);
         return true;
     }
-//
-//    /**
-//     * 系统下线
-//     *
-//     * @param msgId
-//     * @param map
-//     */
-//    public void offline(int msgId, Map<String, Object> map) {
-//        String uid = (String) map.get("uid");
-//        String oldToken = (String) map.get("token");
-//        kickOffClient(uid, oldToken);
-//    }
+
+    /**
+     * 系统下线
+     *
+     * @param map
+     */
+    public void offline(Map<String, Object> map) {
+        String uid = (String) map.get("uid");
+        String oldToken = (String) map.get("token");
+        offline(uid, oldToken);
+    }
+
+    /**
+     * 系统下线
+     *
+     * @param uid
+     * @param oldToken
+     */
+    public void offline(String uid,String oldToken) {
+        kickOffClient(uid, oldToken);
+    }
 
 }

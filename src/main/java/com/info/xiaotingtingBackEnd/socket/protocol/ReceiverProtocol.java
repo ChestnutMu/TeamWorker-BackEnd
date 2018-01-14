@@ -14,4 +14,5 @@ public class ReceiverProtocol {
     public static final int MSG_CONNECTONION_MESSAGE = 1001;//连接
     public static final int MSG_SEND_MESSAGE = 1002;//发消息
     public static final int MSG_ISREAD_MESSAGE = 1003;//已读
+    public static final int MSG_ISSEND_MESSAGE = 1006;//已接收
 }

@@ -8,8 +8,16 @@ package com.info.xiaotingtingBackEnd.socket.protocol;
  * Email: xiaoting233zhang@126.com
  */
 public class SenderProtocol {
+
     /**
-     * msgId 协议
+     * 账号在其他设备登录，强制下线
      */
-    public static final int MSG_SEND_NORMAL_MESSAGE = 1;
+    public static final int DUPLICATE_LOGIN = 1004;
+
+    /**
+     * 发送客户端一条新消息
+     */
+    public static final int MSG_SEND_NORMAL_MESSAGE = 1005;
+
+
 }

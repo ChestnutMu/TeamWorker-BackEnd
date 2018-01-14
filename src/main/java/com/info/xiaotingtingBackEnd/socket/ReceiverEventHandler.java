@@ -49,7 +49,7 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
             handleMessage(client, uid, token, msgId, obj);
         } catch (Exception e) {
             logger.info("消息接收失败 " + e.getMessage());
-            logger.info("防止恶意连接 下线客户端");
+            logger.info("防止恶意连接,下线客户端");
             //服务器主动下线客户端
             client.disconnect();
             e.printStackTrace();
@@ -81,7 +81,6 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
                 } else {
                     clientHashMap.put(uid, client);
                 }
-
                 break;
             }
             case ReceiverProtocol.MSG_SEND_MESSAGE://客户端发送消息
@@ -98,6 +97,9 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
             break;
             case ReceiverProtocol.MSG_ISREAD_MESSAGE://已读消息
                 messageService.hasReadMessage(obj);
+                break;
+            case ReceiverProtocol.MSG_ISSEND_MESSAGE://已接收消息
+                messageService.hasSendMessage(obj);
                 break;
             default:
                 break;

@@ -3,6 +3,7 @@ package com.info.xiaotingtingBackEnd.socket;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.google.gson.Gson;
+import com.info.xiaotingtingBackEnd.socket.protocol.SenderProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,38 +36,38 @@ public class BaseSocketEventHandler {
         this.server = server;
     }
 
-//    /**
-//     * 通过uid和token下线客户端
-//     * 成功踢下线则返回true
-//     * 失败则返回false
-//     *
-//     * @param uid   用户uid
-//     * @param token 当前token
-//     */
-//    public boolean kickOffClient(String uid, String token) {
-//        logger.info("通过uid和token下线客户端 uid: " + uid + " token: " + token);
-//        SocketIOClient uidSocket = clientHashMap.get(uid);
-//        if (uidSocket != null) {
-//            String tokenTemp = uidSocket.get("token");
-//            if (tokenTemp.equals(token)) {
-//                logger.info("踢下线: 找到 uid：" + uid + " token: " + tokenTemp);
-//                kickOffClient(uidSocket);
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    /**
-//     * 直接下线客户端
-//     *
-//     * @param client 用户uid
-//     */
-//    public void kickOffClient(SocketIOClient client) {
-//        logger.info("直接下线客户端: 找到 uid：" + client.get("uid") + " token: " + client.get("token"));
-//        client.sendEvent(TAG_USER_RECEIVER_MESSAGE, UserReceiverProtocol.DUPLICATE_LOGIN, "kickOff");
-//        //服务器主动下线客户端
-//        client.disconnect();
-//    }
+    /**
+     * 通过uid和token下线客户端
+     * 成功踢下线则返回true
+     * 失败则返回false
+     *
+     * @param uid   用户uid
+     * @param token 当前token
+     */
+    public boolean kickOffClient(String uid, String token) {
+        logger.info("通过uid和token下线客户端 uid: " + uid + " token: " + token);
+        SocketIOClient uidSocket = clientHashMap.get(uid);
+        if (uidSocket != null) {
+            String tokenTemp = uidSocket.get("token");
+            if (tokenTemp.equals(token)) {
+                logger.info("踢下线: 找到 uid：" + uid + " token: " + tokenTemp);
+                kickOffClient(uidSocket);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 直接下线客户端
+     *
+     * @param client 用户uid
+     */
+    public void kickOffClient(SocketIOClient client) {
+        logger.info("直接下线客户端: 找到 uid：" + client.get("uid") + " token: " + client.get("token"));
+        client.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.DUPLICATE_LOGIN, "kickOff");
+        //服务器主动下线客户端
+        client.disconnect();
+    }
 
 }

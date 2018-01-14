@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
@@ -39,7 +41,7 @@ public class DepartmentController {
     UserRep userRep;
 
     @RequestMapping(value = "addDepartment", method = RequestMethod.POST)
-    public ApiResponse<Department> addDepartment(Department department) {
+    public ApiResponse<Department> addDepartment(@RequestBody Department department) {
         ApiResponse<Department> apiResponse = new ApiResponse<Department>();
         if (departmentRep.findByDepartmentName(department.getDepartmentName()) != null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
@@ -54,7 +56,9 @@ public class DepartmentController {
     }
 
     @RequestMapping(value = "getDepartments", method = RequestMethod.POST)
-    public ApiResponse<List<Department>> getDepartments(int pageNum, int pageSize) {
+    public ApiResponse<List<Department>> getDepartments(@RequestBody Map<String, Integer> params) {
+        int pageSize = params.get("pageSize");
+        int pageNum = params.get("pageNum");
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setPageNum(pageNum);
         searchCondition.setSize(pageSize);
@@ -63,7 +67,7 @@ public class DepartmentController {
     }
 
     @RequestMapping(value = "deleteDepartment", method = RequestMethod.POST)
-    public ApiResponse<Object> deleteDepartment(String departmentId) {
+    public ApiResponse<Object> deleteDepartment(@RequestBody String departmentId) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         if (departmentRep.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
@@ -77,7 +81,7 @@ public class DepartmentController {
     }
 
     @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)
-    public ApiResponse<Object> addDepartmentRelation(DepartmentRelation departmentRelation) {
+    public ApiResponse<Object> addDepartmentRelation(@RequestBody DepartmentRelation departmentRelation) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         if (userRep.findOne(departmentRelation.getUserId()) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
@@ -94,7 +98,10 @@ public class DepartmentController {
     }
 
     @RequestMapping(value = "getUserByDepartment", method = RequestMethod.POST)
-    public ApiResponse<List<User>> getUserByDepartment(int pageNum, int pageSize, String departmentId) {
+    public ApiResponse<List<User>> getUserByDepartment(@RequestBody Map<String, Object> params) {
+        int pageSize = (int) params.get("pageSize");
+        int pageNum = (int) params.get("pageNum");
+        String departmentId = (String)params.get("departmentId");
         ApiResponse<List<User>> apiResponse = new ApiResponse<>();
         if (departmentRep.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
