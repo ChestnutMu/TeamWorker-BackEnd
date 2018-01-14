@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.xml.crypto.Data;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class UserController {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("账户已存在");
         } else {
+            userRep.save(user);
             userRep.save(user);
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("注册成功");
@@ -163,6 +165,20 @@ public class UserController {
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("修改成功");
         apiResponse.setData(result);
+        return apiResponse;
+    }
+
+    @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
+    public ApiResponse<User> getUserInfo(@RequestBody Map<String, String> params) {
+        String userId = params.get("userId");
+        User result = userRep.getOne(userId);
+        User info = new User();
+        info.setUserId(result.getUserId());
+        info.setNickname(result.getNickname());
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("获取成功");
+        apiResponse.setData(info);
         return apiResponse;
     }
 

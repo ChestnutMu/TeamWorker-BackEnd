@@ -35,7 +35,7 @@ public class XiaotingtingApplication {
     public SocketIOServer socketIOServer(){
         Configuration configuration=new Configuration();
         configuration.setHostname("0.0.0.0");
-        configuration.setPort(8091);
+        configuration.setPort(8092);
         configuration.setAuthorizationListener(new AuthorizationListener() {
             @Override
             public boolean isAuthorized(HandshakeData handshakeData) {

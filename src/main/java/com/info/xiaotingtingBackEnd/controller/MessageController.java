@@ -93,6 +93,7 @@ public class MessageController {
 
     /**
      * 根据userId获取其收到的消息，每个senderId都只取其最新一条消息
+     *
      * @return
      */
     @RequestMapping(value = "getTopMessagesByUserId", method = RequestMethod.POST)
@@ -115,13 +116,14 @@ public class MessageController {
 
     /**
      * 根据userId获取其还未接收成功的消息
+     *
      * @return
      */
     @RequestMapping(value = "getNotSendMessageVosByUserId", method = RequestMethod.POST)
     public ApiResponse<List<MessageVo>> getNotSendMessageVosByUserId(@RequestBody Map<String, Object> params) {
         String userId = (String) params.get("userId");
         ApiResponse<List<MessageVo>> apiResponse = new ApiResponse<>();
-        List<MessageVo> messageList = messageService.getNotSendMessageByUserId(userId);
+        List<MessageVo> messageList = messageService.getNotSendMessageVosByUserId(userId);
         apiResponse.setMaxCount(messageList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("获取未接收消息列表成功");
@@ -129,18 +131,18 @@ public class MessageController {
         return apiResponse;
     }
 
-
     /**
      * 根据userId获取其还未接收成功的消息
+     *
      * @return
      */
     @RequestMapping(value = "getNotSendMessagesByUserId", method = RequestMethod.POST)
     public ApiResponse<List<Message>> getNotSendMessagesByUserId(@RequestBody Map<String, Object> params) {
         String userId = (String) params.get("userId");
         ApiResponse<List<Message>> apiResponse = new ApiResponse<>();
-        SearchCondition searchCondition=new SearchCondition();
-        searchCondition.addSearchBean("userId",userId, SearchBean.OPERATOR_EQ);
-        searchCondition.addSearchBean("isSend",false,SearchBean.OPERATOR_EQ);
+        SearchCondition searchCondition = new SearchCondition();
+        searchCondition.addSearchBean("userId", userId, SearchBean.OPERATOR_EQ);
+        searchCondition.addSearchBean("isSend", false, SearchBean.OPERATOR_EQ);
         List<Message> messageList = messageService.getNotSendMessagesByUserId(userId);
         apiResponse.setMaxCount(messageList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);

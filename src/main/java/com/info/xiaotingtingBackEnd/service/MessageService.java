@@ -3,6 +3,8 @@ package com.info.xiaotingtingBackEnd.service;
 import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
+import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
+import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,7 +77,7 @@ public class MessageService extends BaseService {
      * @param uidList
      */
     public void sendMessage(String userId, String title, String content, List<String> uidList) {
-        if (uidList.isEmpty()){
+        if (uidList.isEmpty()) {
             System.out.println("发送消息没有接受者id");
             return;
         }
@@ -90,39 +92,37 @@ public class MessageService extends BaseService {
 
     /**
      * 根据userId获取其接收到的所有消息
+     *
      * @param userId
      * @param pageable
      * @return
      */
-    public Page<MessageVo> getTopMessagesByUserId(String userId, Pageable pageable){
-        return messageRep.getTopMessagesByUserId(userId,pageable);
+    public Page<MessageVo> getTopMessagesByUserId(String userId, Pageable pageable) {
+        return messageRep.getTopMessagesByUserId(userId, pageable);
     }
 
     /**
      * 根据userId获取其还未接收到的消息
+     *
      * @param userId
      * @return
      */
-    public List<MessageVo> getNotSendMessageByUserId(String userId){
+    public List<MessageVo> getNotSendMessageVosByUserId(String userId) {
         return messageRep.getNotSendMessageByUserId(userId);
     }
 
 
     /**
      * 根据userId获取其还未接收成功的消息
+     *
      * @return
      */
-    public ApiResponse<List<Message>> getNotSendMessagesByUserId(String userId) {
-        ApiResponse<List<Message>> apiResponse = new ApiResponse<>();
-        SearchCondition searchCondition=new SearchCondition();
-        searchCondition.addSearchBean("userId",userId, SearchBean.OPERATOR_EQ);
-        searchCondition.addSearchBean("isSend",false,SearchBean.OPERATOR_EQ);
-        List<Message> messageList = messageService.getNotSendMessagesByUserId(userId);
-        apiResponse.setMaxCount(messageList.size());
-        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取未接收消息列表成功");
-        apiResponse.setData(messageList);
-        return apiResponse;
+    public List<Message> getNotSendMessagesByUserId(String userId) {
+        SearchCondition searchCondition = new SearchCondition();
+        searchCondition.addSearchBean("userId", userId, SearchBean.OPERATOR_EQ);
+        searchCondition.addSearchBean("isSend", false, SearchBean.OPERATOR_EQ);
+        List<Message> result = messageRep.getListBySearchCondition(searchCondition);
+        return result;
     }
 
 }
