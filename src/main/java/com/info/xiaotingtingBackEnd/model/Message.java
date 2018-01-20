@@ -29,6 +29,8 @@ public class Message implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String messageId;
 
+    private String chatId;
+
     private String senderId;
 
     private String receiverId;
@@ -42,6 +44,14 @@ public class Message implements Serializable {
     private Boolean isSend;
 
     private Boolean isRead;
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
 
     public String getTitle() {
         return title;

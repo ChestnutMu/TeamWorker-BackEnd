@@ -39,6 +39,7 @@ public class MessageController {
      */
     @RequestMapping(value = "sendMessage", method = RequestMethod.POST)
     public ApiResponse<Object> sendMessage(@RequestBody Map<String, String> params) {
+        String chatId = params.get("chatId");
         String userId = params.get("userId");
         String title = params.get("title");
         String content = params.get("content");
@@ -46,7 +47,7 @@ public class MessageController {
         List<String> uidList = new Gson().fromJson(uids, new TypeToken<List<String>>() {
         }.getType());
 
-        messageService.sendMessage(userId, title, content, uidList);
+        messageService.sendMessage(chatId, userId, title, content, uidList);
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
 
