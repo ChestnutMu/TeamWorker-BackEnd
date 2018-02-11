@@ -40,6 +40,7 @@ public class MessageController {
     @RequestMapping(value = "sendMessage", method = RequestMethod.POST)
     public ApiResponse<Object> sendMessage(@RequestBody Map<String, String> params) {
         String chatId = params.get("chatId");
+        String chatName = params.get("chatName");
         String userId = params.get("userId");
         String title = params.get("title");
         String content = params.get("content");
@@ -47,7 +48,7 @@ public class MessageController {
         List<String> uidList = new Gson().fromJson(uids, new TypeToken<List<String>>() {
         }.getType());
 
-        messageService.sendMessage(chatId, userId, title, content, uidList);
+        messageService.sendMessage(chatId, chatName, userId, title, content, uidList);
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
 
@@ -141,9 +142,6 @@ public class MessageController {
     public ApiResponse<List<Message>> getNotSendMessagesByUserId(@RequestBody Map<String, Object> params) {
         String userId = (String) params.get("userId");
         ApiResponse<List<Message>> apiResponse = new ApiResponse<>();
-        SearchCondition searchCondition = new SearchCondition();
-        searchCondition.addSearchBean("userId", userId, SearchBean.OPERATOR_EQ);
-        searchCondition.addSearchBean("isSend", false, SearchBean.OPERATOR_EQ);
         List<Message> messageList = messageService.getNotSendMessagesByUserId(userId);
         apiResponse.setMaxCount(messageList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);

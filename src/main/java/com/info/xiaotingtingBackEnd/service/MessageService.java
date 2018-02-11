@@ -31,9 +31,10 @@ public class MessageService extends BaseService {
      * @param receiverIds
      * @return
      */
-    public Message registerMessage(String chatId, String userId, String title, String content, String receiverIds) {
+    public Message registerMessage(String chatId, String chatName, String userId, String title, String content, String receiverIds) {
         Message message = new Message();
         message.setChatId(chatId);
+        message.setChatName(chatName);
         message.setSenderId(userId);
         message.setTitle(title);
         message.setContent(content);
@@ -77,13 +78,13 @@ public class MessageService extends BaseService {
      * @param content
      * @param uidList
      */
-    public void sendMessage(String chatId, String userId, String title, String content, List<String> uidList) {
+    public void sendMessage(String chatId, String chatName, String userId, String title, String content, List<String> uidList) {
         if (uidList.isEmpty()) {
             System.out.println("发送消息没有接受者id");
             return;
         }
         for (String uid : uidList) {
-            Message message = registerMessage(chatId, userId, title, content, uid);
+            Message message = registerMessage(chatId, chatName, userId, title, content, uid);
             boolean isSuccess = handler.sendMessage(message);
             if (isSuccess) {
                 hasSendMessage(message.getMessageId());
@@ -120,7 +121,7 @@ public class MessageService extends BaseService {
      */
     public List<Message> getNotSendMessagesByUserId(String userId) {
         SearchCondition searchCondition = new SearchCondition();
-        searchCondition.addSearchBean("userId", userId, SearchBean.OPERATOR_EQ);
+        searchCondition.addSearchBean("receiverId", userId, SearchBean.OPERATOR_EQ);
         searchCondition.addSearchBean("isSend", false, SearchBean.OPERATOR_EQ);
         List<Message> result = messageRep.getListBySearchCondition(searchCondition);
         return result;

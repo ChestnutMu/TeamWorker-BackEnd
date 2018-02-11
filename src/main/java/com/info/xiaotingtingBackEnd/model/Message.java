@@ -31,6 +31,8 @@ public class Message implements Serializable {
 
     private String chatId;
 
+    private String chatName;
+
     private String senderId;
 
     private String receiverId;
@@ -44,6 +46,14 @@ public class Message implements Serializable {
     private Boolean isSend;
 
     private Boolean isRead;
+
+    public String getChatName() {
+        return chatName;
+    }
+
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
+    }
 
     public String getChatId() {
         return chatId;
