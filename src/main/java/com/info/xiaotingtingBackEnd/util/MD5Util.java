@@ -1,7 +1,6 @@
-package com.info.xiaotingtingBackEnd.uitl;
+package com.info.xiaotingtingBackEnd.util;
 
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved

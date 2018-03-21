@@ -1,5 +1,5 @@
 package com.info.xiaotingtingBackEnd.model.base;
-import com.info.xiaotingtingBackEnd.uitl.EntityUtil;
+import com.info.xiaotingtingBackEnd.util.EntityUtil;
 import org.hibernate.HibernateException;
 
 import org.hibernate.MappingException;

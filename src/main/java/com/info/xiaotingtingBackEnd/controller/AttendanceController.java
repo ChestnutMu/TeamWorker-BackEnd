@@ -4,7 +4,7 @@ import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Attendance;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.AttendanceRep;
-import com.info.xiaotingtingBackEnd.uitl.FormatDateUtil;
+import com.info.xiaotingtingBackEnd.util.FormatDateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

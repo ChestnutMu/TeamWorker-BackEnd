@@ -1,4 +1,4 @@
-package com.info.xiaotingtingBackEnd.uitl;
+package com.info.xiaotingtingBackEnd.util;
 
 import java.sql.Timestamp;
 import java.util.Random;

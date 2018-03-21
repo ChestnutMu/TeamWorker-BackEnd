@@ -1,22 +1,19 @@
 package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
-import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
-import com.info.xiaotingtingBackEnd.uitl.DataCheckUtil;
-import com.info.xiaotingtingBackEnd.uitl.EntityUtil;
+import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
+import com.info.xiaotingtingBackEnd.util.EntityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.crypto.Data;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,7 +146,7 @@ public class UserController {
         ApiResponse<User> apiResponse = new ApiResponse<>();
         User result = userRep.findOne(user.getUserId());
         if (!DataCheckUtil.isEmpty(user.getAvatar())) {
-            result.setAvatar(user.getNickname());
+            result.setAvatar(user.getAvatar());
         } else if (!DataCheckUtil.isEmpty(user.getNickname())) {
             result.setNickname(user.getNickname());
         } else if (!DataCheckUtil.isEmpty(user.getTelephone())) {

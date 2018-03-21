@@ -11,7 +11,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
@@ -43,6 +45,7 @@ public class MessageService extends BaseService {
         message.setSend(false);
         message.setRead(false);
         return messageRep.save(message);
+
     }
 
 

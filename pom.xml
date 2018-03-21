@@ -60,6 +60,12 @@
             <artifactId>netty-socketio</artifactId>
             <version>1.7.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
