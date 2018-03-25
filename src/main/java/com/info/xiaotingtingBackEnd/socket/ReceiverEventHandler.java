@@ -62,11 +62,11 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
      * @param client
      * @param uid
      * @param token
-     * @param msgId
+     * @param requestTypeId
      * @param obj
      */
-    private void handleMessage(SocketIOClient client, String uid, String token, int msgId, String obj) {
-        switch (msgId) {
+    private void handleMessage(SocketIOClient client, String uid, String token, int requestTypeId, String obj) {
+        switch (requestTypeId) {
             case ReceiverProtocol.MSG_CONNECTONION_MESSAGE://连接请求，添加到列表里，并保证只有唯一uid
             {
                 client.set("uid", uid);
