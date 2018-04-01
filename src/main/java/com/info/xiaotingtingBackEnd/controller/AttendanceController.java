@@ -67,7 +67,7 @@ public class AttendanceController {
         if (lastAttendance != null && lastAttendance.getPunchInTime() != null && FormatDateUtil.isSameDay(today, lastAttendance.getPunchInTime())) {
             lastAttendance.setAltitude(attendance.getAltitude());
             lastAttendance.setLatitude(attendance.getLatitude());
-            lastAttendance.setDetailAddress(attendance.getDetailAddress());
+            lastAttendance.setPunchOutAddress(attendance.getPunchOutAddress());
             lastAttendance.setPunchOutTime(new Date());
 
             lastAttendance = attendanceRep.save(lastAttendance);

@@ -26,4 +26,6 @@ public class ThirdController {
         response.setData(upToken);
         return response;
     }
+
+
 }

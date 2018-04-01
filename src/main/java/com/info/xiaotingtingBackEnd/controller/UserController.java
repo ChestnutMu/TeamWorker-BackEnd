@@ -70,7 +70,7 @@ public class UserController {
         String account = (String) params.get("account");
         String password = (String) params.get("password");
         ApiResponse<User> apiResponse = new ApiResponse<User>();
-        System.out.println(account + ":" + password);
+        System.out.println("login : "+ account + ":" + password);
         User user = userRep.findByAccountAndPassword(account, password);
         if (user != null) {
             System.out.println(user + " " + account + ":" + password);

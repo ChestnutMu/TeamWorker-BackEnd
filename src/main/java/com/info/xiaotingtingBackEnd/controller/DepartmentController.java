@@ -5,6 +5,7 @@ import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
+import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.DepartmentRelationRep;
 import com.info.xiaotingtingBackEnd.repository.DepartmentRep;
 import com.info.xiaotingtingBackEnd.repository.UserRep;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -98,17 +96,17 @@ public class DepartmentController {
     }
 
     @RequestMapping(value = "getUserByDepartment", method = RequestMethod.POST)
-    public ApiResponse<List<User>> getUserByDepartment(@RequestBody Map<String, Object> params) {
-        int pageSize = (int) params.get("pageSize");
-        int pageNum = (int) params.get("pageNum");
-        String departmentId = (String)params.get("departmentId");
-        ApiResponse<List<User>> apiResponse = new ApiResponse<>();
+    public ApiResponse<List<DepartmentUser>> getUserByDepartment(@RequestBody Map<String, String> params) {
+        String departmentId = params.get("departmentId");
+        int pageNum = Integer.valueOf(params.get("pageNum"));
+        int pageSize = Integer.valueOf(params.get("pageSize"));
+        ApiResponse<List<DepartmentUser>> apiResponse = new ApiResponse<>();
         if (departmentRep.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("部门不存在");
         } else {
             Pageable pageable = new PageRequest(pageNum - 1, pageSize);
-            Page<User> userList = userRep.getUserByDepartment(departmentId, pageable);
+            Page<DepartmentUser> userList = userRep.getUserByDepartment(departmentId, pageable);
             apiResponse.setCurrentPage(pageNum);
             apiResponse.setPageSize(pageSize);
             apiResponse.setMaxCount((int) userList.getTotalElements());
@@ -116,6 +114,21 @@ public class DepartmentController {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("获取部门成员成功");
             apiResponse.setData(userList.getContent());
+        }
+        return apiResponse;
+    }
+
+    @RequestMapping(value = "getDepartmentByUserId", method = RequestMethod.POST)
+    public ApiResponse<List<Department>> getDepartmentByUserId(@RequestHeader("uid") String userId) {
+        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
+        List<Department> departmentList = departmentRep.getDipartmentByUserId(userId);
+        if (departmentList.size()>0) {
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("获取用户所属部门成功");
+            apiResponse.setData(departmentList);
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("您未加入任何部门");
         }
         return apiResponse;
     }
