@@ -2,18 +2,13 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Department;
-import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
-import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
-import com.info.xiaotingtingBackEnd.repository.DepartmentRelationRep;
-import com.info.xiaotingtingBackEnd.repository.DepartmentRep;
-import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
+import com.info.xiaotingtingBackEnd.service.DepartmentService;
+import com.info.xiaotingtingBackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,29 +23,18 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("Department")
+@RequestMapping("department")
 public class DepartmentController {
 
     @Autowired
-    DepartmentRelationRep departmentRelationRep;
+    DepartmentService departmentService;
+
     @Autowired
-    DepartmentRep departmentRep;
-    @Autowired
-    UserRep userRep;
+    UserService userService;
 
     @RequestMapping(value = "addDepartment", method = RequestMethod.POST)
     public ApiResponse<Department> addDepartment(@RequestBody Department department) {
-        ApiResponse<Department> apiResponse = new ApiResponse<Department>();
-        if (departmentRep.findByDepartmentName(department.getDepartmentName()) != null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("部门已存在");
-        } else {
-            departmentRep.save(department);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("添加部门成功");
-            apiResponse.setData(department);
-        }
-        return apiResponse;
+        return departmentService.addDepartment(department);
     }
 
     @RequestMapping(value = "getDepartments", method = RequestMethod.POST)
@@ -60,39 +44,17 @@ public class DepartmentController {
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setPageNum(pageNum);
         searchCondition.setSize(pageSize);
-        ApiResponse<List<Department>> apiResponse = departmentRep.getPageBySearchCondition(searchCondition);
-        return apiResponse;
+        return departmentService.getPageBySearchCondition(searchCondition);
     }
 
     @RequestMapping(value = "deleteDepartment", method = RequestMethod.POST)
     public ApiResponse<Object> deleteDepartment(@RequestBody String departmentId) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        if (departmentRep.findOne(departmentId) == null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("部门不存在");
-        } else {
-            departmentRep.delete(departmentId);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("删除部门成功");
-        }
-        return apiResponse;
+        return departmentService.deleteDepartment(departmentId);
     }
 
     @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)
-    public ApiResponse<Object> addDepartmentRelation(@RequestBody DepartmentRelation departmentRelation) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        if (userRep.findOne(departmentRelation.getUserId()) == null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("用户不存在");
-        } else if (departmentRep.findOne(departmentRelation.getDepartmentId()) == null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("部门不存在");
-        } else {
-            departmentRelationRep.save(departmentRelation);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("添加或修改用户所属部门关系成功");
-        }
-        return apiResponse;
+    public ApiResponse<Object> addDepartmentRelation(@RequestBody DepartmentMemberRelation departmentMemberRelation) {
+        return departmentService.addDepartmentRelation(departmentMemberRelation);
     }
 
     @RequestMapping(value = "getUserByDepartment", method = RequestMethod.POST)
@@ -101,35 +63,17 @@ public class DepartmentController {
         int pageNum = Integer.valueOf(params.get("pageNum"));
         int pageSize = Integer.valueOf(params.get("pageSize"));
         ApiResponse<List<DepartmentUser>> apiResponse = new ApiResponse<>();
-        if (departmentRep.findOne(departmentId) == null) {
+        if (departmentService.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("部门不存在");
         } else {
-            Pageable pageable = new PageRequest(pageNum - 1, pageSize);
-            Page<DepartmentUser> userList = userRep.getUserByDepartment(departmentId, pageable);
-            apiResponse.setCurrentPage(pageNum);
-            apiResponse.setPageSize(pageSize);
-            apiResponse.setMaxCount((int) userList.getTotalElements());
-            apiResponse.setMaxPage(userList.getTotalPages());
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("获取部门成员成功");
-            apiResponse.setData(userList.getContent());
+            userService.getUserByDepartment(pageNum, pageSize, apiResponse, departmentId);
         }
         return apiResponse;
     }
 
     @RequestMapping(value = "getDepartmentByUserId", method = RequestMethod.POST)
     public ApiResponse<List<Department>> getDepartmentByUserId(@RequestHeader("uid") String userId) {
-        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
-        List<Department> departmentList = departmentRep.getDipartmentByUserId(userId);
-        if (departmentList.size()>0) {
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("获取用户所属部门成功");
-            apiResponse.setData(departmentList);
-        } else {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("您未加入任何部门");
-        }
-        return apiResponse;
+        return departmentService.getDepartmentByUserId(userId);
     }
 }

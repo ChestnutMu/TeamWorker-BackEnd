@@ -25,10 +25,10 @@ public interface UserRep extends BaseRepository<User, String> {
     User findByAccount(String account);
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.pojo.DepartmentUser(u.userId,u.avatar,u.nickname)" +
-            " from User u, DepartmentRelation d " +
+            " from User u, DepartmentMemberRelation d " +
             "where d.departmentId = :departmentId " +
             "and u.userId = d.userId ",
-            countQuery = "select count(d.userId) from DepartmentRelation d" +
+            countQuery = "select count(d.userId) from DepartmentMemberRelation d" +
                     " where d.departmentId = :departmentId")
     Page<DepartmentUser> getUserByDepartment(@Param("departmentId") String departmentId, Pageable pageable);
 }

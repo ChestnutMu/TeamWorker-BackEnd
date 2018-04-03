@@ -5,6 +5,7 @@ import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
+import com.info.xiaotingtingBackEnd.service.UserService;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import com.info.xiaotingtingBackEnd.util.EntityUtil;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    UserRep userRep;
+    UserService userService;
 
     @Autowired
     SenderEventHandler handler;
@@ -51,12 +52,12 @@ public class UserController {
     @RequestMapping(value = "addUser", method = RequestMethod.POST)
     public ApiResponse<User> addUser(@RequestBody User user) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        if (userRep.findByAccount(user.getAccount()) != null) {
+        if (userService.findByAccount(user.getAccount()) != null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("账户已存在");
         } else {
             user.setNickname(user.getAccount());
-            userRep.save(user);
+            userService.save(user);
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("注册成功");
             apiResponse.setData(user);
@@ -70,14 +71,14 @@ public class UserController {
         String password = (String) params.get("password");
         ApiResponse<User> apiResponse = new ApiResponse<User>();
         System.out.println("login : "+ account + ":" + password);
-        User user = userRep.findByAccountAndPassword(account, password);
+        User user = userService.findByAccountAndPassword(account, password);
         if (user != null) {
             System.out.println(user + " " + account + ":" + password);
             //若有其他设备登陆则踢下线
             handler.offline(user.getUserId(), user.getToken());
 
             user.setToken(EntityUtil.getIdByTimeStampAndRandom());
-            user = userRep.save(user);
+            user = userService.save(user);
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("登陆成功");
             apiResponse.setData(user);
@@ -96,11 +97,11 @@ public class UserController {
         String token = params.get("token");
         ApiResponse<User> apiResponse = new ApiResponse<User>();
         System.out.println(userId + ":" + token);
-        User user = userRep.findOne(userId);
+        User user = userService.findOne(userId);
         if (user != null && user.getToken().equals(token)) {
             System.out.println(user + " " + userId + ":" + token);
             user.setToken(EntityUtil.getIdByTimeStampAndRandom());
-            user = userRep.save(user);
+            user = userService.save(user);
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("登陆成功");
             apiResponse.setData(user);
@@ -119,7 +120,7 @@ public class UserController {
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setPageNum(pageNum);
         searchCondition.setSize(pageSize);
-        ApiResponse<List<User>> apiResponse = userRep.getPageBySearchCondition(searchCondition);
+        ApiResponse<List<User>> apiResponse = userService.getPageBySearchCondition(searchCondition);
         return apiResponse;
     }
 
@@ -128,7 +129,7 @@ public class UserController {
         String userId = params.get("userId");
         String token = params.get("token");
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        User result = userRep.findOne(userId);
+        User result = userService.findOne(userId);
         if (result.getToken().equals(token)) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("获取个人信息成功");
@@ -143,7 +144,7 @@ public class UserController {
     @RequestMapping(value = "updateMyInformation", method = RequestMethod.POST)
     public ApiResponse<User> updateMyInformation(@RequestBody User user) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        User result = userRep.findOne(user.getUserId());
+        User result = userService.findOne(user.getUserId());
         if (!DataCheckUtil.isEmpty(user.getAvatar())) {
             result.setAvatar(user.getAvatar());
         } else if (!DataCheckUtil.isEmpty(user.getNickname())) {
@@ -157,7 +158,7 @@ public class UserController {
         } else if (!DataCheckUtil.isEmpty(user.getRegion())) {
             result.setRegion(user.getRegion());
         }
-        result = userRep.save(result);
+        result = userService.save(result);
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("修改成功");
         apiResponse.setData(result);
@@ -167,7 +168,7 @@ public class UserController {
     @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
     public ApiResponse<User> getUserInfo(@RequestBody Map<String, String> params) {
         String userId = params.get("userId");
-        User result = userRep.getOne(userId);
+        User result = userService.findOne(userId);
         User info = new User();
         info.setUserId(result.getUserId());
         info.setNickname(result.getNickname());

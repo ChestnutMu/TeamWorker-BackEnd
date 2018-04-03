@@ -14,5 +14,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkOffRep extends BaseRepository<WorkOff, String> {
 
-
 }

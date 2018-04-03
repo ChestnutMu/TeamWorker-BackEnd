@@ -3,6 +3,7 @@ package com.info.xiaotingtingBackEnd.service;
 import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
+import com.info.xiaotingtingBackEnd.repository.MessageRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
@@ -23,7 +24,7 @@ import java.util.Map;
  * Email: xiaoting233zhang@126.com
  */
 @Service
-public class MessageService extends BaseService {
+public class MessageService extends BaseService<Message,String,MessageRep> {
     /**
      * 保存消息
      *
@@ -127,4 +128,8 @@ public class MessageService extends BaseService {
         return result;
     }
 
+    @Override
+    public MessageRep getRepo() {
+        return messageRep;
+    }
 }

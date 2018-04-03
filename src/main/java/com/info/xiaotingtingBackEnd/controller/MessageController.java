@@ -26,7 +26,7 @@ import java.util.Map;
  * Email: xiaoting233zhang@126.com
  */
 @RestController
-@RequestMapping("Message")
+@RequestMapping("message")
 public class MessageController {
 
     @Autowired

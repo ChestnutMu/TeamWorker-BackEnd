@@ -18,20 +18,17 @@ public class MessageVo {
 
     private String receiverId;
 
-    private String title;
-
     private String content;
 
     private Date time;
 
     private Boolean isRead;
 
-    public MessageVo(String messageId, String senderId, String senderName, String receiverId, String title, String content, Date time, Boolean isRead) {
+    public MessageVo(String messageId, String senderId, String senderName, String receiverId, String content, Date time, Boolean isRead) {
         this.messageId = messageId;
         this.senderId = senderId;
         this.senderName = senderName;
         this.receiverId = receiverId;
-        this.title = title;
         this.content = content;
         this.time = time;
         this.isRead = isRead;
@@ -67,14 +64,6 @@ public class MessageVo {
 
     public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {

@@ -46,12 +46,12 @@ public class WorkOffController {
         message.setReceiverId(workOff.getApproverId());
         message.setChatName("工作通知");
         message.setContent(workOff.getUserName() + "的请假需要您的审批");
-        message.setTime(new Date(System.currentTimeMillis()));
+        message.setTime(new Date());
         handler.sendMessage(message);
 
         ApiResponse<WorkOff> workOffApiResponse = new ApiResponse<>();
         workOffApiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        workOffApiResponse.setMessage("请假申请已发送");
+        workOffApiResponse.setMessage("您的请假申请已提交");
         workOffApiResponse.setData(workOff);
         return workOffApiResponse;
     }

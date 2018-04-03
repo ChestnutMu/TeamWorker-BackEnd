@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("third")
 public class ThirdController {
 
-
     @RequestMapping(value = "getQiniuToken", method = RequestMethod.POST)
     public ApiResponse<String> getQiniuToken() {
         String accessKey = "xJwSUxOTy_TM98539iTTrcEsGkjsQkQ4sJWtGJxU";

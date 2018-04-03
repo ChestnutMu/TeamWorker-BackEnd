@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -19,7 +20,7 @@ import javax.persistence.Id;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class WorkOff {
+public class WorkOff implements Serializable {
     @Id
     @GeneratedValue(generator = "attendanceIdGenerator")
     @GenericGenerator(name = "attendanceIdGenerator", strategy = "com.info.xiaotingtingBackEnd.model.base.IdGenerator")

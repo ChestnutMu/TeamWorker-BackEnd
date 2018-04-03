@@ -2,46 +2,74 @@ package com.info.xiaotingtingBackEnd.model;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
  * Author: Chestnut
  * CreateTime：at 2017/12/26 21:24:08
- * Description：DepartmentRelation Bean
+ * Description：部门之间的关系
  * Email: xiaoting233zhang@126.com
  */
 
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class DepartmentRelation implements Serializable{
+@IdClass(DepartmentRelation.DepartmentRelationId.class)
+public class DepartmentRelation implements Serializable {
 
     @Id
-    @Column(columnDefinition = "char(20)", nullable = false)
-    private String userId;
+    private String mainDepartmentId;
 
-    private String departmentId;
+    @Id
+    private String viceDepartmentId;
 
-    public String getUserId() {
-        return userId;
+    public String getMainDepartmentId() {
+        return mainDepartmentId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setMainDepartmentId(String mainDepartmentId) {
+        this.mainDepartmentId = mainDepartmentId;
     }
 
-    public String getDepartmentId() {
-        return departmentId;
+    public String getViceDepartmentId() {
+        return viceDepartmentId;
     }
 
-    public void setDepartmentId(String departmentId) {
-        this.departmentId = departmentId;
+    public void setViceDepartmentId(String viceDepartmentId) {
+        this.viceDepartmentId = viceDepartmentId;
+    }
+
+    public static class DepartmentRelationId implements Serializable {
+
+        public DepartmentRelationId() {
+        }
+
+        public DepartmentRelationId(String mainDepartmentId, String viceDepartmentId) {
+            this.mainDepartmentId = mainDepartmentId;
+            this.viceDepartmentId = viceDepartmentId;
+        }
+
+        private String mainDepartmentId;
+
+        private String viceDepartmentId;
+
+        public String getMainDepartmentId() {
+            return mainDepartmentId;
+        }
+
+        public void setMainDepartmentId(String mainDepartmentId) {
+            this.mainDepartmentId = mainDepartmentId;
+        }
+
+        public String getViceDepartmentId() {
+            return viceDepartmentId;
+        }
+
+        public void setViceDepartmentId(String viceDepartmentId) {
+            this.viceDepartmentId = viceDepartmentId;
+        }
     }
 }

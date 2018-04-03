@@ -23,9 +23,9 @@ public interface DepartmentRep extends BaseRepository<Department, String> {
 
     Department findByDepartmentName(String name);
 
-    @Query(value = "select d from DepartmentRelation dr,Department d " +
+    @Query(value = "select d from DepartmentMemberRelation dr,Department d " +
             "where dr.userId = :userId and dr.departmentId = d.departmentId",
-            countQuery = "select count(d) from DepartmentRelation dr,Department d " +
+            countQuery = "select count(d) from DepartmentMemberRelation dr,Department d " +
                     "where dr.userId = :userId and dr.departmentId = d.departmentId")
     List<Department> getDipartmentByUserId(@Param("userId") String userId);
 }

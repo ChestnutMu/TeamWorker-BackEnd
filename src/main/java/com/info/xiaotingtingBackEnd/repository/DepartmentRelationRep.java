@@ -2,7 +2,6 @@ package com.info.xiaotingtingBackEnd.repository;
 
 import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface DepartmentRelationRep extends BaseRepository<DepartmentRelation, String> {
+public interface DepartmentRelationRep extends BaseRepository<DepartmentRelation, DepartmentRelation.DepartmentRelationId> {
 
 }
