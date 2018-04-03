@@ -28,17 +28,15 @@ public class MessageService extends BaseService {
      * 保存消息
      *
      * @param userId
-     * @param title
      * @param content
      * @param receiverIds
      * @return
      */
-    public Message registerMessage(String chatId, String chatName, String userId, String title, String content, String receiverIds) {
+    public Message registerMessage(String chatId, String chatName, String userId, String content, String receiverIds) {
         Message message = new Message();
         message.setChatId(chatId);
         message.setChatName(chatName);
         message.setSenderId(userId);
-        message.setTitle(title);
         message.setContent(content);
         message.setReceiverId(receiverIds);
         message.setTime(new Date());
@@ -77,17 +75,16 @@ public class MessageService extends BaseService {
      * 发送消息
      *
      * @param userId
-     * @param title
      * @param content
      * @param uidList
      */
-    public void sendMessage(String chatId, String chatName, String userId, String title, String content, List<String> uidList) {
+    public void sendMessage(String chatId, String chatName, String userId, String content, List<String> uidList) {
         if (uidList.isEmpty()) {
             System.out.println("发送消息没有接受者id");
             return;
         }
         for (String uid : uidList) {
-            Message message = registerMessage(chatId, chatName, userId, title, content, uid);
+            Message message = registerMessage(chatId, chatName, userId, content, uid);
             boolean isSuccess = handler.sendMessage(message);
             if (isSuccess) {
                 hasSendMessage(message.getMessageId());

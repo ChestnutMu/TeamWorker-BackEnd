@@ -62,23 +62,12 @@ public class SenderEventHandler extends BaseSocketEventHandler {
     }
 
     /**
-     * 系统下线
-     *
-     * @param map
-     */
-    public void offline(Map<String, Object> map) {
-        String uid = (String) map.get("uid");
-        String oldToken = (String) map.get("token");
-        offline(uid, oldToken);
-    }
-
-    /**
-     * 系统下线
+     * 系统下线(踢下线)
      *
      * @param uid
      * @param oldToken
      */
-    public void offline(String uid,String oldToken) {
+    public void offline(String uid, String oldToken) {
         kickOffClient(uid, oldToken);
     }
 

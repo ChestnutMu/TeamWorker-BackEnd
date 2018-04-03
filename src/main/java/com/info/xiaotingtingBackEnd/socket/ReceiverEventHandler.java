@@ -89,12 +89,11 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
                 }.getType());
                 String chatId = params.get("chatId");
                 String chatName = params.get("chatName");
-                String title = params.get("title");
                 String content = params.get("content");
                 List<String> uidList = gson.fromJson(params.get("uids"), new TypeToken<List<String>>() {
                 }.getType());
 
-                messageService.sendMessage(chatId, chatName, uid, title, content, uidList);
+                messageService.sendMessage(chatId, chatName, uid, content, uidList);
             }
             break;
             case ReceiverProtocol.MSG_ISREAD_MESSAGE://已读消息

@@ -28,6 +28,8 @@ public class WorkOff {
 
     private String userId;
 
+    private String userName;
+
     private String startTime;
 
     private String endTime;
@@ -38,9 +40,11 @@ public class WorkOff {
 
     private String workOffReason;
 
-    private String picture;
+    private String photo;
 
     private String approverId;
+
+    private int status;//0 已申请，待审批；1 已审批，通过；2 已审批，不通过
 
     public String getWorkOffId() {
         return workOffId;
@@ -56,6 +60,14 @@ public class WorkOff {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getStartTime() {
@@ -98,12 +110,12 @@ public class WorkOff {
         this.workOffReason = workOffReason;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public String getApproverId() {
@@ -112,5 +124,13 @@ public class WorkOff {
 
     public void setApproverId(String approverId) {
         this.approverId = approverId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

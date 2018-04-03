@@ -42,13 +42,12 @@ public class MessageController {
         String chatId = params.get("chatId");
         String chatName = params.get("chatName");
         String userId = params.get("userId");
-        String title = params.get("title");
         String content = params.get("content");
         String uids = params.get("uids");
         List<String> uidList = new Gson().fromJson(uids, new TypeToken<List<String>>() {
         }.getType());
 
-        messageService.sendMessage(chatId, chatName, userId, title, content, uidList);
+        messageService.sendMessage(chatId, chatName, userId, content, uidList);
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();
 

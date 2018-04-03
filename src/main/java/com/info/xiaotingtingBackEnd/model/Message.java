@@ -37,11 +37,11 @@ public class Message implements Serializable {
 
     private String receiverId;
 
-    private String title;
-
     private String content;
 
     private Date time;
+
+    private int messageType;//null标识普通聊天消息；1标识为一条通知消息
 
     private Boolean isSend;
 
@@ -61,14 +61,6 @@ public class Message implements Serializable {
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getMessageId() {
@@ -125,5 +117,13 @@ public class Message implements Serializable {
 
     public void setRead(Boolean read) {
         isRead = read;
+    }
+
+    public int getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
     }
 }

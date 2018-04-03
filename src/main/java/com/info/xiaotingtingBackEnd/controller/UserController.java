@@ -36,7 +36,6 @@ public class UserController {
     @Autowired
     SenderEventHandler handler;
 
-
     @RequestMapping(value = "test", method = RequestMethod.GET)
     public String test(int msgId, String message) {
 
@@ -51,12 +50,12 @@ public class UserController {
 
     @RequestMapping(value = "addUser", method = RequestMethod.POST)
     public ApiResponse<User> addUser(@RequestBody User user) {
-        ApiResponse<User> apiResponse = new ApiResponse<User>();
+        ApiResponse<User> apiResponse = new ApiResponse<>();
         if (userRep.findByAccount(user.getAccount()) != null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("账户已存在");
         } else {
-            userRep.save(user);
+            user.setNickname(user.getAccount());
             userRep.save(user);
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("注册成功");
