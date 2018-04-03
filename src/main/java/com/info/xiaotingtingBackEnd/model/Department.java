@@ -30,6 +30,8 @@ public class Department implements Serializable {
 
     private String departmentName;
 
+    private String departmentBadge;
+
     public String getDepartmentId() {
         return departmentId;
     }
@@ -44,5 +46,13 @@ public class Department implements Serializable {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getDepartmentBadge() {
+        return departmentBadge;
+    }
+
+    public void setDepartmentBadge(String departmentBadge) {
+        this.departmentBadge = departmentBadge;
     }
 }

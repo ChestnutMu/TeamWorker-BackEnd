@@ -26,7 +26,7 @@ public class BaseSocketEventHandler {
     protected static final String TAG_USER_SEND_MESSAGE = "tag_user_send_message";
     protected static final String TAG_USER_RECEIVER_MESSAGE = "tag_user_receiver_message";
 
-    protected static Map<String, SocketIOClient> clientHashMap = new ConcurrentHashMap<String,SocketIOClient>();
+    protected static Map<String, SocketIOClient> clientHashMap = new ConcurrentHashMap<>();
 
     protected Gson gson = new Gson();
 
