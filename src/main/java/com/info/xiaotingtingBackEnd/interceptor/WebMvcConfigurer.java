@@ -22,7 +22,7 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         addInterceptor.excludePathPatterns("/user/getAllUsers");
 
         addInterceptor.excludePathPatterns("/department/getDepartments");
-        addInterceptor.excludePathPatterns("/department/addDepartmentRelation");
+        addInterceptor.excludePathPatterns("/department/addDepartmentMemberRelation");
 
         addInterceptor.addPathPatterns("/**");
         super.addInterceptors(registry);

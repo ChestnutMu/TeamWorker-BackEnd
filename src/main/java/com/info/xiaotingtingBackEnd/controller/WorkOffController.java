@@ -5,6 +5,7 @@ import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.WorkOff;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.WorkOffRep;
+import com.info.xiaotingtingBackEnd.service.WorkOffService;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
 import com.info.xiaotingtingBackEnd.util.EntityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,28 +28,12 @@ import java.util.Date;
 public class WorkOffController {
 
     @Autowired
-    WorkOffRep workOffRep;
-
-    @Autowired
-    SenderEventHandler handler;
+    WorkOffService workOffService;
 
     @RequestMapping(value = "applyWorkOff", method = RequestMethod.POST)
     public ApiResponse<WorkOff> applyWorkOff(@RequestBody WorkOff workOff) {
         workOff.setStatus(0);
-        workOffRep.save(workOff);
-
-        Message message = new Message();
-        message.setChatId(EntityUtil.getIdByTimeStampAndRandom());
-        message.setMessageType(1);
-        message.setSend(false);
-        message.setRead(false);
-        message.setSenderId(workOff.getUserId());
-        message.setReceiverId(workOff.getApproverId());
-        message.setChatName("工作通知");
-        message.setContent(workOff.getUserName() + "的请假需要您的审批");
-        message.setTime(new Date());
-        handler.sendMessage(message);
-
+        workOffService.saveAndSendApplication(workOff);
         ApiResponse<WorkOff> workOffApiResponse = new ApiResponse<>();
         workOffApiResponse.setStatus(HttpResponseCodes.SUCCESS);
         workOffApiResponse.setMessage("您的请假申请已提交");
@@ -58,7 +43,7 @@ public class WorkOffController {
 
     @RequestMapping(value = "approveWorkOff", method = RequestMethod.POST)
     public ApiResponse approveWorkOff(@RequestBody WorkOff workOff) {
-        workOffRep.save(workOff);
+        workOffService.save(workOff);
         ApiResponse workOffApiResponse = new ApiResponse<>();
         workOffApiResponse.setStatus(HttpResponseCodes.SUCCESS);
         workOffApiResponse.setMessage("已处理该请假");

@@ -44,6 +44,10 @@ public class DepartmentRelation implements Serializable {
 
     public static class DepartmentRelationId implements Serializable {
 
+        private String mainDepartmentId;
+
+        private String viceDepartmentId;
+
         public DepartmentRelationId() {
         }
 
@@ -51,10 +55,6 @@ public class DepartmentRelation implements Serializable {
             this.mainDepartmentId = mainDepartmentId;
             this.viceDepartmentId = viceDepartmentId;
         }
-
-        private String mainDepartmentId;
-
-        private String viceDepartmentId;
 
         public String getMainDepartmentId() {
             return mainDepartmentId;

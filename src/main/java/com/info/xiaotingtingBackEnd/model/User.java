@@ -22,7 +22,7 @@ import java.io.Serializable;
 @Entity
 @DynamicUpdate
 @DynamicInsert
-public class User implements Serializable{
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(generator = "userIdGenerator")
@@ -32,7 +32,7 @@ public class User implements Serializable{
 
     private String account;
 
-    private String password;
+    transient private String password;
 
     private String token;
 

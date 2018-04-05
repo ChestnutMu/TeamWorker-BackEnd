@@ -3,6 +3,7 @@ package com.info.xiaotingtingBackEnd.controller;
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
+import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
@@ -52,9 +53,14 @@ public class DepartmentController {
         return departmentService.deleteDepartment(departmentId);
     }
 
-    @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)
-    public ApiResponse<Object> addDepartmentRelation(@RequestBody DepartmentMemberRelation departmentMemberRelation) {
-        return departmentService.addDepartmentRelation(departmentMemberRelation);
+    @RequestMapping(value = "addDepartmentMemberRelation", method = RequestMethod.POST)
+    public ApiResponse<DepartmentMemberRelation> addDepartmentMemberRelation(@RequestBody DepartmentMemberRelation departmentMemberRelation) {
+        return departmentService.addDepartmentMemberRelation(departmentMemberRelation);
+    }
+
+    @RequestMapping(value = "addDepartmentMemberRelations", method = RequestMethod.POST)
+    public ApiResponse<List<DepartmentMemberRelation>> addDepartmentMemberRelations(@RequestBody List<DepartmentMemberRelation> departmentMemberRelations) {
+        return departmentService.addDepartmentMemberRelations(departmentMemberRelations);
     }
 
     @RequestMapping(value = "getUserByDepartment", method = RequestMethod.POST)
@@ -76,4 +82,15 @@ public class DepartmentController {
     public ApiResponse<List<Department>> getDepartmentByUserId(@RequestHeader("uid") String userId) {
         return departmentService.getDepartmentByUserId(userId);
     }
+
+    @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)
+    public ApiResponse<DepartmentRelation> addDepartmentRelation(@RequestBody DepartmentRelation departmentRelation) {
+        return departmentService.addDepartmentRelation(departmentRelation);
+    }
+
+    @RequestMapping(value = "addDepartmentRelations", method = RequestMethod.POST)
+    public ApiResponse<DepartmentRelation> addDepartmentRelations(@RequestBody List<DepartmentRelation> departmentRelations) {
+        return departmentService.addDepartmentRelations(departmentRelations);
+    }
+
 }

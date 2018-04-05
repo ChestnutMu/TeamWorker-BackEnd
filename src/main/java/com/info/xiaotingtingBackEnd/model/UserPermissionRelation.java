@@ -15,7 +15,7 @@ import java.util.List;
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
  * CreateTime：at 2018/4/3 15:45:26
- * Description：用户角色
+ * Description：用户权限
  * Email: xiaoting233zhang@126.com
  */
 
@@ -28,9 +28,9 @@ public class UserPermissionRelation implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String userId;
 
-    private int permissionRange;//0标识整个公司; 1 所在部门及其子部门；2 标识特定部门
+    private int permissionRange;//0 标识整个公司; 1 所在部门及其子部门；2 标识特定部门
 
-    private String permissonList; //json格式的Permisson列表
+    private String permissionId;
 
     public String getUserId() {
         return userId;
@@ -48,11 +48,11 @@ public class UserPermissionRelation implements Serializable {
         this.permissionRange = permissionRange;
     }
 
-    public String getPermissonList() {
-        return permissonList;
+    public String getPermissionId() {
+        return permissionId;
     }
 
-    public void setPermissonList(String permissonList) {
-        this.permissonList = permissonList;
+    public void setPermissionId(String permissionId) {
+        this.permissionId = permissionId;
     }
 }

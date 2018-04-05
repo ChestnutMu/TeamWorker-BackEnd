@@ -66,11 +66,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ApiResponse login(@RequestBody Map<String, Object> params) {
+    public ApiResponse<User> login(@RequestBody Map<String, Object> params) {
         String account = (String) params.get("account");
         String password = (String) params.get("password");
         ApiResponse<User> apiResponse = new ApiResponse<User>();
-        System.out.println("login : "+ account + ":" + password);
+        System.out.println("login : " + account + ":" + password);
         User user = userService.findByAccountAndPassword(account, password);
         if (user != null) {
             System.out.println(user + " " + account + ":" + password);
@@ -176,6 +176,22 @@ public class UserController {
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("获取成功");
         apiResponse.setData(info);
+        return apiResponse;
+    }
+
+    @RequestMapping(value = "searchUser", method = RequestMethod.POST)
+    public ApiResponse<User> searchUser(@RequestBody Map<String, String> params) {
+        String account = params.get("account");
+        User result = userService.findByAccount(account);
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        if (result != null) {
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("搜索成功");
+            apiResponse.setData(result);
+        }else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("无搜索到该账号");
+        }
         return apiResponse;
     }
 

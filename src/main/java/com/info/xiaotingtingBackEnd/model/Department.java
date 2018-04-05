@@ -32,6 +32,12 @@ public class Department implements Serializable {
 
     private String departmentBadge;
 
+    private String departmentIndustry;
+
+    private String personnelScale;
+
+    private String departmentRegion;
+
     public String getDepartmentId() {
         return departmentId;
     }
@@ -48,11 +54,35 @@ public class Department implements Serializable {
         this.departmentName = departmentName;
     }
 
+    public String getDepartmentIndustry() {
+        return departmentIndustry;
+    }
+
+    public void setDepartmentIndustry(String departmentIndustry) {
+        this.departmentIndustry = departmentIndustry;
+    }
+
     public String getDepartmentBadge() {
         return departmentBadge;
     }
 
     public void setDepartmentBadge(String departmentBadge) {
         this.departmentBadge = departmentBadge;
+    }
+
+    public String getDepartmentRegion() {
+        return departmentRegion;
+    }
+
+    public void setDepartmentRegion(String departmentRegion) {
+        this.departmentRegion = departmentRegion;
+    }
+
+    public String getPersonnelScale() {
+        return personnelScale;
+    }
+
+    public void setPersonnelScale(String personnelScale) {
+        this.personnelScale = personnelScale;
     }
 }

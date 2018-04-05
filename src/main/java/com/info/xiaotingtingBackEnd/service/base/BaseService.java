@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.service.base;
 
+import com.info.xiaotingtingBackEnd.model.WorkOff;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.*;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
@@ -39,6 +40,9 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
 
     @Autowired
     public AttendanceRep attendanceRep;
+
+    @Autowired
+    public WorkOffRep workOffRep;
 
     @Autowired
     public SenderEventHandler handler;

@@ -4,6 +4,7 @@ import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Attendance;
 import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
+import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.AttendanceRep;
 import com.info.xiaotingtingBackEnd.repository.DepartmentRelationRep;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -35,12 +37,8 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return departmentRep;
     }
 
-    public Department findByDepartmentName(String userId) {
-        return departmentRep.findByDepartmentName(userId);
-    }
-
-    public ApiResponse<Object> addDepartmentRelation(DepartmentMemberRelation departmentMemberRelation) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
+    public ApiResponse addDepartmentMemberRelation(DepartmentMemberRelation departmentMemberRelation) {
+        ApiResponse apiResponse = new ApiResponse<>();
         if (userRep.findOne(departmentMemberRelation.getUserId()) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("用户不存在");
@@ -55,7 +53,15 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse<Object> deleteDepartment(@RequestBody String departmentId) {
+    public ApiResponse addDepartmentMemberRelations(List<DepartmentMemberRelation> departmentMemberRelations) {
+        ApiResponse apiResponse = new ApiResponse<>();
+        departmentMemberRep.save(departmentMemberRelations);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("添加或修改用户所属部门关系成功");
+        return apiResponse;
+    }
+
+    public ApiResponse deleteDepartment(String departmentId) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         if (departmentRep.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
@@ -69,7 +75,7 @@ public class DepartmentService extends BaseService<Department, String, Departmen
     }
 
     public ApiResponse<List<Department>> getDepartmentByUserId(String userId) {
-        ApiResponse<List<Department>> apiResponse = new ApiResponse<>();
+        ApiResponse apiResponse = new ApiResponse<>();
         List<Department> departmentList = departmentRep.getDipartmentByUserId(userId);
         if (departmentList.size() > 0) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
@@ -82,8 +88,8 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse<Department> addDepartment(@RequestBody Department department) {
-        ApiResponse<Department> apiResponse = new ApiResponse<Department>();
+    public ApiResponse addDepartment(Department department) {
+        ApiResponse apiResponse = new ApiResponse<>();
         if (departmentRep.findByDepartmentName(department.getDepartmentName()) != null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("部门已存在");
@@ -95,4 +101,27 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         }
         return apiResponse;
     }
+
+    public ApiResponse addDepartmentRelation(DepartmentRelation departmentRelation) {
+        ApiResponse apiResponse = new ApiResponse<>();
+        if (departmentRep.findOne(departmentRelation.getMainDepartmentId()) != null
+                && departmentRep.findOne(departmentRelation.getViceDepartmentId()) != null) {
+            departmentRelationRep.save(departmentRelation);
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("添加部门关系成功");
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("无查询到部门记录");
+        }
+        return apiResponse;
+    }
+
+    public ApiResponse addDepartmentRelations(List<DepartmentRelation> departmentRelations) {
+        ApiResponse<DepartmentRelation> apiResponse = new ApiResponse<>();
+        departmentRelationRep.save(departmentRelations);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("添加部门关系成功");
+        return apiResponse;
+    }
+
 }
