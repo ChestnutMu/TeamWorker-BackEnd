@@ -1,25 +1,14 @@
 package com.info.xiaotingtingBackEnd.service;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
-import com.info.xiaotingtingBackEnd.model.Attendance;
 import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
 import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
-import com.info.xiaotingtingBackEnd.repository.AttendanceRep;
-import com.info.xiaotingtingBackEnd.repository.DepartmentRelationRep;
 import com.info.xiaotingtingBackEnd.repository.DepartmentRep;
-import com.info.xiaotingtingBackEnd.repository.UserRep;
-import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**

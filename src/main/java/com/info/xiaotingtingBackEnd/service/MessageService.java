@@ -2,7 +2,6 @@ package com.info.xiaotingtingBackEnd.service;
 
 import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
-import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.MessageRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
@@ -12,9 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
@@ -24,7 +21,7 @@ import java.util.Map;
  * Email: xiaoting233zhang@126.com
  */
 @Service
-public class MessageService extends BaseService<Message,String,MessageRep> {
+public class MessageService extends BaseService<Message, String, MessageRep> {
     /**
      * 保存消息
      *

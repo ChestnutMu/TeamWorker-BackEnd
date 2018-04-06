@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
  * Description：
  * Email: xiaoting233zhang@126.com
  */
-
 @Repository
 public interface DepartmentRelationRep extends BaseRepository<DepartmentRelation, DepartmentRelation.DepartmentRelationId> {
 

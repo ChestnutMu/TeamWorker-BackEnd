@@ -32,7 +32,7 @@ public class User implements Serializable {
 
     private String account;
 
-    transient private String password;
+    private String password;
 
     private String token;
 

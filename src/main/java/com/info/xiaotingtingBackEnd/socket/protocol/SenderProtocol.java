@@ -19,5 +19,9 @@ public class SenderProtocol {
      */
     public static final int MSG_SEND_NORMAL_MESSAGE = 1005;
 
+    /**
+     * 发送客户端一条新的好友请求
+     */
+    public static final int MSG_SEND_FRIEND_REQUEST = 1006;
 
 }

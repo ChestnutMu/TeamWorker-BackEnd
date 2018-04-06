@@ -3,6 +3,8 @@ package com.info.xiaotingtingBackEnd.socket;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.info.xiaotingtingBackEnd.model.Message;
+import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
+import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.socket.protocol.SenderProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,6 +60,21 @@ public class SenderEventHandler extends BaseSocketEventHandler {
         }
 
         socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_NORMAL_MESSAGE, message);
+        return true;
+    }
+
+    /**
+     *
+     * @param newFriendRequest
+     * @return
+     */
+    public boolean sendFriendRequest(NewFriendRequest newFriendRequest) {
+        SocketIOClient socketIOClient = clientHashMap.get(newFriendRequest.getRecipientId());
+        if (socketIOClient == null) {
+            logger.info("sendOderResultToUser socketIOClient不存在");
+            return false;
+        }
+        socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_FRIEND_REQUEST, newFriendRequest);
         return true;
     }
 

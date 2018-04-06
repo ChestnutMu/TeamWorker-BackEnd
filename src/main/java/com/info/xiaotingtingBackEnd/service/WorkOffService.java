@@ -7,9 +7,7 @@ import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.WorkOffRep;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import com.info.xiaotingtingBackEnd.util.EntityUtil;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
@@ -20,7 +18,8 @@ import java.util.Date;
  * Description：
  * Email: xiaoting233zhang@126.com
  */
-public class WorkOffService extends BaseService<WorkOff,String,WorkOffRep>{
+@Service
+public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
     @Override
     public WorkOffRep getRepo() {
         return workOffRep;
@@ -42,7 +41,7 @@ public class WorkOffService extends BaseService<WorkOff,String,WorkOffRep>{
         handler.sendMessage(message);
     }
 
-    public ApiResponse approveWorkOff( WorkOff workOff) {
+    public ApiResponse approveWorkOff(WorkOff workOff) {
         workOffRep.save(workOff);
         ApiResponse workOffApiResponse = new ApiResponse<>();
         workOffApiResponse.setStatus(HttpResponseCodes.SUCCESS);

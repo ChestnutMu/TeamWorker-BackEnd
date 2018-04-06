@@ -17,7 +17,6 @@ import java.util.List;
  * Description：
  * Email: xiaoting233zhang@126.com
  */
-
 @Repository
 public interface DepartmentRep extends BaseRepository<Department, String> {
 

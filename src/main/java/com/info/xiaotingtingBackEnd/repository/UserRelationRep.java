@@ -1,20 +1,17 @@
 package com.info.xiaotingtingBackEnd.repository;
 
-import com.info.xiaotingtingBackEnd.model.Attendance;
+import com.info.xiaotingtingBackEnd.model.UserRelation;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
- * CreateTime：at 2018/1/3 13:49:56
+ * CreateTime：at 2018/4/6 11:12:44
  * Description：
  * Email: xiaoting233zhang@126.com
  */
 @Repository
-public interface AttendanceRep extends BaseRepository<Attendance, String> {
+public interface UserRelationRep extends BaseRepository<UserRelation, UserRelation.UserRelationId> {
 
-    Attendance findTopByUserId(String userId);
-
-    Attendance findTopByUserIdOrderByPunchInTimeDesc(String userId);
 }
