@@ -77,18 +77,12 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse addDepartment(Department department) {
-        ApiResponse apiResponse = new ApiResponse<>();
+    public Department addDepartment(Department department) {
         if (departmentRep.findByDepartmentName(department.getDepartmentName()) != null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("部门已存在");
+            return null;
         } else {
-            departmentRep.save(department);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("添加部门成功");
-            apiResponse.setData(department);
+            return departmentRep.save(department);
         }
-        return apiResponse;
     }
 
     public ApiResponse addDepartmentRelation(DepartmentRelation departmentRelation) {

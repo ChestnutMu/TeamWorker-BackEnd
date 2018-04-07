@@ -5,6 +5,8 @@ import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.UserRelation;
+import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
+import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
@@ -136,6 +138,7 @@ public class UserController {
         String token = params.get("token");
         ApiResponse<User> apiResponse = new ApiResponse<>();
         User result = userService.findOne(userId);
+        result.setPassword(null);
         if (result.getToken().equals(token)) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("获取个人信息成功");
@@ -173,15 +176,17 @@ public class UserController {
 
     @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
     public ApiResponse<User> getUserInfo(@RequestBody Map<String, String> params) {
-        String userId = params.get("userId");
-        User result = userService.findOne(userId);
-        User info = new User();
-        info.setUserId(result.getUserId());
-        info.setNickname(result.getNickname());
+        User result = userService.findOne(params.get("userId"));
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取成功");
-        apiResponse.setData(info);
+        if (result != null) {
+            result.setPassword(null);
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("获取成功");
+            apiResponse.setData(result);
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("获取用户信息失败");
+        }
         return apiResponse;
     }
 
@@ -204,17 +209,33 @@ public class UserController {
 
     @RequestMapping(value = "addUserRelation", method = RequestMethod.POST)
     public ApiResponse<User> addUserRelation(@RequestHeader("uid") String uid, @RequestBody Map<String, String> params) {
-        String userId = params.get("account");
+        String userId = params.get("userId");
+        String requestId = params.get("requestId");
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        User user = userService.findByAccount(userId);
+        User user = userService.findOne(userId);
+        NewFriendRequest newFriendRequest = friendRequestService.findOne(requestId);
         if (user == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("用户不存在");
+        } else if (newFriendRequest == null) {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("好友请求不存在");
         } else {
-            userService.addUserRelation(uid, userId);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("添加好友成功");
-            apiResponse.setData(user);
+            if (userService.addUserRelation(uid, userId)) {
+                newFriendRequest.setAccepted(true);
+                if (friendRequestService.save(newFriendRequest) != null) {
+                    apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+                    apiResponse.setMessage("添加好友成功");
+                    user.setPassword(null);
+                    apiResponse.setData(user);
+                } else {
+                    apiResponse.setStatus(HttpResponseCodes.FAILED);
+                    apiResponse.setMessage("添加好友失败");
+                }
+            } else {
+                apiResponse.setStatus(HttpResponseCodes.FAILED);
+                apiResponse.setMessage("添加好友失败");
+            }
         }
         return apiResponse;
     }
@@ -250,7 +271,29 @@ public class UserController {
         String userId = params.get("userId");
         ApiResponse<Boolean> apiResponse = new ApiResponse<>();
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setData(userService.isMyFriend(uid, userId));
+        if (userService.isMyFriend(userId, uid) || userService.isMyFriend(uid, userId)) {
+            apiResponse.setData(true);
+            apiResponse.setMessage("是我的好友");
+        } else {
+            apiResponse.setData(false);
+            apiResponse.setMessage("不是我的好友");
+        }
+        return apiResponse;
+    }
+
+    /**
+     * 根据userId其接收到的好友请求消息
+     *
+     * @return
+     */
+    @RequestMapping(value = "getMyFriends", method = RequestMethod.POST)
+    public ApiResponse<List<UserVo>> getMyFriends(@RequestHeader String uid) {
+        ApiResponse<List<UserVo>> apiResponse = new ApiResponse<>();
+        List<UserVo> requestList = userService.getMyFriends(uid);
+        apiResponse.setMaxCount(requestList.size());
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("获取我的好友列表成功");
+        apiResponse.setData(requestList);
         return apiResponse;
     }
 

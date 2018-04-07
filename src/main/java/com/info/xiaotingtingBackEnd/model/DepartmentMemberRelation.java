@@ -28,6 +28,14 @@ public class DepartmentMemberRelation implements Serializable {
     @Id
     private String userId;
 
+    public DepartmentMemberRelation() {
+    }
+
+    public DepartmentMemberRelation(String departmentId, String userId) {
+        this.departmentId = departmentId;
+        this.userId = userId;
+    }
+
     public String getDepartmentId() {
         return departmentId;
     }

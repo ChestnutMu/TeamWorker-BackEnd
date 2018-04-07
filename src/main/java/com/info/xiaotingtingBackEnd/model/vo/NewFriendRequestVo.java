@@ -14,20 +14,11 @@ public class NewFriendRequestVo {
     //好友请求Id
     private String requestId;
 
-    //好友请求接收者Id
-    private String recipientId;
-
     //好友请求者Id
     private String requesterId;
 
-    //好友请求者头像
-    private String requesterAvatar;
-
-    //好友请求者账号
-    private String requesterAccount;
-
-    //好友请求者昵称
-    private String requesterNickname;
+    //好友请求接收者Id
+    private String recipientId;
 
     //验证消息
     private String authenticationMessage;
@@ -40,6 +31,28 @@ public class NewFriendRequestVo {
 
     //已接受好友请求
     private Boolean isAccepted;
+
+    //好友请求者账号
+    private String requesterAccount;
+
+    //好友请求者昵称
+    private String requesterNickname;
+
+    //好友请求者头像
+    private String requesterAvatar;
+
+    public NewFriendRequestVo(String requestId, String requesterId, String recipientId, String authenticationMessage, Date time, Boolean isSend, Boolean isAccepted, String requesterAccount, String requesterNickname, String requesterAvatar) {
+        this.requestId = requestId;
+        this.requesterId = requesterId;
+        this.recipientId = recipientId;
+        this.authenticationMessage = authenticationMessage;
+        this.time = time;
+        this.isSend = isSend;
+        this.isAccepted = isAccepted;
+        this.requesterAccount = requesterAccount;
+        this.requesterNickname = requesterNickname;
+        this.requesterAvatar = requesterAvatar;
+    }
 
     public String getRequestId() {
         return requestId;

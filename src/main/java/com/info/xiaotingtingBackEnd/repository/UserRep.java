@@ -1,6 +1,7 @@
 package com.info.xiaotingtingBackEnd.repository;
 
 import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
@@ -31,4 +34,13 @@ public interface UserRep extends BaseRepository<User, String> {
             countQuery = "select count(d.userId) from DepartmentMemberRelation d" +
                     " where d.departmentId = :departmentId")
     Page<DepartmentUser> getUserByDepartment(@Param("departmentId") String departmentId, Pageable pageable);
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserVo" +
+            "(u.userId,u.account,u.nickname,u.avatar,u.telephone,u.sex,u.birthday,u.region)" +
+            " from User u, UserRelation ur" +
+            " where (ur.userAId = :userId and u.userId = ur.userBId)" +
+            " or (ur.userBId = :userId and u.userId = ur.userAId)",
+            countQuery = "select count(ur.userAId) from UserRelation ur" +
+                    "where ur.userAId = :userId or ur.userBId = :userId")
+    List<UserVo> getMyFriend(@Param("userId") String userId);
 }

@@ -33,7 +33,7 @@ public class MessageController {
     MessageService messageService;
 
     /**
-     * 发送消息
+     * 群发通知或聊天消息
      *
      * @return
      */

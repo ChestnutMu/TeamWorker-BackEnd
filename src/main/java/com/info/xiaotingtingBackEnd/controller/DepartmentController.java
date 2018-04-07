@@ -4,14 +4,17 @@ import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
 import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
+import com.info.xiaotingtingBackEnd.model.vo.DepartmentVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.DepartmentService;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +35,6 @@ public class DepartmentController {
 
     @Autowired
     UserService userService;
-
-    @RequestMapping(value = "addDepartment", method = RequestMethod.POST)
-    public ApiResponse<Department> addDepartment(@RequestBody Department department) {
-        return departmentService.addDepartment(department);
-    }
 
     @RequestMapping(value = "getDepartments", method = RequestMethod.POST)
     public ApiResponse<List<Department>> getDepartments(@RequestBody Map<String, Integer> params) {
@@ -93,4 +91,23 @@ public class DepartmentController {
         return departmentService.addDepartmentRelations(departmentRelations);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    @RequestMapping(value = "buildTeam", method = RequestMethod.POST)
+    public ApiResponse<Department> buildTeam(@RequestBody DepartmentVo departmentVo) {
+        ApiResponse<Department> apiResponse = new ApiResponse<>();
+        Department department = departmentService.addDepartment(departmentVo.getDepartment());
+        if (department != null) {
+            List<DepartmentMemberRelation> relationList = new ArrayList<>(departmentVo.getUserIds().size());
+            for(String userId:departmentVo.getUserIds()){
+                relationList.add(new DepartmentMemberRelation(department.getDepartmentId(),userId));
+            }
+            departmentService.addDepartmentMemberRelations(relationList);
+            apiResponse.setData(department);
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("部门已存在");
+        }
+        return apiResponse;
+    }
 }
