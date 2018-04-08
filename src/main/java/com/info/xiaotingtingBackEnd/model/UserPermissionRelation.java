@@ -28,7 +28,9 @@ public class UserPermissionRelation implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String userId;
 
-    private int permissionRange;//0 标识整个公司; 1 所在部门及其子部门；2 标识特定部门
+    private String departmentId;//与权限范围相匹配，标识公司或所在部门或者特定部门的Id
+
+    private int permissionRange;//0 标识整个公司；1 所在部门及其子部门；2 标识特定部门
 
     private String permissionId;
 
@@ -38,6 +40,14 @@ public class UserPermissionRelation implements Serializable {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
     }
 
     public int getPermissionRange() {

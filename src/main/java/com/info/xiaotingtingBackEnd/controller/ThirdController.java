@@ -26,5 +26,4 @@ public class ThirdController {
         return response;
     }
 
-
 }

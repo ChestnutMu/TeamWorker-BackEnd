@@ -37,6 +37,7 @@ public class MessageController {
      *
      * @return
      */
+    // TODO: 2018/4/8 添加一个发送通知、公告的接口，并且加入权限验证的WebMvcConfigurer类中
     @RequestMapping(value = "sendMessage", method = RequestMethod.POST)
     public ApiResponse<Object> sendMessage(@RequestBody Map<String, String> params) {
         String chatId = params.get("chatId");

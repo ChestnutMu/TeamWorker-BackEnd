@@ -1,5 +1,7 @@
 package com.info.xiaotingtingBackEnd.interceptor;
 
+import com.info.xiaotingtingBackEnd.service.PermissionService;
+import com.info.xiaotingtingBackEnd.service.UserPermissionRelationService;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,28 +15,29 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
- * CreateTime：at 2018/4/1 14:19:14
- * Description：uid和token验证
+ * CreateTime：at 2018/4/8 13:14:36
+ * Description：权限验证
  * Email: xiaoting233zhang@126.com
  */
-public class IdAuthentication implements HandlerInterceptor {
+
+public class PermissionAuthentication implements HandlerInterceptor {
 
     private Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
 
     @Autowired
-    UserService userService;
+    UserPermissionRelationService relationService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         logger.info("RequestURI " + httpServletRequest.getRequestURI());
         logger.info("method " + httpServletRequest.getRemoteAddr());
-        String uid = httpServletRequest.getHeader("uid");
-        String token = httpServletRequest.getHeader("token");
-        if (userService.idAuth(uid, token)) {
-            logger.info("身份认证成功");
+        String userId = httpServletRequest.getHeader("uid");
+        String uri = httpServletRequest.getRequestURI();
+        if (relationService.getUserPermissionRelation(userId, uri) != null) {
+            logger.info("查询到该用户对该Uri的请求权限");
             return true;
-        }else {
-            logger.info("身份认证失败");
+        } else {
+            logger.info("无查询到该用户对该Uri的请求权限");
             return false;
         }
     }

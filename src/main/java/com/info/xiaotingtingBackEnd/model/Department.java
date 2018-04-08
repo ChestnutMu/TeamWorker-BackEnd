@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Copyright (c) 2017, Chestnut All rights reserved
  * Author: Chestnut
  * CreateTime：at 2017/12/26 21:19:02
- * Description：Department Bean
+ * Description：部门
  * Email: xiaoting233zhang@126.com
  */
 
@@ -30,13 +30,7 @@ public class Department implements Serializable {
 
     private String departmentName;
 
-    private String departmentBadge;
-
-    private String departmentIndustry;
-
-    private String personnelScale;
-
-    private String departmentRegion;
+    private String teamId; //所属团队/公司/机构的Id
 
     public String getDepartmentId() {
         return departmentId;
@@ -54,35 +48,11 @@ public class Department implements Serializable {
         this.departmentName = departmentName;
     }
 
-    public String getDepartmentIndustry() {
-        return departmentIndustry;
+    public String getTeamId() {
+        return teamId;
     }
 
-    public void setDepartmentIndustry(String departmentIndustry) {
-        this.departmentIndustry = departmentIndustry;
-    }
-
-    public String getDepartmentBadge() {
-        return departmentBadge;
-    }
-
-    public void setDepartmentBadge(String departmentBadge) {
-        this.departmentBadge = departmentBadge;
-    }
-
-    public String getDepartmentRegion() {
-        return departmentRegion;
-    }
-
-    public void setDepartmentRegion(String departmentRegion) {
-        this.departmentRegion = departmentRegion;
-    }
-
-    public String getPersonnelScale() {
-        return personnelScale;
-    }
-
-    public void setPersonnelScale(String personnelScale) {
-        this.personnelScale = personnelScale;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

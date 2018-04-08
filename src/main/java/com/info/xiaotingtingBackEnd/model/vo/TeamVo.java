@@ -1,7 +1,6 @@
 package com.info.xiaotingtingBackEnd.model.vo;
 
-import com.info.xiaotingtingBackEnd.model.Department;
-import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.Team;
 
 import java.util.List;
 
@@ -12,18 +11,18 @@ import java.util.List;
  * Description：
  * Email: xiaoting233zhang@126.com
  */
-public class DepartmentVo {
+public class TeamVo {
 
-    private Department department;
+    private Team team;
 
     private List<String> userIds;
 
-    public Department getDepartment() {
-        return department;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setDepartment(Department department) {
-        this.department = department;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public List<String> getUserIds() {

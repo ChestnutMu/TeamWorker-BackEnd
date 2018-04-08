@@ -4,8 +4,11 @@ import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Department;
 import com.info.xiaotingtingBackEnd.model.DepartmentMemberRelation;
 import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
+import com.info.xiaotingtingBackEnd.model.Team;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.DepartmentRep;
+import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
+import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import org.springframework.stereotype.Service;
 
@@ -50,8 +53,7 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse deleteDepartment(String departmentId) {
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
+    public ApiResponse deleteDepartment(ApiResponse apiResponse, String departmentId) {
         if (departmentRep.findOne(departmentId) == null) {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("部门不存在");
@@ -107,4 +109,61 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
+    //递归算法，判断tartgetDepartment是否为mainDepartment的子部门或子部门的子部门
+    public boolean isViceDepartment(String mainDepartmentId, String targetDepartmentId) {
+        if (isMainViceDepartment(mainDepartmentId, targetDepartmentId)) {
+            return true;
+        } else {
+            List<DepartmentRelation> viceDepartments = getViceDepartment(mainDepartmentId);
+            if (viceDepartments != null) {
+                for (DepartmentRelation departmentRelation : viceDepartments) {
+                    isViceDepartment(departmentRelation.getViceDepartmentId(), targetDepartmentId);
+                }
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    //判断两个部门是否为主部门和子部门的关系
+    public boolean isMainViceDepartment(String mainDepartmentId, String viceDepartment) {
+        DepartmentRelation.DepartmentRelationId departmentRelation = new DepartmentRelation.DepartmentRelationId();
+        departmentRelation.setMainDepartmentId(mainDepartmentId);
+        departmentRelation.setViceDepartmentId(viceDepartment);
+        if (departmentRelationRep.findOne(departmentRelation) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //获取一个部门的所有子部门
+    public List<DepartmentRelation> getViceDepartment(String departmentId) {
+        SearchCondition searchCondition = new SearchCondition();
+        searchCondition.addSearchBean("mainDepartmentId", departmentId, SearchBean.OPERATOR_EQ);
+        return departmentRelationRep.getListBySearchCondition(searchCondition);
+    }
+
+    public Team addTeam(Team team) {
+        if (teamRep.findByTeamName(team.getTeamName()) != null) {
+            return null;
+        } else {
+            return teamRep.save(team);
+        }
+    }
+
+    public ApiResponse<List<Team>> getTeamByUserId(String userId) {
+        ApiResponse apiResponse = new ApiResponse<>();
+        List<Team> teamList = teamRep.getTeamByUserId(userId);
+        if (teamList != null) {
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("获取用户所属团队成功");
+            apiResponse.setData(teamList);
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("您未加入任何团队");
+        }
+        return apiResponse;
+    }
 }
