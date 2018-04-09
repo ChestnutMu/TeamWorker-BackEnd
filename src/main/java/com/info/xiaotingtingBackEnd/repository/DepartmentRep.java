@@ -23,10 +23,10 @@ public interface DepartmentRep extends BaseRepository<Department, String> {
 
     Department findByDepartmentName(String name);
 
-    @Query(value = "select dr from DepartmentRelation dr" +
-            "where dr.mainDepartmentId = :teamId",
-            countQuery = "select count(dr.mainDepartmentId) from DepartmentRelation dr" +
-                    "where dr.mainDepartmentId = :teamId")
-    List<DepartmentRelation> getDepartmentByTeamId(@Param("teamId") String teamId);
+    @Query(value = "select de from Department de " +
+            "where de.teamId = :teamId",
+            countQuery = "select count(de.teamId) from Department de " +
+                    "where de.teamId = :teamId")
+    List<Department> getDepartmentsByTeamId(@Param("teamId") String teamId);
 
 }

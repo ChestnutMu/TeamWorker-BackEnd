@@ -67,7 +67,7 @@ public class DepartmentService extends BaseService<Department, String, Departmen
 
     public ApiResponse<List<Department>> getDepartmentByTeamId(String teamId) {
         ApiResponse apiResponse = new ApiResponse<>();
-        List<Department> departmentList = departmentRep.getDepartmentByTeamId(teamId);
+        List<Department> departmentList = departmentRep.getDepartmentsByTeamId(teamId);
         if (departmentList.size() > 0) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("获取用户所属部门成功");
