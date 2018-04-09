@@ -88,10 +88,10 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
     @Transactional(rollbackFor = Exception.class)
     public void acceptedRequest(String userId, String newFriendRequestId) throws PlatformException {
         NewFriendRequest newFriendRequest = newFriendRequestRep.findOne(newFriendRequestId);
-        //判断是否已是好友
-        checkFriendRelation(userId, newFriendRequest.getRequesterId());
         if (newFriendRequest == null)
             throw new PlatformException(-1, "好友请求不存在");
+        //判断是否已是好友
+        checkFriendRelation(userId, newFriendRequest.getRequesterId());
         if (!newFriendRequest.getRecipientId().equals(userId))
             throw new PlatformException(-1, "不能接受别人的好友请求");
         if (newFriendRequest.getAccepted().equals(true))
