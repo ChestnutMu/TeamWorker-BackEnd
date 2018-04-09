@@ -124,9 +124,14 @@ public class DepartmentController {
         }
     }
 
-    @RequestMapping(value = "getDepartmentByTeamId", method = RequestMethod.POST)
-    public ApiResponse<List<Department>> getDepartmentByTeamId(@RequestHeader("uid") String userId,@RequestBody Map<String,String> params) {
-        return departmentService.getDepartmentByTeamId(userId);
+    @RequestMapping(value = "getDepartmentsByTeamId", method = RequestMethod.POST)
+    public ApiResponse<List<Department>> getDepartmentsByTeamId(@RequestHeader("uid") String userId,@RequestBody Map<String,String> params) {
+        return departmentService.getDepartmentsByTeamId(userId);
+    }
+
+    @RequestMapping(value = "getDepartmentsByDepartmentId", method = RequestMethod.POST)
+    public ApiResponse<List<Department>> getDepartmentsByDepartmentId(@RequestHeader("uid") String userId,@RequestBody Map<String,String> params) {
+        return departmentService.getDepartmentsByDepartmentId(userId);
     }
 
     @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)

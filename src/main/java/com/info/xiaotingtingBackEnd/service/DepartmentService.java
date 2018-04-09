@@ -65,16 +65,30 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse<List<Department>> getDepartmentByTeamId(String teamId) {
+    public ApiResponse<List<Department>> getDepartmentsByTeamId(String teamId) {
         ApiResponse apiResponse = new ApiResponse<>();
         List<Department> departmentList = departmentRep.getDepartmentsByTeamId(teamId);
         if (departmentList.size() > 0) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("获取用户所属部门成功");
+            apiResponse.setMessage("获取该团队下的所有部门成功");
             apiResponse.setData(departmentList);
         } else {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("您未加入任何部门");
+            apiResponse.setMessage("该团队下无子部门");
+        }
+        return apiResponse;
+    }
+
+    public ApiResponse<List<Department>> getDepartmentsByDepartmentId(String departmentId) {
+        ApiResponse apiResponse = new ApiResponse<>();
+        List<Department> departmentList = departmentRep.getDepartmentsByDepartmentId(departmentId);
+        if (departmentList.size() > 0) {
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("获取该部门下的所有部门成功");
+            apiResponse.setData(departmentList);
+        } else {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("该部门下无子部门");
         }
         return apiResponse;
     }

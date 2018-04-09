@@ -29,4 +29,10 @@ public interface DepartmentRep extends BaseRepository<Department, String> {
                     "where de.teamId = :teamId")
     List<Department> getDepartmentsByTeamId(@Param("teamId") String teamId);
 
+    @Query(value = "select de from Department de " +
+            "where de.teamId = :departmentId",
+            countQuery = "select count(de.teamId) from Department de " +
+                    "where de.teamId = :departmentId")
+    List<Department> getDepartmentsByDepartmentId(@Param("teamId") String departmentId);
+
 }
