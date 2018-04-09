@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -28,15 +29,24 @@ public class Team implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String teamId;
 
+    /*团队名字*/
     private String teamName;
 
+    /*团队图标*/
     private String teamBadge;
 
+    /*行业*/
     private String teamIndustry;
 
-    private String personnelScale;
+    /*团队描述*/
+    private String teamDesc;
 
+    /*团队地区*/
     private String teamRegion;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public String getTeamId() {
         return teamId;
@@ -70,12 +80,12 @@ public class Team implements Serializable {
         this.teamIndustry = teamIndustry;
     }
 
-    public String getPersonnelScale() {
-        return personnelScale;
+    public String getTeamDesc() {
+        return teamDesc;
     }
 
-    public void setPersonnelScale(String personnelScale) {
-        this.personnelScale = personnelScale;
+    public void setTeamDesc(String teamDesc) {
+        this.teamDesc = teamDesc;
     }
 
     public String getTeamRegion() {
@@ -84,5 +94,21 @@ public class Team implements Serializable {
 
     public void setTeamRegion(String teamRegion) {
         this.teamRegion = teamRegion;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

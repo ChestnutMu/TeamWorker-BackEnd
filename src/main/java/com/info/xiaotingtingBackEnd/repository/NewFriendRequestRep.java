@@ -23,7 +23,7 @@ public interface NewFriendRequestRep extends BaseRepository<NewFriendRequest, St
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo" +
             "(n.newFriendRequestId,n.requesterId,n.recipientId,n.authenticationMessage,n.time,n.isSend,n.isAccepted," +
-            "u.account,u.nickname,u.avatar)" +
+            "u.telephone,u.nickname,u.avatar)" +
             " from NewFriendRequest n, User u" +
             " where n.recipientId = :userId and n.requesterId = u.userId and n.isSend=:isSend" +
             " order by n.time desc",

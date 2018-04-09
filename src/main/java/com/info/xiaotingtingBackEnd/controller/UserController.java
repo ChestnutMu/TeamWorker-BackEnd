@@ -222,21 +222,6 @@ public class UserController {
         return apiResponse;
     }
 
-    @RequestMapping(value = "isMyFriend", method = RequestMethod.POST)
-    public ApiResponse<Boolean> isMyFriend(@RequestHeader("uid") String uid, @RequestBody Map<String, String> params) {
-        String userId = params.get("userId");
-        ApiResponse<Boolean> apiResponse = new ApiResponse<>();
-        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        if (userService.isMyFriend(userId, uid) || userService.isMyFriend(uid, userId)) {
-            apiResponse.setData(true);
-            apiResponse.setMessage("是我的好友");
-        } else {
-            apiResponse.setData(false);
-            apiResponse.setMessage("不是我的好友");
-        }
-        return apiResponse;
-    }
-
     /**
      * 根据userId其接收到的好友请求消息
      *

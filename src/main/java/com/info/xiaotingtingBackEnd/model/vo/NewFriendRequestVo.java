@@ -33,7 +33,7 @@ public class NewFriendRequestVo {
     private Boolean isAccepted;
 
     //好友请求者账号
-    private String requesterAccount;
+    private String requesterTelephone;
 
     //好友请求者昵称
     private String requesterNickname;
@@ -41,7 +41,7 @@ public class NewFriendRequestVo {
     //好友请求者头像
     private String requesterAvatar;
 
-    public NewFriendRequestVo(String newFriendRequestId, String requesterId, String recipientId, String authenticationMessage, Date time, Boolean isSend, Boolean isAccepted, String requesterAccount, String requesterNickname, String requesterAvatar) {
+    public NewFriendRequestVo(String newFriendRequestId, String requesterId, String recipientId, String authenticationMessage, Date time, Boolean isSend, Boolean isAccepted, String requesterTelephone, String requesterNickname, String requesterAvatar) {
         this.newFriendRequestId = newFriendRequestId;
         this.requesterId = requesterId;
         this.recipientId = recipientId;
@@ -49,7 +49,7 @@ public class NewFriendRequestVo {
         this.time = time;
         this.isSend = isSend;
         this.isAccepted = isAccepted;
-        this.requesterAccount = requesterAccount;
+        this.requesterTelephone = requesterTelephone;
         this.requesterNickname = requesterNickname;
         this.requesterAvatar = requesterAvatar;
     }
@@ -70,12 +70,12 @@ public class NewFriendRequestVo {
         this.requesterAvatar = requesterAvatar;
     }
 
-    public String getRequesterAccount() {
-        return requesterAccount;
+    public String getRequesterTelephone() {
+        return requesterTelephone;
     }
 
-    public void setRequesterAccount(String requesterAccount) {
-        this.requesterAccount = requesterAccount;
+    public void setRequesterTelephone(String requesterTelephone) {
+        this.requesterTelephone = requesterTelephone;
     }
 
     public String getRequesterNickname() {

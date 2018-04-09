@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.interceptor;
 
+import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.service.PermissionService;
 import com.info.xiaotingtingBackEnd.service.UserPermissionRelationService;
 import com.info.xiaotingtingBackEnd.service.UserService;
@@ -38,7 +39,7 @@ public class PermissionAuthentication implements HandlerInterceptor {
             return true;
         } else {
             logger.info("无查询到该用户对该Uri的请求权限");
-            return false;
+            throw new PlatformException(-1, "无查询到该用户对该Uri的请求权限");
         }
     }
 

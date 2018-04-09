@@ -167,20 +167,6 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         }
     }
 
-    public ApiResponse<List<Team>> getTeamByUserId(String userId) {
-        ApiResponse apiResponse = new ApiResponse<>();
-        List<Team> teamList = teamRep.getTeamByUserId(userId);
-        if (teamList != null) {
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("获取用户所属团队成功");
-            apiResponse.setData(teamList);
-        } else {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("您未加入任何团队");
-        }
-        return apiResponse;
-    }
-
     //判断两个部门是否属于同一个Team
     public boolean isBelongToSameTeam(String departmentId1, String departmentId2) {
         Department department1 = departmentRep.findOne(departmentId1);

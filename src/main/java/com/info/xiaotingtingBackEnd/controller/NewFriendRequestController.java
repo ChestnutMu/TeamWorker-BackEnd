@@ -2,10 +2,12 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
+import com.info.xiaotingtingBackEnd.model.vo.FriendUserVo;
 import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.service.NewFriendRequestService;
+import com.info.xiaotingtingBackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +33,25 @@ public class NewFriendRequestController {
 
     @Autowired
     NewFriendRequestService requestService;
+    @Autowired
+    UserService userService;
 
+
+    /**
+     * 返回用户信息与个人关系
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "getUserDetail", method = RequestMethod.POST)
+    public ApiResponse<FriendUserVo> getUserDetail(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) {
+        String friendId = params.get("friendId");
+        ApiResponse<FriendUserVo> apiResponse = new ApiResponse<>();
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        FriendUserVo friendUserVo = userService.getUserDetail(userId, friendId);
+        apiResponse.setData(friendUserVo);
+        return apiResponse;
+    }
 
     /**
      * 加好友请求

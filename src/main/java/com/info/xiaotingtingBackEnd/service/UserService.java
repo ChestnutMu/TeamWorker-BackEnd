@@ -3,6 +3,7 @@ package com.info.xiaotingtingBackEnd.service;
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.UserRelation;
+import com.info.xiaotingtingBackEnd.model.vo.FriendUserVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
@@ -139,5 +140,28 @@ public class UserService extends BaseService<User, String, UserRep> {
             user.setPassword(null);
         }
         return users;
+    }
+
+    public boolean isFriend(String userId, String friendId) {
+        //判断是否已是好友
+        Long count = userRelationRep.countAllByUserAIdAndUserBId(userId, friendId);
+        if (count != null && count > 0)
+            return true;
+        count = userRelationRep.countAllByUserAIdAndUserBId(friendId, userId);
+        if (count != null && count > 0)
+            return true;
+        return false;
+    }
+
+    public FriendUserVo getUserDetail(String userId, String friendId) {
+        User user = userRep.findOne(friendId);
+        user.setPassword(null);
+        user.setToken(null);
+
+        //判断是否已是好友
+        FriendUserVo friendUserVo = new FriendUserVo();
+        friendUserVo.setUser(user);
+        friendUserVo.setFriend(isMyFriend(userId, friendId));
+        return friendUserVo;
     }
 }

@@ -15,7 +15,7 @@ public class TeamVo {
 
     private Team team;
 
-    private List<String> userIds;
+    private List<String> userList;
 
     public Team getTeam() {
         return team;
@@ -25,11 +25,11 @@ public class TeamVo {
         this.team = team;
     }
 
-    public List<String> getUserIds() {
-        return userIds;
+    public List<String> getUserList() {
+        return userList;
     }
 
-    public void setUserIds(List<String> userIds) {
-        this.userIds = userIds;
+    public void setUserList(List<String> userList) {
+        this.userList = userList;
     }
 }

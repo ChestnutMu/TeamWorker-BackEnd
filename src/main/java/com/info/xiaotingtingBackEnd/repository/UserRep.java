@@ -34,7 +34,7 @@ public interface UserRep extends BaseRepository<User, String> {
     Page<DepartmentUser> getUserByDepartment(@Param("departmentId") String departmentId, Pageable pageable);
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserVo" +
-            "(u.userId,u.account,u.nickname,u.avatar,u.telephone,u.sex,u.birthday,u.region)" +
+            "(u.userId,u.nickname,u.avatar,u.telephone,u.sex,u.birthday,u.region)" +
             " from User u, UserRelation ur" +
             " where (ur.userAId = :userId and u.userId = ur.userBId)" +
             " or (ur.userBId = :userId and u.userId = ur.userAId)",
@@ -43,10 +43,8 @@ public interface UserRep extends BaseRepository<User, String> {
     List<UserVo> getMyFriend(@Param("userId") String userId);
 
     @Query(value = "select u from User u" +
-            " where u.account like :keyword" +
-            " or  u.telephone like :keyword or  u.nickname like :keyword",
+            " where u.telephone like :keyword or  u.nickname like :keyword",
             countQuery = "select count(u.userId) from User u" +
-                    " where u.account like :keyword" +
-                    " or  u.telephone like :keyword or  u.nickname like :keyword")
+                    " where u.telephone like :keyword or  u.nickname like :keyword")
     List<User> searchUser(@Param("keyword") String keyword);
 }
