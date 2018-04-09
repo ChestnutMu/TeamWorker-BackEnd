@@ -222,7 +222,7 @@ public class UserController {
             apiResponse.setMessage("好友请求不存在");
         } else {
             if (userService.addUserRelation(uid, userId)) {
-                newFriendRequest.setAccepted(true);
+                newFriendRequest.setStatus(1);
                 if (friendRequestService.save(newFriendRequest) != null) {
                     apiResponse.setStatus(HttpResponseCodes.SUCCESS);
                     apiResponse.setMessage("添加好友成功");
@@ -255,7 +255,7 @@ public class UserController {
             newFriendRequest.setRecipientId(recipientId);
             newFriendRequest.setTime(new Date());
             newFriendRequest.setSend(false);
-            newFriendRequest.setAccepted(false);
+            newFriendRequest.setStatus(0);
             newFriendRequest.setAuthenticationMessage(authenticationMessage);
 
             friendRequestService.sendNewFriendRequest(newFriendRequest);

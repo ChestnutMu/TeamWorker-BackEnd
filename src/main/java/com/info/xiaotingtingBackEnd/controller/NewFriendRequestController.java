@@ -1,7 +1,6 @@
 package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
-import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
 import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.service.NewFriendRequestService;
@@ -44,20 +43,38 @@ public class NewFriendRequestController {
     }
 
     /**
-     * 设置接受该好友请求
+     * 接受该好友请求
      *
      * @return
      */
-    @RequestMapping(value = "isAccepted", method = RequestMethod.POST)
-    public ApiResponse<Object> isAccepted(@RequestBody Map<String, String> params) {
+    @RequestMapping(value = "acceptRequest", method = RequestMethod.POST)
+    public ApiResponse<Object> acceptRequest(@RequestBody Map<String, String> params) {
         String requestId = params.get("requestId");
-        String isAccepted = params.get("isAccepted");
+        String isAccepted = params.get("acceptRequest");
         if (isAccepted.equals("接受")) {
-            requestService.isAccepted(requestId);
+            requestService.acceptRequest(requestId);
         }
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("已接收该好友请求");
+        apiResponse.setMessage("已接受该好友请求");
+        return apiResponse;
+    }
+
+    /**
+     * 拒绝该好友请求
+     *
+     * @return
+     */
+    @RequestMapping(value = "refuseRequest", method = RequestMethod.POST)
+    public ApiResponse<Object> refuseRequest(@RequestBody Map<String, String> params) {
+        String requestId = params.get("requestId");
+        String isAccepted = params.get("acceptRequest");
+        if (isAccepted.equals("不接受")) {
+            requestService.refuseRequest(requestId);
+        }
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("已接受该好友请求");
         return apiResponse;
     }
 
@@ -73,7 +90,7 @@ public class NewFriendRequestController {
         List<NewFriendRequestVo> requestList = requestService.getNotSendRequestByUserId(userId);
         apiResponse.setMaxCount(requestList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取未接收消息列表的数量成功");
+        apiResponse.setMessage("获取未接受的好友请求消息列表的数量成功");
         apiResponse.setData(requestList.size());
         return apiResponse;
     }
@@ -90,7 +107,7 @@ public class NewFriendRequestController {
         List<NewFriendRequestVo> requestList = requestService.getRequestVoByUserId(userId);
         apiResponse.setMaxCount(requestList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取消息列表成功");
+        apiResponse.setMessage("获取所有的好友请求消息列表成功");
         apiResponse.setData(requestList);
         return apiResponse;
     }

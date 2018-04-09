@@ -49,9 +49,21 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
      * @param requestId
      * @return
      */
-    public NewFriendRequest isAccepted(String requestId) {
+    public NewFriendRequest acceptRequest(String requestId) {
         NewFriendRequest result = newFriendRequestRep.findOne(requestId);
-        result.setAccepted(true);
+        result.setStatus(1);
+        return newFriendRequestRep.save(result);
+    }
+
+    /**
+     * 拒绝好友请求
+     *
+     * @param requestId
+     * @return
+     */
+    public NewFriendRequest refuseRequest(String requestId) {
+        NewFriendRequest result = newFriendRequestRep.findOne(requestId);
+        result.setStatus(2);
         return newFriendRequestRep.save(result);
     }
 
@@ -64,7 +76,7 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
         if (handler.sendFriendRequest(request)) {
             hasSendRequest(request.getRequestId());
             return true;
-        }else {
+        } else {
             return false;
         }
     }

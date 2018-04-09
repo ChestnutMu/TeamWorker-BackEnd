@@ -20,7 +20,7 @@ import java.util.List;
 public interface NewFriendRequestRep extends BaseRepository<NewFriendRequest, String> {
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo" +
-            "(n.requestId,n.requesterId,n.recipientId,n.authenticationMessage,n.time,n.isSend,n.isAccepted," +
+            "(n.requestId,n.requesterId,n.recipientId,n.authenticationMessage,n.time,n.isSend,n.acceptRequest," +
             "u.account,u.nickname,u.avatar)" +
             " from NewFriendRequest n, User u" +
             " where n.recipientId = :userId and n.requesterId = u.userId" +
@@ -30,11 +30,11 @@ public interface NewFriendRequestRep extends BaseRepository<NewFriendRequest, St
     List<NewFriendRequestVo> getRequestVoByUserId(@Param("userId") String userId);
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo" +
-            "(n.requestId,n.requesterId,n.recipientId,n.authenticationMessage,n.time,n.isSend,n.isAccepted," +
+            "(n.requestId,n.requesterId,n.recipientId,n.authenticationMessage,n.time,n.isSend,n.acceptRequest," +
             "u.account,u.nickname,u.avatar)" +
             " from NewFriendRequest n, User u" +
-            " where n.recipientId = :userId and n.isSend = 0 and n.requesterId = u.userId",
+            " where n.recipientId = :userId and n.acceptRequest = 0 and n.requesterId = u.userId",
             countQuery = "select count(n) from NewFriendRequest n" +
-                    " where n.recipientId = :userId and n.isSend = 0")
+                    " where n.recipientId = :userId and n.acceptRequest = 0")
     List<NewFriendRequestVo> getNotSendRequestVoByUserId(@Param("userId") String userId);
 }
