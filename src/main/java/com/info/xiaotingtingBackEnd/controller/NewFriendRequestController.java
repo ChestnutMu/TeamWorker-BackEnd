@@ -33,8 +33,8 @@ public class NewFriendRequestController {
      *
      * @return
      */
-    @RequestMapping(value = "hasSendRequest", method = RequestMethod.POST)
-    public ApiResponse<Object> hasSendRequest(@RequestBody Map<String, String> params) {
+    @RequestMapping(value = "hasReceivedRequest", method = RequestMethod.POST)
+    public ApiResponse<Object> hasReceivedRequest(@RequestBody Map<String, String> params) {
         String requestId = params.get("requestId");
         requestService.hasSendRequest(requestId);
         ApiResponse<Object> apiResponse = new ApiResponse<>();
@@ -62,23 +62,6 @@ public class NewFriendRequestController {
     }
 
     /**
-     * 根据userId获取其还未接收成功的好友请求消息
-     *
-     * @return
-     */
-    @RequestMapping(value = "getNotSendRequestByUserId", method = RequestMethod.POST)
-    public ApiResponse<List<NewFriendRequestVo>> getNotSendRequestByUserId(@RequestBody Map<String, Object> params) {
-        String userId = (String) params.get("userId");
-        ApiResponse<List<NewFriendRequestVo>> apiResponse = new ApiResponse<>();
-        List<NewFriendRequestVo> requestList = requestService.getNotSendRequestByUserId(userId);
-        apiResponse.setMaxCount(requestList.size());
-        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取未接收消息列表成功");
-        apiResponse.setData(requestList);
-        return apiResponse;
-    }
-
-    /**
      * 根据userId获取其还未接收成功的好友请求消息的数量
      *
      * @return
@@ -90,7 +73,7 @@ public class NewFriendRequestController {
         List<NewFriendRequestVo> requestList = requestService.getNotSendRequestByUserId(userId);
         apiResponse.setMaxCount(requestList.size());
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取未接收消息列表成功");
+        apiResponse.setMessage("获取未接收消息列表的数量成功");
         apiResponse.setData(requestList.size());
         return apiResponse;
     }

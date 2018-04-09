@@ -38,7 +38,7 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
 //
 //        //部门权限
 //        addPermissionInterceptor.addPathPatterns("/department/*");
-//        addPermissionInterceptor.excludePathPatterns("/department/getDepartmentByUserId");
+//        addPermissionInterceptor.excludePathPatterns("/department/getDepartmentByTeamId");
 //        addPermissionInterceptor.excludePathPatterns("/department/buildTeam");
 //
 //        //考勤权限

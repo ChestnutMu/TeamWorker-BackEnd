@@ -58,6 +58,14 @@ public class UserService extends BaseService<User, String, UserRep> {
         }
     }
 
+    public void deleteUserRelation(String userAId, String userBId) {
+        UserRelation userRelation = new UserRelation(userAId,userBId);
+        userRelationRep.delete(userRelation);
+        userRelation.setUserAId(userBId);
+        userRelation.setUserBId(userAId);
+        userRelationRep.delete(userRelation);
+    }
+
     public ApiResponse<List<DepartmentUser>> getUserByDepartment(int pageNum, int pageSize, ApiResponse<List<DepartmentUser>> apiResponse, String departmentId) {
         Pageable pageable = new PageRequest(pageNum - 1, pageSize);
         Page<DepartmentUser> userList = userRep.getUserByDepartment(departmentId, pageable);

@@ -30,7 +30,7 @@ public class UserPermissionRelation implements Serializable {
 
     private String departmentId;//与权限范围相匹配，标识公司或所在部门或者特定部门的Id
 
-    private int permissionRange;//0 标识整个公司；1 所在部门及其子部门；2 标识特定部门
+    private int permissionRange;//0 标识整个团队；1 所在部门及其子部门；2 标识特定部门
 
     private String permissionId;
 

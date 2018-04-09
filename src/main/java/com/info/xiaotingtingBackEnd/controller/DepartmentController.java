@@ -2,18 +2,16 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.*;
-import com.info.xiaotingtingBackEnd.model.vo.TeamVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.DepartmentService;
+import com.info.xiaotingtingBackEnd.service.PermissionService;
 import com.info.xiaotingtingBackEnd.service.UserPermissionRelationService;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +35,9 @@ public class DepartmentController {
 
     @Autowired
     UserPermissionRelationService relationService;
+
+    @Autowired
+    PermissionService permissionService;
 
     String deleteDepartmentUri = "/department/deleteDepartment";
 
@@ -62,66 +63,70 @@ public class DepartmentController {
 
     @RequestMapping(value = "deleteDepartment", method = RequestMethod.POST)
     public ApiResponse deleteDepartment(@RequestHeader("uid") String userId, @RequestBody String departmentId) {
-        boolean hasPermission = false;
-        List<UserPermissionRelation> permissionRelationList = relationService.getUserPermissionRelation(userId, deleteDepartmentUri);
         ApiResponse apiResponse = new ApiResponse();
-        int permissionRange;
-        if (permissionRelationList != null) {
-            for (UserPermissionRelation relation : permissionRelationList) {
-                if (departmentId.equals(relation.getDepartmentId())) {//如果获取到的用户权限列表中的存在请求删除的部门则可以删除该部门
-                    hasPermission = true;
-                } else {
-                    permissionRange = relation.getPermissionRange();
-                    if (permissionRange == 1) {//如果该权限范围为"所在部门及其子部门"，则查询该请求的departmentId是否为所在部门的子部门Id
-                        if (departmentService.isViceDepartment(relation.getDepartmentId(), departmentId)) {
-                            hasPermission = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (hasPermission) {
+        if (permissionService.hasPermission(userId, departmentId, deleteDepartmentUri)) {
             return departmentService.deleteDepartment(apiResponse, departmentId);
-        }else {
+        } else {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("你无删除该部门的权限");
+            return apiResponse;
         }
-        apiResponse.setStatus(HttpResponseCodes.FAILED);
-        apiResponse.setMessage("删除部门失败");
-        return apiResponse;
     }
 
     @RequestMapping(value = "addDepartmentMemberRelation", method = RequestMethod.POST)
     public ApiResponse addDepartmentMemberRelation(@RequestHeader("uid") String userId, @RequestBody DepartmentMemberRelation departmentMemberRelation) {
-        if (relationService.getUserPermissionRelation(userId, addDepartmentRelationsUri) != null) {
-
+        if (permissionService.hasPermission(userId, departmentMemberRelation.getDepartmentId(), addDepartmentRelationUri)) {
+            return departmentService.addDepartmentMemberRelation(departmentMemberRelation);
+        } else {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("你对该部门没有添加部门成员的权限");
+            return apiResponse;
         }
-        return departmentService.addDepartmentMemberRelation(departmentMemberRelation);
     }
 
+    /**
+     * @param userId
+     * @param departmentMemberRelations
+     * @return 为一个团队或部门添加多个成员
+     */
     @RequestMapping(value = "addDepartmentMemberRelations", method = RequestMethod.POST)
-    public ApiResponse<List<DepartmentMemberRelation>> addDepartmentMemberRelations(@RequestBody List<DepartmentMemberRelation> departmentMemberRelations) {
-        return departmentService.addDepartmentMemberRelations(departmentMemberRelations);
+    public ApiResponse<List<DepartmentMemberRelation>> addDepartmentMemberRelations(@RequestHeader("uid") String userId, @RequestBody List<DepartmentMemberRelation> departmentMemberRelations) {
+        if (permissionService.hasPermission(userId, departmentMemberRelations.get(0).getDepartmentId(), addDepartmentRelationsUri)) {
+            return departmentService.addDepartmentMemberRelations(departmentMemberRelations);
+        } else {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("你对该部门没有添加部门成员的权限");
+            return apiResponse;
+        }
     }
 
     @RequestMapping(value = "getUserByDepartment", method = RequestMethod.POST)
-    public ApiResponse<List<DepartmentUser>> getUserByDepartment(@RequestBody Map<String, String> params) {
+    public ApiResponse<List<DepartmentUser>> getUserByDepartment(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) {
         String departmentId = params.get("departmentId");
-        int pageNum = Integer.valueOf(params.get("pageNum"));
-        int pageSize = Integer.valueOf(params.get("pageSize"));
-        ApiResponse<List<DepartmentUser>> apiResponse = new ApiResponse<>();
-        if (departmentService.findOne(departmentId) == null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("部门不存在");
+        if (permissionService.hasPermission(userId, departmentId, getUserByDepartmentUri)) {
+            int pageNum = Integer.valueOf(params.get("pageNum"));
+            int pageSize = Integer.valueOf(params.get("pageSize"));
+            ApiResponse<List<DepartmentUser>> apiResponse = new ApiResponse<>();
+            if (departmentService.findOne(departmentId) == null) {
+                apiResponse.setStatus(HttpResponseCodes.FAILED);
+                apiResponse.setMessage("部门不存在");
+                return apiResponse;
+            } else {
+                return userService.getUserByDepartment(pageNum, pageSize, apiResponse, departmentId);
+            }
         } else {
-            userService.getUserByDepartment(pageNum, pageSize, apiResponse, departmentId);
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("你没有获取该部门成员的权限");
+            return apiResponse;
         }
-        return apiResponse;
     }
 
-    @RequestMapping(value = "getDepartmentByUserId", method = RequestMethod.POST)
-    public ApiResponse<List<Department>> getDepartmentByUserId(@RequestHeader("uid") String userId) {
-        return departmentService.getDepartmentByUserId(userId);
+    @RequestMapping(value = "getDepartmentByTeamId", method = RequestMethod.POST)
+    public ApiResponse<List<Department>> getDepartmentByTeamId(@RequestHeader("uid") String userId,@RequestBody Map<String,String> params) {
+        return departmentService.getDepartmentByTeamId(userId);
     }
 
     @RequestMapping(value = "addDepartmentRelation", method = RequestMethod.POST)

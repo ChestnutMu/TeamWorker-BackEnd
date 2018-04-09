@@ -297,4 +297,20 @@ public class UserController {
         return apiResponse;
     }
 
+    @RequestMapping(value = "deleteUserRelation", method = RequestMethod.POST)
+    public ApiResponse<Object> deleteUserRelation(@RequestHeader("uid") String uid, @RequestBody Map<String, String> params) {
+        String userId = params.get("userId");
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        User user = userService.findOne(userId);
+        if (user == null) {
+            apiResponse.setStatus(HttpResponseCodes.FAILED);
+            apiResponse.setMessage("用户不存在");
+        } else {
+            userService.deleteUserRelation(uid, userId);
+            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+            apiResponse.setMessage("删除好友成功");
+        }
+        return apiResponse;
+    }
+
 }

@@ -36,4 +36,13 @@ public class UserPermissionRelationService extends BaseService<UserPermissionRel
         return userPermissionRelationRep.getUserPermissionRelation(userId, permissionUri);
     }
 
+    /**
+     *
+     * @param userPermissionRelation
+     * @return 给用户添加权限
+     */
+    public UserPermissionRelation addPermissionRelation(UserPermissionRelation userPermissionRelation) {
+        return userPermissionRelationRep.save(userPermissionRelation);
+    }
+
 }

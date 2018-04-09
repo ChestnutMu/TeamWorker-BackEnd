@@ -2,9 +2,11 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Permission;
+import com.info.xiaotingtingBackEnd.model.UserPermissionRelation;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.service.NewFriendRequestService;
 import com.info.xiaotingtingBackEnd.service.PermissionService;
+import com.info.xiaotingtingBackEnd.service.UserPermissionRelationService;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,21 +27,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class PermissionController {
 
     @Autowired
-    PermissionService permissionService;
+    UserPermissionRelationService permissionService;
 
-    @RequestMapping(value = "addPermission", method = RequestMethod.POST)
-    public ApiResponse<Permission> addPermission(@RequestBody Permission permission) {
-
-        ApiResponse<Permission> apiResponse = new ApiResponse<>();
-        Permission newPermission = permissionService.save(permission);
-        if (newPermission != null) {
+    @RequestMapping(value = "addPermissionRelation", method = RequestMethod.POST)
+    public ApiResponse<UserPermissionRelation> addPermissionRelation(@RequestBody UserPermissionRelation userPermissionRelation) {
+        ApiResponse<UserPermissionRelation> apiResponse = new ApiResponse<>();
+        UserPermissionRelation relation = permissionService.addPermissionRelation(userPermissionRelation);
+        if (relation != null) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("添加权限成功");
-            apiResponse.setData(newPermission);
-        }else {
+            apiResponse.setData(relation);
+        } else {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("添加权限失败");
         }
         return apiResponse;
     }
+
+
 }

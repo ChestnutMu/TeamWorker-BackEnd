@@ -27,6 +27,14 @@ public class UserRelation {
     @Id
     private String userBId;
 
+    public UserRelation() {
+    }
+
+    public UserRelation(String userAId, String userBId) {
+        this.userAId = userAId;
+        this.userBId = userBId;
+    }
+
     public String getUserAId() {
         return userAId;
     }

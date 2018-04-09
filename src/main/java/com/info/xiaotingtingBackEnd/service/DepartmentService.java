@@ -65,9 +65,9 @@ public class DepartmentService extends BaseService<Department, String, Departmen
         return apiResponse;
     }
 
-    public ApiResponse<List<Department>> getDepartmentByUserId(String userId) {
+    public ApiResponse<List<Department>> getDepartmentByTeamId(String teamId) {
         ApiResponse apiResponse = new ApiResponse<>();
-        List<Department> departmentList = departmentRep.getDipartmentByUserId(userId);
+        List<Department> departmentList = departmentRep.getDepartmentByTeamId(teamId);
         if (departmentList.size() > 0) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("获取用户所属部门成功");
@@ -165,5 +165,16 @@ public class DepartmentService extends BaseService<Department, String, Departmen
             apiResponse.setMessage("您未加入任何团队");
         }
         return apiResponse;
+    }
+
+    //判断两个部门是否属于同一个Team
+    public boolean isBelongToSameTeam(String departmentId1, String departmentId2) {
+        Department department1 = departmentRep.findOne(departmentId1);
+        Department department2 = departmentRep.findOne(departmentId2);
+        if(department1.getTeamId().equals(department2.getTeamId())){
+            return true;
+        }else {
+            return false;
+        }
     }
 }

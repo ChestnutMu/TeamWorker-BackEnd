@@ -1,6 +1,7 @@
 package com.info.xiaotingtingBackEnd.repository;
 
 import com.info.xiaotingtingBackEnd.model.Department;
+import com.info.xiaotingtingBackEnd.model.DepartmentRelation;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,9 +23,10 @@ public interface DepartmentRep extends BaseRepository<Department, String> {
 
     Department findByDepartmentName(String name);
 
-    @Query(value = "select d from DepartmentMemberRelation dr,Department d " +
-            "where dr.userId = :userId and dr.departmentId = d.departmentId",
-            countQuery = "select count(d) from DepartmentMemberRelation dr,Department d " +
-                    "where dr.userId = :userId and dr.departmentId = d.departmentId")
-    List<Department> getDipartmentByUserId(@Param("userId") String userId);
+    @Query(value = "select dr from DepartmentRelation dr" +
+            "where dr.mainDepartmentId = :teamId",
+            countQuery = "select count(dr.mainDepartmentId) from DepartmentRelation dr" +
+                    "where dr.mainDepartmentId = :teamId")
+    List<DepartmentRelation> getDepartmentByTeamId(@Param("teamId") String teamId);
+
 }
