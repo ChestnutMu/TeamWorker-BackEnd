@@ -23,9 +23,7 @@ import java.util.List;
 @Repository
 public interface UserRep extends BaseRepository<User, String> {
 
-    User findByAccountAndPassword(String account, String password);
-
-    User findByAccount(String account);
+    User findByTelephone(String telephone);
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.pojo.DepartmentUser(u.userId,u.avatar,u.nickname)" +
             " from User u, DepartmentMemberRelation d " +
@@ -43,4 +41,12 @@ public interface UserRep extends BaseRepository<User, String> {
             countQuery = "select count(ur.userAId) from UserRelation ur" +
                     "where ur.userAId = :userId or ur.userBId = :userId")
     List<UserVo> getMyFriend(@Param("userId") String userId);
+
+    @Query(value = "select u from User u" +
+            " where u.account like :keyword" +
+            " or  u.telephone like :keyword or  u.nickname like :keyword",
+            countQuery = "select count(u.userId) from User u" +
+                    " where u.account like :keyword" +
+                    " or  u.telephone like :keyword or  u.nickname like :keyword")
+    List<User> searchUser(@Param("keyword") String keyword);
 }

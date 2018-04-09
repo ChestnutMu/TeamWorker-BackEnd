@@ -8,6 +8,7 @@ import com.info.xiaotingtingBackEnd.model.UserRelation;
 import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
+import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.NewFriendRequestService;
@@ -56,68 +57,49 @@ public class UserController {
         return "123";
     }
 
-    @RequestMapping(value = "addUser", method = RequestMethod.POST)
-    public ApiResponse<User> addUser(@RequestBody User user) {
+    /**
+     * 注册
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "unauth/register", method = RequestMethod.POST)
+    public ApiResponse<User> register(@RequestBody Map<String, String> params) throws Exception {
+        String telephone = params.get("telephone");
+        String verificationCode = params.get("verificationCode");
+        String password = params.get("password");
+        User user = userService.register(telephone, verificationCode, password);
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        if (userService.findByAccount(user.getAccount()) != null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("账户已存在");
-        } else {
-            user.setNickname(user.getAccount());
-            user.setSex("女");
-            userService.save(user);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("注册成功");
-            apiResponse.setData(user);
-        }
+        apiResponse.setData(user);
         return apiResponse;
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public ApiResponse<User> login(@RequestBody Map<String, Object> params) {
-        String account = (String) params.get("account");
+    /**
+     * 登录
+     *
+     * @param params
+     * @return
+     */
+    @RequestMapping(value = "unauth/login", method = RequestMethod.POST)
+    public ApiResponse<User> login(@RequestBody Map<String, Object> params) throws Exception {
+        String telephone = (String) params.get("telephone");
         String password = (String) params.get("password");
-        ApiResponse<User> apiResponse = new ApiResponse<User>();
-        System.out.println("login : " + account + ":" + password);
-        User user = userService.findByAccountAndPassword(account, password);
-        if (user != null) {
-            System.out.println(user + " " + account + ":" + password);
-            //若有其他设备登陆则踢下线
-            handler.offline(user.getUserId(), user.getToken());
-
-            user.setToken(EntityUtil.getIdByTimeStampAndRandom());
-            user = userService.save(user);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("登陆成功");
-            apiResponse.setData(user);
-        } else {
-            System.out.println(user + " " + account + ":" + password);
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("用户名或密码错误");
-            apiResponse.setData(new User());
-        }
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        User user = userService.login(telephone, password);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("登陆成功");
+        apiResponse.setData(user);
         return apiResponse;
     }
 
     @RequestMapping(value = "rememberMe", method = RequestMethod.POST)
-    public ApiResponse rememberMe(@RequestBody Map<String, String> params) {
-        String userId = params.get("userId");
-        String token = params.get("token");
-        ApiResponse<User> apiResponse = new ApiResponse<User>();
-        System.out.println(userId + ":" + token);
-        User user = userService.findOne(userId);
-        if (user != null && user.getToken().equals(token)) {
-            System.out.println(user + " " + userId + ":" + token);
-            user.setToken(EntityUtil.getIdByTimeStampAndRandom());
-            user = userService.save(user);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("登陆成功");
-            apiResponse.setData(user);
-        } else {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("账号在其他设备上被登录,请重新登录");
-            apiResponse.setData(new User());
-        }
+    public ApiResponse<User> rememberMe(@RequestHeader("uid") String userId) throws PlatformException {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        User user = userService.rememberMe(userId);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("登陆成功");
+        apiResponse.setData(user);
         return apiResponse;
     }
 
@@ -191,14 +173,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "searchUser", method = RequestMethod.POST)
-    public ApiResponse<String> searchUser(@RequestBody Map<String, String> params) {
-        String account = params.get("account");
-        User result = userService.findByAccount(account);
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        if (result != null) {
+    public ApiResponse<List<User>> searchUser(@RequestBody Map<String, String> params) {
+        String keyword = params.get("keyword");
+        List<User> result = userService.searchUser(keyword);
+        ApiResponse<List<User>> apiResponse = new ApiResponse<>();
+        if (result != null && !result.isEmpty()) {
             apiResponse.setStatus(HttpResponseCodes.SUCCESS);
             apiResponse.setMessage("搜索成功");
-            apiResponse.setData(result.getUserId());
+            apiResponse.setData(result);
         } else {
             apiResponse.setStatus(HttpResponseCodes.FAILED);
             apiResponse.setMessage("无搜索到该账号");
