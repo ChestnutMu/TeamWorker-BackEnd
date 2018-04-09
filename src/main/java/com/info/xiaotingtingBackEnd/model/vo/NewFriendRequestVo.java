@@ -12,7 +12,7 @@ import java.util.Date;
 public class NewFriendRequestVo {
 
     //好友请求Id
-    private String requestId;
+    private String newFriendRequestId;
 
     //好友请求者Id
     private String requesterId;
@@ -41,8 +41,8 @@ public class NewFriendRequestVo {
     //好友请求者头像
     private String requesterAvatar;
 
-    public NewFriendRequestVo(String requestId, String requesterId, String recipientId, String authenticationMessage, Date time, Boolean isSend, Boolean isAccepted, String requesterAccount, String requesterNickname, String requesterAvatar) {
-        this.requestId = requestId;
+    public NewFriendRequestVo(String newFriendRequestId, String requesterId, String recipientId, String authenticationMessage, Date time, Boolean isSend, Boolean isAccepted, String requesterAccount, String requesterNickname, String requesterAvatar) {
+        this.newFriendRequestId = newFriendRequestId;
         this.requesterId = requesterId;
         this.recipientId = recipientId;
         this.authenticationMessage = authenticationMessage;
@@ -54,12 +54,12 @@ public class NewFriendRequestVo {
         this.requesterAvatar = requesterAvatar;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getNewFriendRequestId() {
+        return newFriendRequestId;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setNewFriendRequestId(String newFriendRequestId) {
+        this.newFriendRequestId = newFriendRequestId;
     }
 
     public String getRequesterAvatar() {

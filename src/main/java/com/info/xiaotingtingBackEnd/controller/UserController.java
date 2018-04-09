@@ -222,32 +222,6 @@ public class UserController {
         return apiResponse;
     }
 
-    @RequestMapping(value = "sendFriendRequest", method = RequestMethod.POST)
-    public ApiResponse<User> sendFriendRequest(@RequestHeader("uid") String requesterId, @RequestBody Map<String, String> params) {
-        String recipientId = params.get("userId");
-        String authenticationMessage = params.get("authenticationMessage");
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        User user = userService.findOne(recipientId);
-        if (user == null) {
-            apiResponse.setStatus(HttpResponseCodes.FAILED);
-            apiResponse.setMessage("用户不存在");
-        } else {
-            NewFriendRequest newFriendRequest = new NewFriendRequest();
-            newFriendRequest.setRequesterId(requesterId);
-            newFriendRequest.setRecipientId(recipientId);
-            newFriendRequest.setTime(new Date());
-            newFriendRequest.setSend(false);
-            newFriendRequest.setAccepted(false);
-            newFriendRequest.setAuthenticationMessage(authenticationMessage);
-
-            friendRequestService.sendNewFriendRequest(newFriendRequest);
-            apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-            apiResponse.setMessage("已发送好友请求");
-            apiResponse.setData(user);
-        }
-        return apiResponse;
-    }
-
     @RequestMapping(value = "isMyFriend", method = RequestMethod.POST)
     public ApiResponse<Boolean> isMyFriend(@RequestHeader("uid") String uid, @RequestBody Map<String, String> params) {
         String userId = params.get("userId");

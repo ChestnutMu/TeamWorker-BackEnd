@@ -14,4 +14,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRelationRep extends BaseRepository<UserRelation, UserRelation.UserRelationId> {
 
+    Long countAllByUserAIdAndUserBId(String userAId, String userBId);
 }

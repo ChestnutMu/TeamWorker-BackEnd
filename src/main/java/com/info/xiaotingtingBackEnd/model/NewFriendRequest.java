@@ -26,7 +26,7 @@ public class NewFriendRequest {
     @GeneratedValue(generator = "requestId")
     @GenericGenerator(name = "requestId", strategy = "com.info.xiaotingtingBackEnd.model.base.IdGenerator")
     @Column(columnDefinition = "char(20)", nullable = false)
-    private String requestId;
+    private String newFriendRequestId;
 
     //好友请求者Id
     private String requesterId;
@@ -46,12 +46,12 @@ public class NewFriendRequest {
     //已接受好友请求
     private Boolean isAccepted;
 
-    public String getRequestId() {
-        return requestId;
+    public String getNewFriendRequestId() {
+        return newFriendRequestId;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setNewFriendRequestId(String newFriendRequestId) {
+        this.newFriendRequestId = newFriendRequestId;
     }
 
     public String getRequesterId() {
