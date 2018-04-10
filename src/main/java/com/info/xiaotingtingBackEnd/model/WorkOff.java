@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -27,25 +28,41 @@ public class WorkOff implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String workOffId;
 
+    /*用户id*/
     private String userId;
 
-    private String userName;
+    /*团队id*/
+    private String teamId;
 
-    private String startTime;
+    /*标题*/
+    private String workOffName;
 
-    private String endTime;
-
-    private String workOffType;
-
-    private int dayCount;
-
+    /*内容*/
     private String workOffReason;
 
+    /*图片*/
     private String photo;
 
-    private String approverId;
+    /*开始时间*/
+    private Date startTime;
 
-    private int status;//0 已申请，待审批；1 已审批，通过；2 已审批，不通过
+    /*结束时间*/
+    private Date endTime;
+
+    /*提交时间*/
+    private Date commitTime;
+
+    /*处理id人*/
+    private String adminId;
+
+    /*处理信息*/
+    private String handleReason;
+
+    /*处理时间*/
+    private Date handleTime;
+
+    /*状态 WorkOffConstants*/
+    private Integer status;
 
     public String getWorkOffId() {
         return workOffId;
@@ -63,44 +80,20 @@ public class WorkOff implements Serializable {
         this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getTeamId() {
+        return teamId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getWorkOffName() {
+        return workOffName;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public String getWorkOffType() {
-        return workOffType;
-    }
-
-    public void setWorkOffType(String workOffType) {
-        this.workOffType = workOffType;
-    }
-
-    public int getDayCount() {
-        return dayCount;
-    }
-
-    public void setDayCount(int dayCount) {
-        this.dayCount = dayCount;
+    public void setWorkOffName(String workOffName) {
+        this.workOffName = workOffName;
     }
 
     public String getWorkOffReason() {
@@ -119,19 +112,59 @@ public class WorkOff implements Serializable {
         this.photo = photo;
     }
 
-    public String getApproverId() {
-        return approverId;
+    public Date getStartTime() {
+        return startTime;
     }
 
-    public void setApproverId(String approverId) {
-        this.approverId = approverId;
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
-    public int getStatus() {
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Date getCommitTime() {
+        return commitTime;
+    }
+
+    public void setCommitTime(Date commitTime) {
+        this.commitTime = commitTime;
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
+    public String getHandleReason() {
+        return handleReason;
+    }
+
+    public void setHandleReason(String handleReason) {
+        this.handleReason = handleReason;
+    }
+
+    public Date getHandleTime() {
+        return handleTime;
+    }
+
+    public void setHandleTime(Date handleTime) {
+        this.handleTime = handleTime;
+    }
+
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

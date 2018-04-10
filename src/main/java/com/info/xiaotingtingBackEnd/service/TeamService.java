@@ -190,7 +190,7 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
     }
 
     /**
-     * 检查团队及团队人员是否有权限
+     * 检查团队及团队人员是否有权限查看打卡记录
      *
      * @param teamId
      * @param userId
