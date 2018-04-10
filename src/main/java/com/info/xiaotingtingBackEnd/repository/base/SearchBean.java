@@ -12,6 +12,15 @@ public class SearchBean {
     private Object value;
     private String operator;
     private Integer priority;
+    private String joinType;
+
+    public String getJoinType() {
+        return joinType;
+    }
+
+    public void setJoinType(String joinType) {
+        this.joinType = joinType;
+    }
 
     public String getKey() {
         return key;

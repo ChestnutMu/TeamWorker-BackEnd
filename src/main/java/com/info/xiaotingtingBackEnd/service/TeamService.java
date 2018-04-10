@@ -150,7 +150,7 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
             addTeamRelation.setType(TeamConstants.TYPE_TEAM_NORMAL);
             addTeamRelation.setUpdateTime(new Date());
             teamRelationRep.save(addTeamRelation);
-        }else {
+        } else {
             throw new PlatformException(-1, "不能给予拥有者权限");
         }
     }
@@ -189,4 +189,25 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
         teamRep.delete(teamId);
     }
 
+    /**
+     * 检查团队及团队人员是否有权限
+     *
+     * @param teamId
+     * @param userId
+     * @param teamUserId
+     */
+    public void checkTeamAuthForPunchClockRecords(String teamId, String userId, String teamUserId) throws PlatformException {
+        if (DataCheckUtil.isEmpty(teamId))
+            throw new PlatformException(-1, "必须是团队成员");
+        TeamRelation teamRelationAdmin = getTeamRelation(userId, teamId);
+        if (null == teamRelationAdmin)
+            throw new PlatformException(-1, "必须是团队成员");
+        if (teamRelationAdmin.getType() != TeamConstants.TYPE_TEAM_OWNER && teamRelationAdmin.getType() != TeamConstants.TYPE_TEAM_ADMIN)
+            throw new PlatformException(-1, "你没有查看权限");
+        if (!DataCheckUtil.isEmpty(teamUserId)) {
+            TeamRelation teamRelation = getTeamRelation(teamUserId, teamId);
+            if (null == teamRelation)
+                throw new PlatformException(-1, "该成员不是团队成员");
+        }
+    }
 }

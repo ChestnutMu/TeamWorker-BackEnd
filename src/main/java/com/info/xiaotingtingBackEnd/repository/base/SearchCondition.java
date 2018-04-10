@@ -1,7 +1,11 @@
 package com.info.xiaotingtingBackEnd.repository.base;
 
+import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 /**
  * Copyright (c) 2017, Chestnut All rights reserved
  * Author: Chestnut
@@ -12,28 +16,34 @@ import java.util.List;
 public class SearchCondition {
     private static final Integer DEFUALT_PAGE_NUM = 1;
     private static final Integer DEFUALT_SIZE = 10;
-    public static final String JOIN_TYPE_AND="and";
-    public static final String JOIN_TYPE_OR="or";
-    private  String joinType;
+    public static final String JOIN_TYPE_AND = "and";
+    public static final String JOIN_TYPE_OR = "or";
+    private String joinType;
     private Integer pageNum;
     private Integer size;
     private List<SearchBean> searchBeans;
     private List<SearchBean> sortBeans;
+
+
+    public SearchCondition(String joinType) {
+        this(DEFUALT_PAGE_NUM, DEFUALT_SIZE);
+        this.joinType = joinType;
+    }
 
     public SearchCondition() {
         this(DEFUALT_PAGE_NUM, DEFUALT_SIZE);
     }
 
     public SearchCondition(Integer pageNum, Integer size) {
-        if(pageNum <= 0)
+        if (pageNum <= 0)
             pageNum = 1;
-        if(size <= 0)
+        if (size <= 0)
             size = 10;
-        if(size > 20)
+        if (size > 20)
             size = 20;
         this.pageNum = pageNum;
         this.size = size;
-        this.joinType =JOIN_TYPE_AND;
+        this.joinType = JOIN_TYPE_AND;
         searchBeans = new ArrayList<>(5);
     }
 
@@ -97,6 +107,40 @@ public class SearchCondition {
     }
 
     /**
+     * 添加有排序条件的搜索条件
+     *
+     * @param key
+     * @param value
+     * @param operator
+     */
+    public void addSearchBean(String key, Object value, String operator, Integer priority, String joinType) {
+        SearchBean searchBean = new SearchBean();
+        searchBean.setKey(key);
+        searchBean.setOperator(operator);
+        searchBean.setValue(value);
+        searchBean.setPriority(priority);
+        searchBean.setJoinType(joinType);
+        this.searchBeans.add(searchBean);
+    }
+
+    /**
+     * 添加有排序条件的搜索条件
+     *
+     * @param key
+     * @param value
+     * @param operator
+     */
+    public void addSearchBean(String key, Object value, String operator, String joinType) {
+        SearchBean searchBean = new SearchBean();
+        searchBean.setKey(key);
+        searchBean.setOperator(operator);
+        searchBean.setValue(value);
+        searchBean.setPriority(0);
+        searchBean.setJoinType(joinType);
+        this.searchBeans.add(searchBean);
+    }
+
+    /**
      * 直接添加条件列表
      *
      * @param searchBeanList
@@ -150,5 +194,90 @@ public class SearchCondition {
 
     public void setJoinType(String joinType) {
         this.joinType = joinType;
+    }
+
+
+    public void setSearchCondition(Map<String, String> params) {
+        String pageNum = params.get("pageNum");
+        String pageSize = params.get("pageSize");
+        if (!DataCheckUtil.isEmpty(pageNum))
+            this.setPageNum(Integer.valueOf(pageNum));
+        if (!DataCheckUtil.isEmpty(pageSize))
+            this.setSize(Integer.valueOf(pageSize));
+        String sortStr = params.get("sort");
+        if (!DataCheckUtil.isEmpty(sortStr)) {
+            String[] sortArray = sortStr.split(",");
+            for (String sort : sortArray) {
+                System.out.println(sort);
+                String[] sortElements = sort.split("-");
+                for (String temp : sortElements)
+                    System.out.println(temp);
+                if (sortElements.length == 2) {
+                    this.addSortBean(sortElements[0], sortElements[1], SearchBean.OPERATOR_SORT);
+                } else if (sortElements.length == 3) {
+                    this.addSearchBean(sortElements[0], sortElements[1], SearchBean.OPERATOR_SORT, Integer.parseInt(sortElements[2]));
+                }
+            }
+        }
+    }
+
+    public void setSearchRequest(SearchRequest request) {
+        this.joinType = SearchCondition.JOIN_TYPE_OR;
+        if (request.getPageNum() != null)
+            this.setPageNum(request.getPageNum());
+        if (request.getPageSize() != null)
+            this.setSize(request.getPageSize());
+        if (request.getSearchBeans() != null && !request.getSearchBeans().isEmpty()) {
+            for (SearchBean item : request.getSearchBeans()) {
+                if (DataCheckUtil.isEmpty(item.getJoinType())) {
+                    if (item.getPriority() == null)
+                        this.addSearchBean(item.getKey(), item.getValue(), item.getOperator());
+                    else
+                        this.addSearchBean(item.getKey(), item.getValue(), item.getOperator(), item.getPriority());
+                } else {
+                    if (item.getPriority() == null)
+                        this.addSearchBean(item.getKey(), item.getValue(), item.getOperator(), item.getJoinType());
+                    else
+                        this.addSearchBean(item.getKey(), item.getValue(), item.getOperator(), item.getPriority(), item.getJoinType());
+                }
+            }
+        }
+        if (request.getSortBeans() != null && !request.getSortBeans().isEmpty()) {
+            for (SearchBean item : request.getSortBeans()) {
+                if (item.getPriority() == null) {
+                    this.addSortBean(item.getKey(), item.getValue(), SearchBean.OPERATOR_SORT);
+                } else {
+                    this.addSearchBean(item.getKey(), item.getValue(), SearchBean.OPERATOR_SORT, item.getPriority());
+                }
+
+            }
+        }
+    }
+
+    public static SearchCondition convertSearchCondition(Map<String, String> params) {
+        String pageNum = params.get("pageNum");
+        String pageSize = params.get("pageSize");
+        SearchCondition searchCondition = new SearchCondition();
+        if (!DataCheckUtil.isEmpty(pageNum))
+            searchCondition.setPageNum(Integer.valueOf(pageNum));
+        if (!DataCheckUtil.isEmpty(pageSize))
+            searchCondition.setSize(Integer.valueOf(pageSize));
+        String sortStr = params.get("sort");
+        System.out.println(sortStr);
+        if (!DataCheckUtil.isEmpty(sortStr)) {
+            String[] sortArray = sortStr.split(",");
+            for (String sort : sortArray) {
+                System.out.println(sort);
+                String[] sortElements = sort.split("-");
+                for (String temp : sortElements)
+                    System.out.println(temp);
+                if (sortElements.length == 2) {
+                    searchCondition.addSortBean(sortElements[0], sortElements[1], SearchBean.OPERATOR_SORT);
+                } else if (sortElements.length == 3) {
+                    searchCondition.addSearchBean(sortElements[0], sortElements[1], SearchBean.OPERATOR_SORT, Integer.parseInt(sortElements[2]));
+                }
+            }
+        }
+        return searchCondition;
     }
 }

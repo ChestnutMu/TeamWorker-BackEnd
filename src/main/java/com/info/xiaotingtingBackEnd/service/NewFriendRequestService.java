@@ -103,4 +103,19 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
         userRelation.setUserBId(newFriendRequest.getRequesterId());
         userRelationRep.save(userRelation);
     }
+
+    public void delFriend(String userId, String friendId) throws PlatformException {
+        //判断是否已是好友
+        Long count = userRelationRep.countAllByUserAIdAndUserBId(userId, friendId);
+        if (count != null && count > 0) {
+            userRelationRep.delete(new UserRelation.UserRelationId(userId, friendId));
+        } else {
+            count = userRelationRep.countAllByUserAIdAndUserBId(friendId, userId);
+            if (count != null && count > 0) {
+                userRelationRep.delete(new UserRelation.UserRelationId(friendId, userId));
+            } else {
+                throw new PlatformException(-1, "已不是好友关系");
+            }
+        }
+    }
 }

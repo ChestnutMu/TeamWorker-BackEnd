@@ -23,4 +23,6 @@ public interface TeamRelationRep extends BaseRepository<TeamRelation, TeamRelati
     List<TeamUserVo> getTeamers(@Param("teamId") String teamId);
 
     void deleteAllByTeamId(String teamId);
+
+    Long countAllByTeamIdAndUserId(String teamId, String userId);
 }

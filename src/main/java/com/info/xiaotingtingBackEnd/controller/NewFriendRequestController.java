@@ -120,5 +120,20 @@ public class NewFriendRequestController {
         return apiResponse;
     }
 
+    /**
+     * 删除好友
+     *
+     * @return
+     */
+    @RequestMapping(value = "delFriend", method = RequestMethod.POST)
+    public ApiResponse<Object> delFriend(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String friendId = params.get("friendId");
+        requestService.delFriend(userId, friendId);
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("已删除该好友");
+        return apiResponse;
+    }
+
 
 }

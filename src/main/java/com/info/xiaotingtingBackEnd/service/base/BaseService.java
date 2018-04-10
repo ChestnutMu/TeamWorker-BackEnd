@@ -5,6 +5,8 @@ import com.info.xiaotingtingBackEnd.repository.*;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -21,6 +23,8 @@ import java.util.List;
 public abstract class BaseService<T, ID extends Serializable, TR extends BaseRepository<T, ID>> {
 
     public abstract TR getRepo();
+
+    public Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
 
     @Autowired
     public UserRep userRep;
