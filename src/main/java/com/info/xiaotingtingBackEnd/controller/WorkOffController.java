@@ -113,7 +113,7 @@ public class WorkOffController {
         String handleReason = params.get("handleReason");
         String handleStatus = params.get("handleStatus");
         workOffService.handleWorkOff(userId, workOffId, handleReason, Integer.parseInt(handleStatus));
-        ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "回收请假条成功");
+        ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "处理请假条成功");
         return response;
     }
 
@@ -168,6 +168,23 @@ public class WorkOffController {
         }
         searchCondition.addSortBean("commitTime", "asc", SearchBean.OPERATOR_SORT);
         ApiResponse<List<WorkOff>> response = workOffService.getPageBySearchCondition(searchCondition);
+        return response;
+    }
+
+
+    /**
+     * 删除请假条（回收的以及处理完后请假结束时间已经过去一个月则可以删除）
+     *
+     * @param userId
+     * @param params
+     * @return
+     * @throws PlatformException
+     */
+    @RequestMapping(value = "delWorkOff", method = RequestMethod.POST)
+    public ApiResponse<Object> delWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String workOffId = params.get("workOffId");
+        workOffService.delWorkOff(userId, workOffId);
+        ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "处理请假条成功");
         return response;
     }
 }

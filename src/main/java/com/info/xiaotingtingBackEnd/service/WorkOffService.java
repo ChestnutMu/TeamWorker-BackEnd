@@ -26,33 +26,6 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         return workOffRep;
     }
 
-    /*用户id*/
-    private String userId;
-    /*团队id*/
-    private String teamId;
-    /*标题*/
-    private String workOffName;
-    /*内容*/
-    private String workOffReason;
-    /*图片*/
-    private String photo;
-    /*开始时间*/
-    private Date startTime;
-    /*结束时间*/
-    private Date endTime;
-    /*处理id人*/
-    private String adminId;
-    /*处理信息*/
-    private String handleReason;
-    /*处理时间*/
-    private Date handleTime;
-    /*状态 WorkOffConstants*/
-    private Integer status;
-
-    public void applyWorkOff(WorkOff workOff) throws PlatformException {
-
-    }
-
     public void applyWorkOff(String userId, String teamId, String workOffName, String workOffReason, String photo, long startTime, long endTime) throws PlatformException {
         if (DataCheckUtil.isEmpty(teamId))
             throw new PlatformException(-1, "必须选择团队");
@@ -112,6 +85,28 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         workOff.setHandleReason(handleReason);
         workOff.setHandleTime(new Date());
         workOffRep.save(workOff);
+    }
+
+    public void delWorkOff(String userId, String workOffId) throws PlatformException {
+        WorkOff workOff = workOffRep.findOne(workOffId);
+        if (workOff == null)
+            throw new PlatformException(-1, "请求条不存在");
+        if (!workOff.getUserId().equals(userId))
+            throw new PlatformException(-1, "请求条不属于你");
+        if (workOff.getStatus() == WorkOffConstants.STATUS_WORK_OFF_RETURN) {
+            workOffRep.delete(workOff);
+            return;
+        }
+        if (workOff.getStatus() == WorkOffConstants.STATUS_WORK_OFF_WAITING)
+            throw new PlatformException(-1, "请求条还在等待处理，不能删除");
+        long passTime = System.currentTimeMillis() - workOff.getEndTime().getTime();
+        if (passTime > 30 * 86400 * 1000L) {
+            workOffRep.delete(workOff);
+            return;
+        } else {
+            throw new PlatformException(-1, "请求条必须结束后一个月才能删除");
+        }
+
     }
 
 //    public void saveAndSendApplication(WorkOff workOff) {
