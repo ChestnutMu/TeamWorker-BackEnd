@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.service;
 
+import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.constants.TeamConstants;
 import com.info.xiaotingtingBackEnd.model.Team;
@@ -16,10 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 /**
- * Created by king on 20:05 2018/4/9
+ * Copyright (c) 2018, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2018/4/10 15:23:00
+ * Description：
+ * Email: xiaoting233zhang@126.com
  */
 @Service
 public class TeamService extends BaseService<Team, String, TeamRep> {
@@ -30,7 +36,7 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void buildTeam(String userId, Team team, List<String> userList) throws PlatformException {
+    public void buildTeam(String userId, Team team, String userJson) throws PlatformException {
         if (DataCheckUtil.isEmpty(team.getTeamName()))
             throw new PlatformException(-1, "团队名字不能为空");
         if (DataCheckUtil.isEmpty(team.getTeamIndustry()))
@@ -46,6 +52,9 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
         team.setUpdateTime(now);
 
         teamRep.save(team);
+
+        List<String> userList = gson.fromJson(userJson, new TypeToken<List<String>>() {
+        }.getType());
 
         List<TeamRelation> peoples = new ArrayList<>(userList.size() + 1);
 

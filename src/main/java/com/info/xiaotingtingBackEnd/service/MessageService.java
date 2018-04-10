@@ -129,4 +129,5 @@ public class MessageService extends BaseService<Message, String, MessageRep> {
     public MessageRep getRepo() {
         return messageRep;
     }
+
 }

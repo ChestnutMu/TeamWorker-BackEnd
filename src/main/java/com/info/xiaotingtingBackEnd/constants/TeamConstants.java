@@ -1,7 +1,11 @@
 package com.info.xiaotingtingBackEnd.constants;
 
 /**
- * Created by king on 20:15 2018/4/9
+ * Copyright (c) 2018, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2018/4/10 20:23:00
+ * Description：
+ * Email: xiaoting233zhang@126.com
  */
 public class TeamConstants {
     /**

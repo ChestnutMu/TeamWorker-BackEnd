@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.service.base;
 
+import com.google.gson.Gson;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.*;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
@@ -25,6 +26,8 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
     public abstract TR getRepo();
 
     public Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
+
+    public Gson gson = new Gson();
 
     @Autowired
     public UserRep userRep;
@@ -66,6 +69,12 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
 
     @Autowired
     public TeamRelationRep teamRelationRep;
+
+    @Autowired
+    public ChatRep chatRep;
+
+    @Autowired
+    public ChatMessageRep chatMessageRep;
 
     @Autowired
     public SenderEventHandler handler;

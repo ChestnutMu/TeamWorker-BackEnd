@@ -228,14 +228,11 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "getMyFriends", method = RequestMethod.POST)
-    public ApiResponse<List<UserVo>> getMyFriends(@RequestHeader String uid) {
-        ApiResponse<List<UserVo>> apiResponse = new ApiResponse<>();
-        List<UserVo> requestList = userService.getMyFriends(uid);
-        apiResponse.setMaxCount(requestList.size());
-        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
-        apiResponse.setMessage("获取我的好友列表成功");
-        apiResponse.setData(requestList);
-        return apiResponse;
+    public ApiResponse<List<UserVo>> getMyFriends(@RequestHeader String uid, @RequestBody Map<String, String> params) {
+        String pageNum = params.get("pageNum");
+        String pageSize = params.get("pageSize");
+        ApiResponse<List<UserVo>> response = userService.getMyFriends(uid, Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+        return response;
     }
 
     @RequestMapping(value = "deleteUserRelation", method = RequestMethod.POST)

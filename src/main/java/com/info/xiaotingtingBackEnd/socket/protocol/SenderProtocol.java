@@ -24,4 +24,16 @@ public class SenderProtocol {
      */
     public static final int MSG_SEND_FRIEND_REQUEST = 1006;
 
+
+    /**
+     * 发送客户端一条聊天室消息
+     * 发送对象 ChatMessage
+     */
+    public static final int MSG_SEND_CHAT_MESSAGE = 2000;
+    /**
+     * 发送客户端多条聊天室消息
+     * 发送对象 List<ChatMessage>
+     */
+    public static final int MSG_SEND_CHAT_MANY_MESSAGE = 2001;
+
 }

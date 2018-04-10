@@ -84,8 +84,17 @@ public class UserService extends BaseService<User, String, UserRep> {
         }
     }
 
-    public List<UserVo> getMyFriends(String userId) {
-        return userRep.getMyFriend(userId);
+    public ApiResponse<List<UserVo>> getMyFriends(String userId, int pageNum, int pageSize) {
+        Pageable pageable = new PageRequest(pageNum - 1, pageSize);
+        Page<UserVo> result = userRep.getMyFriend(userId, pageable);
+
+        ApiResponse<List<UserVo>> apiResponse = new ApiResponse<>();
+        apiResponse.setCurrentPage(pageNum);
+        apiResponse.setMaxPage(result.getTotalPages());
+        apiResponse.setMaxCount((int) result.getTotalElements());
+        apiResponse.setPageSize(result.getSize());
+        apiResponse.setData(result.getContent());
+        return apiResponse;
     }
 
     @Override

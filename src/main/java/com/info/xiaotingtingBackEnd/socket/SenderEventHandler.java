@@ -2,6 +2,7 @@ package com.info.xiaotingtingBackEnd.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.info.xiaotingtingBackEnd.model.ChatMessage;
 import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
 import com.info.xiaotingtingBackEnd.model.User;
@@ -9,6 +10,7 @@ import com.info.xiaotingtingBackEnd.socket.protocol.SenderProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,7 +66,6 @@ public class SenderEventHandler extends BaseSocketEventHandler {
     }
 
     /**
-     *
      * @param newFriendRequest
      * @return
      */
@@ -88,4 +89,23 @@ public class SenderEventHandler extends BaseSocketEventHandler {
         kickOffClient(uid, oldToken);
     }
 
+    public void sendChatMessage(List<ChatMessage> chatMessageList) {
+        for (ChatMessage chatMessage : chatMessageList) {
+            SocketIOClient socketIOClient = clientHashMap.get(chatMessage.getUserId());
+            if (socketIOClient == null) {
+                logger.info("sendOderResultToUser socketIOClient不存在");
+                return;
+            }
+            socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MESSAGE, chatMessage);
+        }
+    }
+
+    public void sendAllChatMessage(String uid, List<ChatMessage> chatMessageList) {
+        SocketIOClient socketIOClient = clientHashMap.get(uid);
+        if (socketIOClient == null) {
+            logger.info("sendOderResultToUser socketIOClient不存在");
+            return;
+        }
+        socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MANY_MESSAGE, chatMessageList);
+    }
 }

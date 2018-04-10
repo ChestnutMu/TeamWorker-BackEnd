@@ -10,7 +10,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by king on 19:55 2018/4/9
+ * Copyright (c) 2018, Chestnut All rights reserved
+ * Author: Chestnut
+ * CreateTime：at 2018/4/10 15:23:00
+ * Description：
+ * Email: xiaoting233zhang@126.com
  */
 @Repository
 public interface TeamRelationRep extends BaseRepository<TeamRelation, TeamRelation.TeamRelationId> {

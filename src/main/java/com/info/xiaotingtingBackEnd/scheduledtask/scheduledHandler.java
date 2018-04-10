@@ -1,6 +1,7 @@
 package com.info.xiaotingtingBackEnd.scheduledtask;
 
 import com.info.xiaotingtingBackEnd.service.AttendanceService;
+import com.info.xiaotingtingBackEnd.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 public class scheduledHandler {
     @Autowired
     AttendanceService attendanceService;
+    @Autowired
+    ChatService chatService;
 
 
     /**
@@ -24,5 +27,13 @@ public class scheduledHandler {
     @Scheduled(cron = "0 0 0 * * ?")//每天凌晨0点执行一次
     public void autoPunchClock() {
         attendanceService.autoPunchClock();
+    }
+
+    /**
+     * 每隔1分钟发送未接受信息
+     */
+//    @Scheduled(cron = "0 0/2 * * * ?")//每隔2分钟
+    public void autoSendChatMessage() {
+        chatService.autoSendChatMessage();
     }
 }

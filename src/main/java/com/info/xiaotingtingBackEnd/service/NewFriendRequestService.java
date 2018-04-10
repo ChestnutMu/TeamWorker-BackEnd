@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.service;
 
+import com.info.xiaotingtingBackEnd.constants.ChatConstants;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.UserRelation;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -104,6 +107,7 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
         userRelationRep.save(userRelation);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void delFriend(String userId, String friendId) throws PlatformException {
         //判断是否已是好友
         Long count = userRelationRep.countAllByUserAIdAndUserBId(userId, friendId);
@@ -117,5 +121,11 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
                 throw new PlatformException(-1, "已不是好友关系");
             }
         }
+        //删除双人聊天室
+        Set<String> userList = new HashSet<>();
+        userList.add(userId);
+        userList.add(friendId);
+        String userJson = gson.toJson(userList);
+        chatRep.deleteByUserListAndChatType(userJson, ChatConstants.TYPE_CHAT_DOUBLE);
     }
 }

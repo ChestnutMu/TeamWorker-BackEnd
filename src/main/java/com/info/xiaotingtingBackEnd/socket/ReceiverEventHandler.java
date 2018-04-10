@@ -6,6 +6,8 @@ import com.corundumstudio.socketio.annotation.OnConnect;
 import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.google.gson.reflect.TypeToken;
+import com.info.xiaotingtingBackEnd.model.ChatMessage;
+import com.info.xiaotingtingBackEnd.service.ChatService;
 import com.info.xiaotingtingBackEnd.service.MessageService;
 import com.info.xiaotingtingBackEnd.socket.protocol.ReceiverProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
 
     @Autowired
     MessageService messageService;
+
+    @Autowired
+    ChatService chatService;
 
     @Autowired
     private SenderEventHandler handler;
@@ -81,6 +86,7 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
                 } else {
                     clientHashMap.put(uid, client);
                 }
+                checkNotifyMessage(uid);
                 break;
             }
             case ReceiverProtocol.MSG_SEND_MESSAGE://客户端发送消息
@@ -102,9 +108,22 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
             case ReceiverProtocol.MSG_ISSEND_MESSAGE://已接收消息
                 messageService.hasSendMessage(obj);
                 break;
+            case ReceiverProtocol.MSG_ISSEND_CHAT_MESSAGE://已接收聊天室消息
+                chatService.hasSendChatMessage(obj);
+                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 检查是否有消息发送给用户
+     *
+     * @param uid
+     */
+    private void checkNotifyMessage(String uid) {
+        List<ChatMessage> chatMessageList = chatService.getChatMessageList(uid);
+        handler.sendAllChatMessage(uid, chatMessageList);
     }
 
 
