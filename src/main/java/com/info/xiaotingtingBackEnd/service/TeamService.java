@@ -101,10 +101,14 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
 
     public void addTeamUser(String userId, String teamId, String teamUserId) throws PlatformException {
         TeamRelation teamRelation = getTeamRelation(userId, teamId);
-        if (teamRelation == null)
+        if (null == teamRelation)
             throw new PlatformException(-1, "不属于该团队");
         if (teamRelation.getType() != TeamConstants.TYPE_TEAM_ADMIN && teamRelation.getType() != TeamConstants.TYPE_TEAM_OWNER)
             throw new PlatformException(-1, "只有团队拥有者和管理员才能添加人员");
+
+        TeamRelation teamRelationTemp = getTeamRelation(teamUserId, teamId);
+        if (null != teamRelationTemp)
+            throw new PlatformException(-1, "该用户已在团队中");
 
         TeamRelation addTeamRelation = new TeamRelation();
         addTeamRelation.setTeamId(teamId);
