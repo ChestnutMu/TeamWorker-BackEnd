@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.interceptor;
 
+import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,9 @@ public class IdAuthentication implements HandlerInterceptor {
         if (userService.idAuth(uid, token)) {
             logger.info("身份认证成功");
             return true;
-        }else {
+        } else {
             logger.info("身份认证失败");
-            return false;
+            throw new PlatformException(-1, "身份认证失败");
         }
     }
 

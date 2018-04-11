@@ -23,9 +23,7 @@ import java.util.List;
 @Repository
 public interface UserRep extends BaseRepository<User, String> {
 
-    User findByAccountAndPassword(String account, String password);
-
-    User findByAccount(String account);
+    User findByTelephone(String telephone);
 
     @Query(value = "select new com.info.xiaotingtingBackEnd.pojo.DepartmentUser(u.userId,u.avatar,u.nickname)" +
             " from User u, DepartmentMemberRelation d " +
@@ -35,12 +33,17 @@ public interface UserRep extends BaseRepository<User, String> {
                     " where d.departmentId = :departmentId")
     Page<DepartmentUser> getUserByDepartment(@Param("departmentId") String departmentId, Pageable pageable);
 
-    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserVo" +
-            "(u.userId,u.account,u.nickname,u.avatar,u.telephone,u.sex,u.birthday,u.region)" +
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserVo(u.userId,u.nickname,u.avatar,u.telephone,u.sex,u.birthday,u.region)" +
             " from User u, UserRelation ur" +
             " where (ur.userAId = :userId and u.userId = ur.userBId)" +
-            " or (ur.userBId = :userId and u.userId = ur.userAId)",
-            countQuery = "select count(ur.userAId) from UserRelation ur" +
+            " or (ur.userBId = :userId and u.userId = ur.userAId) ",
+            countQuery = "select count(ur.userAId) from UserRelation ur " +
                     "where ur.userAId = :userId or ur.userBId = :userId")
-    List<UserVo> getMyFriend(@Param("userId") String userId);
+    Page<UserVo> getMyFriend(@Param("userId") String userId, Pageable pageable);
+
+    @Query(value = "select u from User u" +
+            " where u.telephone like :keyword or  u.nickname like :keyword",
+            countQuery = "select count(u.userId) from User u" +
+                    " where u.telephone like :keyword or  u.nickname like :keyword")
+    List<User> searchUser(@Param("keyword") String keyword);
 }

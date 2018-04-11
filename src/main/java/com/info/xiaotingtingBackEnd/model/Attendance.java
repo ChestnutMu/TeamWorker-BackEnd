@@ -29,11 +29,13 @@ public class Attendance implements Serializable {
     @Column(columnDefinition = "char(20)", nullable = false)
     private String attendanceId;
 
+    private String teamId;
+
     private String userId;
 
-    private String altitude;//经度
+    private String punchInPicture;//上班照片
 
-    private String latitude;//纬度
+    private String punchOutPicture;//下班照片
 
     private String punchInAddress;//上班地址
 
@@ -51,6 +53,14 @@ public class Attendance implements Serializable {
         this.attendanceId = attendanceId;
     }
 
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -59,20 +69,20 @@ public class Attendance implements Serializable {
         this.userId = userId;
     }
 
-    public String getLatitude() {
-        return latitude;
+    public String getPunchInPicture() {
+        return punchInPicture;
     }
 
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
+    public void setPunchInPicture(String punchInPicture) {
+        this.punchInPicture = punchInPicture;
     }
 
-    public String getAltitude() {
-        return altitude;
+    public String getPunchOutPicture() {
+        return punchOutPicture;
     }
 
-    public void setAltitude(String altitude) {
-        this.altitude = altitude;
+    public void setPunchOutPicture(String punchOutPicture) {
+        this.punchOutPicture = punchOutPicture;
     }
 
     public String getPunchInAddress() {

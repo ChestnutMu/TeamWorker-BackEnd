@@ -1,11 +1,13 @@
 package com.info.xiaotingtingBackEnd.service.base;
 
-import com.info.xiaotingtingBackEnd.model.UserPermissionRelation;
+import com.google.gson.Gson;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.repository.*;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
@@ -23,12 +25,12 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
 
     public abstract TR getRepo();
 
+    public Logger logger = LoggerFactory.getLogger(Thread.currentThread().getStackTrace()[1].getClassName());
+
+    public Gson gson = new Gson();
+
     @Autowired
     public UserRep userRep;
-
-    @Autowired
-    public TeamRep teamRep;
-
     @Autowired
     public DepartmentRep departmentRep;
 
@@ -61,6 +63,18 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
 
     @Autowired
     public UserPermissionRelationRep userPermissionRelationRep;
+
+    @Autowired
+    public TeamRep teamRep;
+
+    @Autowired
+    public TeamRelationRep teamRelationRep;
+
+    @Autowired
+    public ChatRep chatRep;
+
+    @Autowired
+    public ChatMessageRep chatMessageRep;
 
     @Autowired
     public SenderEventHandler handler;

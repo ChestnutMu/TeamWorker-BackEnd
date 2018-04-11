@@ -4,6 +4,8 @@ import com.info.xiaotingtingBackEnd.model.Attendance;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
@@ -16,5 +18,6 @@ public interface AttendanceRep extends BaseRepository<Attendance, String> {
 
     Attendance findTopByUserId(String userId);
 
-    Attendance findTopByUserIdOrderByPunchInTimeDesc(String userId);
+    Attendance findTopByUserIdAndTeamIdAndPunchOutTimeOrderByPunchInTimeDesc(String userId, String teamId, Date punchOutTime);
+
 }

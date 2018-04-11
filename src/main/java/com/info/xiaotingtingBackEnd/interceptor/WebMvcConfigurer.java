@@ -23,8 +23,8 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         //-----------token认证-----------
         InterceptorRegistration addInterceptor = registry.addInterceptor(getTokenInterceptor());
         //不用token认证
+        addInterceptor.excludePathPatterns("/user/unauth/*");
         addInterceptor.excludePathPatterns("/user/login");
-        addInterceptor.excludePathPatterns("/user/addUser");
         addInterceptor.excludePathPatterns("/user/getAllUsers");
 
         addInterceptor.excludePathPatterns("/department/getDepartments");

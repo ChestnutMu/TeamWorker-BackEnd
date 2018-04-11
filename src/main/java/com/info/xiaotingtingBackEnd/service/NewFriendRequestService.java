@@ -1,14 +1,22 @@
 package com.info.xiaotingtingBackEnd.service;
 
+import com.info.xiaotingtingBackEnd.constants.ChatConstants;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
+import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.UserRelation;
 import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
+import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.repository.NewFriendRequestRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
@@ -21,88 +29,103 @@ import java.util.List;
 public class NewFriendRequestService extends BaseService<NewFriendRequest, String, NewFriendRequestRep> {
 
     /**
-     * 保存消息
-     *
-     * @param newFriendRequest
-     * @return
-     */
-    public NewFriendRequest registerRequest(NewFriendRequest newFriendRequest) {
-        return newFriendRequestRep.save(newFriendRequest);
-
-    }
-
-    /**
-     * 改变消息状态为（已发送）
-     *
-     * @param requestId
-     * @return
-     */
-    public NewFriendRequest hasSendRequest(String requestId) {
-        NewFriendRequest result = newFriendRequestRep.findOne(requestId);
-        result.setSend(true);
-        return newFriendRequestRep.save(result);
-    }
-
-    /**
-     * 接受好友请求
-     *
-     * @param requestId
-     * @return
-     */
-    public NewFriendRequest acceptRequest(String requestId) {
-        NewFriendRequest result = newFriendRequestRep.findOne(requestId);
-        result.setStatus(1);
-        return newFriendRequestRep.save(result);
-    }
-
-    /**
-     * 拒绝好友请求
-     *
-     * @param requestId
-     * @return
-     */
-    public NewFriendRequest refuseRequest(String requestId) {
-        NewFriendRequest result = newFriendRequestRep.findOne(requestId);
-        result.setStatus(2);
-        return newFriendRequestRep.save(result);
-    }
-
-    /**
-     * 发送好友请求
-     */
-    public boolean sendNewFriendRequest(NewFriendRequest newFriendRequest) {
-        NewFriendRequest request = registerRequest(newFriendRequest);
-        handler.sendFriendRequest(request);
-        if (handler.sendFriendRequest(request)) {
-            hasSendRequest(request.getRequestId());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 根据userId获取其接收到的所有好友请求
      *
      * @param userId
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public List<NewFriendRequestVo> getRequestVoByUserId(String userId) {
-        return newFriendRequestRep.getRequestVoByUserId(userId);
+        List<NewFriendRequestVo> requestVoList = newFriendRequestRep.getRequestVoByUserId(userId, false);
+        //更新接收状态
+        newFriendRequestRep.updateNewFriendRequestHadSend(userId, false, true);
+        return requestVoList;
     }
 
-    /**
-     * 根据userId获取其还未接收到的好友请求消息
-     *
-     * @return
-     */
-    public List<NewFriendRequestVo> getNotSendRequestByUserId(String userId) {
-        List<NewFriendRequestVo> result = newFriendRequestRep.getNotSendRequestVoByUserId(userId);
-        return result;
-    }
 
     @Override
     public NewFriendRequestRep getRepo() {
         return newFriendRequestRep;
+    }
+
+    public void checkFriendRelation(String userAId, String userBId) throws PlatformException {
+        //判断是否已是好友
+        Long count = userRelationRep.countAllByUserAIdAndUserBId(userAId, userBId);
+        if (count != null && count > 0)
+            throw new PlatformException(-1, "已是好友关系");
+        count = userRelationRep.countAllByUserAIdAndUserBId(userBId, userAId);
+        if (count != null && count > 0)
+            throw new PlatformException(-1, "已是好友关系");
+    }
+
+    public void sendFriendRequest(String userId, String recipientId, String message) throws PlatformException {
+        if (message == null || "".equals(message))
+            throw new PlatformException(-1, "必须要验证信息");
+        //判断是否已是好友
+        checkFriendRelation(userId, recipientId);
+
+        NewFriendRequest request = new NewFriendRequest();
+        request.setRequesterId(userId);
+        request.setRecipientId(recipientId);
+        request.setAuthenticationMessage(message);
+        request.setTime(new Date());
+        request.setSend(false);
+        request.setAccepted(false);
+
+        User user = userRep.findOne(recipientId);
+        if (user == null)
+            throw new PlatformException(-1, "用户不存在");
+
+        newFriendRequestRep.save(request);
+
+        handler.sendFriendRequest(request);
+    }
+
+    public long countNotSendRequestByUserId(String userId) {
+        Long count = newFriendRequestRep.countAllByRecipientIdAndIsSend(userId, false);
+        if (count == null)
+            return 0;
+        return count;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void acceptedRequest(String userId, String newFriendRequestId) throws PlatformException {
+        NewFriendRequest newFriendRequest = newFriendRequestRep.findOne(newFriendRequestId);
+        if (newFriendRequest == null)
+            throw new PlatformException(-1, "好友请求不存在");
+        //判断是否已是好友
+        checkFriendRelation(userId, newFriendRequest.getRequesterId());
+        if (!newFriendRequest.getRecipientId().equals(userId))
+            throw new PlatformException(-1, "不能接受别人的好友请求");
+        if (newFriendRequest.getAccepted().equals(true))
+            throw new PlatformException(-1, "已接受该好友请求");
+        newFriendRequest.setAccepted(true);
+        newFriendRequestRep.save(newFriendRequest);
+        UserRelation userRelation = new UserRelation();
+        userRelation.setUserAId(userId);
+        userRelation.setUserBId(newFriendRequest.getRequesterId());
+        userRelationRep.save(userRelation);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void delFriend(String userId, String friendId) throws PlatformException {
+        //判断是否已是好友
+        Long count = userRelationRep.countAllByUserAIdAndUserBId(userId, friendId);
+        if (count != null && count > 0) {
+            userRelationRep.delete(new UserRelation.UserRelationId(userId, friendId));
+        } else {
+            count = userRelationRep.countAllByUserAIdAndUserBId(friendId, userId);
+            if (count != null && count > 0) {
+                userRelationRep.delete(new UserRelation.UserRelationId(friendId, userId));
+            } else {
+                throw new PlatformException(-1, "已不是好友关系");
+            }
+        }
+        //删除双人聊天室
+        Set<String> userList = new HashSet<>();
+        userList.add(userId);
+        userList.add(friendId);
+        String userJson = gson.toJson(userList);
+        chatRep.deleteByUserListAndChatType(userJson, ChatConstants.TYPE_CHAT_DOUBLE);
     }
 }

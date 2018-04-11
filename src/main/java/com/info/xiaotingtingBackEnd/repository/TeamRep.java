@@ -17,13 +17,13 @@ import java.util.List;
  * Email: xiaoting233zhang@126.com
  */
 @Repository
-public interface TeamRep extends BaseRepository<Team,String>{
+public interface TeamRep extends BaseRepository<Team, String> {
 
     Team findByTeamName(String name);
 
-    @Query(value = "select t from DepartmentMemberRelation dr,Team t " +
-            "where dr.userId = :userId and dr.departmentId = t.teamId",
-            countQuery = "select count(t) from DepartmentMemberRelation dr,Team t " +
-                    "where dr.userId = :userId and dr.departmentId = t.teamId")
+    @Query(value = "select t from TeamRelation tr,Team t " +
+            "where tr.userId = :userId and tr.teamId = t.teamId",
+            countQuery = "select count(t) from TeamRelation tr,Team t " +
+                    "where tr.userId = :userId and tr.teamId = t.teamId")
     List<Team> getTeamByUserId(@Param("userId") String userId);
 }

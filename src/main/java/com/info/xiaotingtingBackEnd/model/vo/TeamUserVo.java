@@ -1,13 +1,16 @@
 package com.info.xiaotingtingBackEnd.model.vo;
 
+import java.util.Date;
+
 /**
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
- * CreateTime：at 2018/4/7 19:04:02
+ * CreateTime：at 2018/4/10 15:23:00
  * Description：
  * Email: xiaoting233zhang@126.com
  */
-public class UserVo {
+public class TeamUserVo {
+    /*基本信息*/
     private String userId;
 
     private String nickname;
@@ -22,7 +25,14 @@ public class UserVo {
 
     private String region;
 
-    public UserVo(String userId, String nickname, String avatar, String telephone, String sex, String birthday, String region) {
+    /*与团队关系*/
+    /*队员类型 TeamConstants*/
+    private Integer type;
+
+    /*加入团队或者更新type时间*/
+    private Date updateTime;
+
+    public TeamUserVo(String userId, String nickname, String avatar, String telephone, String sex, String birthday, String region, Integer type, Date updateTime) {
         this.userId = userId;
         this.nickname = nickname;
         this.avatar = avatar;
@@ -30,6 +40,8 @@ public class UserVo {
         this.sex = sex;
         this.birthday = birthday;
         this.region = region;
+        this.type = type;
+        this.updateTime = updateTime;
     }
 
     public String getUserId() {
@@ -86,5 +98,21 @@ public class UserVo {
 
     public void setRegion(String region) {
         this.region = region;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }
