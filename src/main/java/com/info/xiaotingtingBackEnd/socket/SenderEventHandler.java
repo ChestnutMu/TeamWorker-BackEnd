@@ -101,6 +101,7 @@ public class SenderEventHandler extends BaseSocketEventHandler {
     }
 
     public void sendAllChatMessage(String uid, List<ChatMessage> chatMessageList) {
+        if (chatMessageList.isEmpty()) return;
         SocketIOClient socketIOClient = clientHashMap.get(uid);
         if (socketIOClient == null) {
             logger.info("sendOderResultToUser socketIOClient不存在");

@@ -49,6 +49,7 @@ public class BaseSocketEventHandler {
         SocketIOClient uidSocket = clientHashMap.get(uid);
         if (uidSocket != null) {
             String tokenTemp = uidSocket.get("token");
+            logger.info("检查token uid: " + uid + " token: " + tokenTemp);
             if (tokenTemp.equals(token)) {
                 logger.info("踢下线: 找到 uid：" + uid + " token: " + tokenTemp);
                 kickOffClient(uidSocket);

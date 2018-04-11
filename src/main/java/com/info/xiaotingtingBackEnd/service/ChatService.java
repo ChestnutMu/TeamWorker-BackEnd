@@ -6,6 +6,8 @@ import com.info.xiaotingtingBackEnd.model.Chat;
 import com.info.xiaotingtingBackEnd.model.ChatMessage;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.repository.ChatRep;
+import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
+import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import org.springframework.stereotype.Service;
@@ -142,7 +144,7 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
      * @return
      */
     public List<ChatMessage> getChatMessageList(String userId) {
-        List<ChatMessage> chatMessageList = chatMessageRep.findAllByUserIdAndSend(userId, false);
+        List<ChatMessage> chatMessageList = chatMessageRep.findAllByUserIdAndSendOrderBySendTimeAsc(userId, false);
         return chatMessageList;
     }
 
@@ -152,5 +154,18 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
     public void autoSendChatMessage() {
         List<ChatMessage> chatMessageList = chatMessageRep.findAllBySend(false);
         handler.sendChatMessage(chatMessageList);
+    }
+
+    public List<Chat> getChatList(String userId, String chatListJson) throws PlatformException {
+        Set<String> chatList = gson.fromJson(chatListJson, new TypeToken<HashSet<String>>() {
+        }.getType());
+        SearchCondition searchCondition = new SearchCondition();
+        searchCondition.addSearchBean("chatId", chatList, SearchBean.OPERATOR_IN);
+        List<Chat> chats = getListBySearchCondition(searchCondition);
+        for (Chat chat : chats) {
+            if (!chat.getUserList().contains(userId))
+                throw new PlatformException(-1, "你不属于该聊天室");
+        }
+        return chats;
     }
 }

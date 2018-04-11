@@ -26,7 +26,7 @@ public interface ChatMessageRep extends BaseRepository<ChatMessage, String> {
     @Query(value = "update chat_message set send=:send where chat_message_id=:chatMessageId", nativeQuery = true)
     void updateChatMessageHadSend(@Param("chatMessageId") String chatMessageId, @Param("send") boolean send);
 
-    List<ChatMessage> findAllByUserIdAndSend(String userId, boolean send);
+    List<ChatMessage> findAllByUserIdAndSendOrderBySendTimeAsc(String userId, boolean send);
 
     List<ChatMessage> findAllBySend(boolean send);
 }
