@@ -43,8 +43,8 @@ public class NewFriendRequest {
     //已发送
     private Boolean isSend;
 
-    //好友请求状态
-    private int status;//0表示未处理 1表示已接收 2表示已拒绝
+    //已接受好友请求
+    private Boolean isAccepted;
 
     public String getNewFriendRequestId() {
         return newFriendRequestId;
@@ -94,11 +94,11 @@ public class NewFriendRequest {
         isSend = send;
     }
 
-    public int getStatus() {
-        return status;
+    public Boolean getAccepted() {
+        return isAccepted;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setAccepted(Boolean accepted) {
+        isAccepted = accepted;
     }
 }
