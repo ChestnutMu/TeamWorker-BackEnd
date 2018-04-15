@@ -5,6 +5,7 @@ import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.UserRelation;
 import com.info.xiaotingtingBackEnd.model.vo.FriendUserVo;
+import com.info.xiaotingtingBackEnd.model.vo.UserInfoVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
@@ -165,18 +166,10 @@ public class UserService extends BaseService<User, String, UserRep> {
         return friendUserVo;
     }
 
-    public List<User> getUserInfo(String json) {
-        List<String> userList = gson.fromJson(json, new TypeToken<List<String>>() {
+    public List<UserInfoVo> getUserListInfo(String json) {
+        List<String> userIdList = gson.fromJson(json, new TypeToken<List<String>>() {
         }.getType());
-        SearchCondition searchCondition = new SearchCondition();
-        searchCondition.setPageNum(1);
-        searchCondition.setSize(100);
-        searchCondition.addSearchBean("userId", userList, SearchBean.OPERATOR_IN);
-        List<User> result = getListBySearchCondition(searchCondition);
-        for (User user : result) {
-            user.setToken(null);
-            user.setPassword(null);
-        }
+        List<UserInfoVo> result = userRep.getUserListInfo(userIdList);
         return result;
     }
 }

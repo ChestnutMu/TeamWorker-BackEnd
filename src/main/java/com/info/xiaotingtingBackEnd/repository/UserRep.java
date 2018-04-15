@@ -1,6 +1,7 @@
 package com.info.xiaotingtingBackEnd.repository;
 
 import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.vo.UserInfoVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.DepartmentUser;
 import com.info.xiaotingtingBackEnd.repository.base.BaseRepository;
@@ -46,4 +47,10 @@ public interface UserRep extends BaseRepository<User, String> {
             countQuery = "select count(u.userId) from User u" +
                     " where u.telephone like :keyword or  u.nickname like :keyword")
     List<User> searchUser(@Param("keyword") String keyword);
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserInfoVo(u.userId,u.nickname,u.avatar) from User u" +
+            " where u.userId in :userIdList ",
+            countQuery = "select count(u.userId) from User u" +
+                    " where u.userId in :userIdList ")
+    List<UserInfoVo> getUserListInfo(@Param("userIdList") List<String> userIdList);
 }

@@ -1,25 +1,20 @@
 package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
-import com.info.xiaotingtingBackEnd.model.Message;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
 import com.info.xiaotingtingBackEnd.model.User;
-import com.info.xiaotingtingBackEnd.model.UserRelation;
-import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
+import com.info.xiaotingtingBackEnd.model.vo.UserInfoVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
-import com.info.xiaotingtingBackEnd.repository.UserRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.NewFriendRequestService;
 import com.info.xiaotingtingBackEnd.service.UserService;
 import com.info.xiaotingtingBackEnd.socket.SenderEventHandler;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
-import com.info.xiaotingtingBackEnd.util.EntityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -150,6 +145,7 @@ public class UserController {
             result.setRegion(user.getRegion());
         }
         result = userService.save(result);
+        result.setPassword(null);
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("修改成功");
         apiResponse.setData(result);
@@ -253,10 +249,10 @@ public class UserController {
 
 
     @RequestMapping(value = "getUserListInfo", method = RequestMethod.POST)
-    public ApiResponse<List<User>> getUserListInfo(@RequestBody Map<String, String> params) {
+    public ApiResponse<List<UserInfoVo>> getUserListInfo(@RequestBody Map<String, String> params) {
         String json = params.get("userList");
-        List<User> result = userService.getUserInfo(json);
-        ApiResponse<List<User>> response=new ApiResponse<>(0,"获取成功");
+        List<UserInfoVo> result = userService.getUserListInfo(json);
+        ApiResponse<List<UserInfoVo>> response = new ApiResponse<>(0, "获取成功");
         response.setData(result);
         return response;
     }
