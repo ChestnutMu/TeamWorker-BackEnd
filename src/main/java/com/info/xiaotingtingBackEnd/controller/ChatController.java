@@ -1,7 +1,6 @@
 package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.model.Chat;
-import com.info.xiaotingtingBackEnd.model.ChatMessage;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.service.ChatService;
@@ -9,7 +8,6 @@ import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +93,23 @@ public class ChatController {
         if (!chat.getUserList().contains(userId))
             throw new PlatformException(-1, "你不在该聊天室");
         apiResponse.setData(chat);
+        return apiResponse;
+    }
+
+    /**
+     * 获取聊天室列表
+     *
+     * @param userId
+     * @param params
+     * @return
+     * @throws PlatformException
+     */
+    @RequestMapping(value = "getChatList", method = RequestMethod.POST)
+    public ApiResponse<List<Chat>> getChatList(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String chatListJson = params.get("chatList");
+        ApiResponse<List<Chat>> apiResponse = new ApiResponse<>();
+        List<Chat> chats = chatService.getChatList(userId, chatListJson);
+        apiResponse.setData(chats);
         return apiResponse;
     }
 

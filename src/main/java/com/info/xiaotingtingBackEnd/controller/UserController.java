@@ -251,4 +251,13 @@ public class UserController {
         return apiResponse;
     }
 
+
+    @RequestMapping(value = "getUserListInfo", method = RequestMethod.POST)
+    public ApiResponse<List<User>> getUserListInfo(@RequestBody Map<String, String> params) {
+        String json = params.get("userList");
+        List<User> result = userService.getUserInfo(json);
+        ApiResponse<List<User>> response=new ApiResponse<>(0,"获取成功");
+        response.setData(result);
+        return response;
+    }
 }

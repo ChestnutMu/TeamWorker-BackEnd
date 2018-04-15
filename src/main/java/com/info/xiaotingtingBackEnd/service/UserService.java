@@ -1,5 +1,6 @@
 package com.info.xiaotingtingBackEnd.service;
 
+import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.UserRelation;
@@ -76,12 +77,13 @@ public class UserService extends BaseService<User, String, UserRep> {
     }
 
     public boolean isMyFriend(String myUserId, String userId) {
-        UserRelation.UserRelationId userRelation = new UserRelation.UserRelationId(myUserId, userId);
-        if (userRelationRep.findOne(userRelation) != null) {
+        Long count = userRelationRep.countAllByUserAIdAndUserBId(myUserId, userId);
+        if (count != null && count > 0)
             return true;
-        } else {
-            return false;
-        }
+        count = userRelationRep.countAllByUserAIdAndUserBId(userId, myUserId);
+        if (count != null && count > 0)
+            return true;
+        return false;
     }
 
     public ApiResponse<List<UserVo>> getMyFriends(String userId, int pageNum, int pageSize) {
@@ -151,17 +153,6 @@ public class UserService extends BaseService<User, String, UserRep> {
         return users;
     }
 
-    public boolean isFriend(String userId, String friendId) {
-        //判断是否已是好友
-        Long count = userRelationRep.countAllByUserAIdAndUserBId(userId, friendId);
-        if (count != null && count > 0)
-            return true;
-        count = userRelationRep.countAllByUserAIdAndUserBId(friendId, userId);
-        if (count != null && count > 0)
-            return true;
-        return false;
-    }
-
     public FriendUserVo getUserDetail(String userId, String friendId) {
         User user = userRep.findOne(friendId);
         user.setPassword(null);
@@ -172,5 +163,20 @@ public class UserService extends BaseService<User, String, UserRep> {
         friendUserVo.setUser(user);
         friendUserVo.setFriend(isMyFriend(userId, friendId));
         return friendUserVo;
+    }
+
+    public List<User> getUserInfo(String json) {
+        List<String> userList = gson.fromJson(json, new TypeToken<List<String>>() {
+        }.getType());
+        SearchCondition searchCondition = new SearchCondition();
+        searchCondition.setPageNum(1);
+        searchCondition.setSize(100);
+        searchCondition.addSearchBean("userId", userList, SearchBean.OPERATOR_IN);
+        List<User> result = getListBySearchCondition(searchCondition);
+        for (User user : result) {
+            user.setToken(null);
+            user.setPassword(null);
+        }
+        return result;
     }
 }
