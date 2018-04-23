@@ -53,4 +53,19 @@ public interface UserRep extends BaseRepository<User, String> {
             countQuery = "select count(u.userId) from User u" +
                     " where u.userId in :userIdList ")
     List<UserInfoVo> getUserListInfo(@Param("userIdList") List<String> userIdList);
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserInfoVo(u.userId,u.nickname,u.avatar) from User u" +
+            " where u.userId = :userId ",
+            countQuery = "select count(u.userId) from User u" +
+                    " where u.userId = :userId ")
+    List<UserInfoVo> getUserInfo(@Param("userId") String userId);
+
+
+    @Query(value = "select new com.info.xiaotingtingBackEnd.model.vo.UserInfoVo(u.userId,u.nickname,u.avatar)" +
+            " from User u, UserRelation ur" +
+            " where (ur.userAId = :userId and u.userId = ur.userBId)" +
+            " or (ur.userBId = :userId and u.userId = ur.userAId) ",
+            countQuery = "select count(ur.userAId) from UserRelation ur " +
+                    "where ur.userAId = :userId or ur.userBId = :userId")
+    List<UserInfoVo> getMyFriendInfoList(@Param("userId") String userId);
 }

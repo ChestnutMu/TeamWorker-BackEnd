@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.constants.ChatConstants;
 import com.info.xiaotingtingBackEnd.model.Chat;
 import com.info.xiaotingtingBackEnd.model.ChatMessage;
+import com.info.xiaotingtingBackEnd.model.vo.UserInfoVo;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.repository.ChatRep;
 import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
@@ -11,7 +12,6 @@ import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -40,10 +40,12 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             }
             chat.setUserList(gson.toJson(userList));
             Chat temp = chatRep.findTopByUserListAndChatType(chat.getUserList(), ChatConstants.TYPE_CHAT_DOUBLE);
+            Date now = new Date();
             if (temp != null) {//不用创建
+                temp.setUpdateTime(now);
+                chatRep.save(temp);
                 return temp;
             }
-            Date now = new Date();
             chat.setCreateTime(now);
             chat.setUpdateTime(now);
             chatRep.save(chat);
@@ -79,6 +81,8 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
         }
         List<ChatMessage> chatMessageList = new ArrayList<>(userList.size() - 1);
         Date now = new Date();
+        List<UserInfoVo> userInfoVoList = userRep.getUserInfo(userId);
+        UserInfoVo userInfo = userInfoVoList.get(0);
         for (String receiverId : userList) {
             if (receiverId.equals(userId)) continue;
             ChatMessage chatMessage = new ChatMessage();
@@ -88,7 +92,14 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             chatMessage.setMessage(message);
             chatMessage.setSend(false);
             chatMessage.setSendTime(now);
+            chatMessage.setNickname(userInfo.getNickname());
+            chatMessage.setAvatar(userInfo.getAvatar());
             chatMessageList.add(chatMessage);
+        }
+        if (chat.getChatType().equals(ChatConstants.TYPE_CHAT_DOUBLE)) {
+            chat.setLastMessage(message);
+        } else {
+            chat.setLastMessage(userInfo.getNickname() + ":" + message);
         }
         chat.setUpdateTime(now);
         chatRep.save(chat);

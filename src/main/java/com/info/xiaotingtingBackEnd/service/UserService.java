@@ -172,4 +172,8 @@ public class UserService extends BaseService<User, String, UserRep> {
         List<UserInfoVo> result = userRep.getUserListInfo(userIdList);
         return result;
     }
+
+    public List<UserInfoVo> getUserListInfoByPersonal(String userId) {
+        return userRep.getMyFriendInfoList(userId);
+    }
 }

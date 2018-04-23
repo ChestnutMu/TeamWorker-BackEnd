@@ -256,4 +256,18 @@ public class UserController {
         response.setData(result);
         return response;
     }
+
+    /**
+     * 获取个人好友的用户信息
+     *
+     * @param uid
+     * @return
+     */
+    @RequestMapping(value = "getUserListInfoByPersonal", method = RequestMethod.POST)
+    public ApiResponse<List<UserInfoVo>> getUserListInfoByPersonal(@RequestHeader("uid") String uid) {
+        List<UserInfoVo> result = userService.getUserListInfoByPersonal(uid);
+        ApiResponse<List<UserInfoVo>> response = new ApiResponse<>(0, "获取成功");
+        response.setData(result);
+        return response;
+    }
 }

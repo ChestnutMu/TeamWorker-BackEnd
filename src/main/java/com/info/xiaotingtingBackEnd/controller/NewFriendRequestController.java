@@ -2,6 +2,7 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
+import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.vo.FriendUserVo;
 import com.info.xiaotingtingBackEnd.model.vo.NewFriendRequestVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
@@ -111,11 +112,12 @@ public class NewFriendRequestController {
      * @return
      */
     @RequestMapping(value = "acceptedRequest", method = RequestMethod.POST)
-    public ApiResponse<Object> acceptedRequest(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    public ApiResponse<User> acceptedRequest(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String newFriendRequestId = params.get("newFriendRequestId");
-        requestService.acceptedRequest(userId, newFriendRequestId);
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        User user = requestService.acceptedRequest(userId, newFriendRequestId);
+        ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setData(user);
         apiResponse.setMessage("已接收该好友请求");
         return apiResponse;
     }

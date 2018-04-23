@@ -31,6 +31,8 @@ public class IdAuthentication implements HandlerInterceptor {
         logger.info("method " + httpServletRequest.getRemoteAddr());
         String uid = httpServletRequest.getHeader("uid");
         String token = httpServletRequest.getHeader("token");
+        logger.info("uid " + uid);
+        logger.info("token " + token);
         if (userService.idAuth(uid, token)) {
             logger.info("身份认证成功");
             return true;

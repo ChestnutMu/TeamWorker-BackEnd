@@ -49,6 +49,10 @@ public class ChatMessage implements Serializable {
     /*发送时间*/
     private Date sendTime;
 
+    private String nickname;
+
+    private String avatar;
+
     public String getChatMessageId() {
         return chatMessageId;
     }
@@ -103,5 +107,21 @@ public class ChatMessage implements Serializable {
 
     public void setSendTime(Date sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

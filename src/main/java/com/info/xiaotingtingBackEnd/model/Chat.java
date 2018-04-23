@@ -54,6 +54,8 @@ public class Chat implements Serializable {
     /*更新时间*/
     private Date updateTime;
 
+    private String lastMessage;
+
     public String getChatId() {
         return chatId;
     }
@@ -124,5 +126,13 @@ public class Chat implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 }
