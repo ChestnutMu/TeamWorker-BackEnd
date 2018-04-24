@@ -114,7 +114,10 @@ public class NewFriendRequestController {
     @RequestMapping(value = "acceptedRequest", method = RequestMethod.POST)
     public ApiResponse<User> acceptedRequest(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String newFriendRequestId = params.get("newFriendRequestId");
-        User user = requestService.acceptedRequest(userId, newFriendRequestId);
+        String friendId = requestService.acceptedRequest(userId, newFriendRequestId);
+        User user = userService.findOne(friendId);
+        user.setToken(null);
+        user.setPassword(null);
         ApiResponse<User> apiResponse = new ApiResponse<>();
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setData(user);

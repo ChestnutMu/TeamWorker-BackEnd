@@ -89,7 +89,7 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public User acceptedRequest(String userId, String newFriendRequestId) throws PlatformException {
+    public String acceptedRequest(String userId, String newFriendRequestId) throws PlatformException {
         NewFriendRequest newFriendRequest = newFriendRequestRep.findOne(newFriendRequestId);
         if (newFriendRequest == null)
             throw new PlatformException(-1, "好友请求不存在");
@@ -106,10 +106,7 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
         userRelation.setUserBId(newFriendRequest.getRequesterId());
         userRelationRep.save(userRelation);
 
-        User user = userRep.findOne(newFriendRequest.getRequesterId());
-        user.setPassword(null);
-        user.setToken(null);
-        return user;
+        return newFriendRequest.getRequesterId();
     }
 
     @Transactional(rollbackFor = Exception.class)

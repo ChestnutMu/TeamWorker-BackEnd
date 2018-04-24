@@ -52,6 +52,16 @@ public class ChatMessage implements Serializable {
     private String nickname;
 
     private String avatar;
+    
+    private Integer type;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public String getChatMessageId() {
         return chatMessageId;

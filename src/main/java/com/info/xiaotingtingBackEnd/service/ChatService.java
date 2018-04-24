@@ -121,20 +121,100 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             throw new PlatformException(-1, "你没有权限");
         Date now = new Date();
         if (!DataCheckUtil.isEmpty(newChat.getChatName())) {
+            if (newChat.getChatName().length() >= 15) {
+                throw new PlatformException(-1, "已超过限定字数");
+            }
             chat.setChatName(newChat.getChatName());
             chat.setUpdateTime(now);
+//            chatRep.save(chat);
+            sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_CHANGE_NAME, null);
         }
         if (!DataCheckUtil.isEmpty(newChat.getChatPic())) {
             chat.setChatPic(newChat.getChatPic());
             chat.setUpdateTime(now);
+//            chatRep.save(chat);
+            sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_CHANGE_PIC, null);
         }
         if (!DataCheckUtil.isEmpty(newChat.getUserList())) {
             Set<String> userList = gson.fromJson(newChat.getUserList(), new TypeToken<HashSet<String>>() {
             }.getType());
+            List<String> userListOld = gson.fromJson(chat.getUserList(), new TypeToken<ArrayList<String>>() {
+            }.getType());
+            List<String> addUserList = new ArrayList<>();
+            for (String temp : userList) {
+                if (!userListOld.remove(temp)) {
+                    addUserList.add(temp);
+                }
+            }
+            //删除的userListOld 添加的addUserList
+
             chat.setUserList(gson.toJson(userList));
             chat.setUpdateTime(now);
+//            chatRep.save(chat);
+            if (userListOld.isEmpty() && !addUserList.isEmpty())
+                sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_ADD, addUserList);
+            else if (!userListOld.isEmpty() && addUserList.isEmpty())
+                sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_REMOVE, userListOld);
         }
-        return chatRep.save(chat);
+        return chat;
+    }
+
+    private void sendChatMessageChangeInfo(String userId, Chat chat, Integer type, List<String> userListOld) {
+        Set<String> userList = gson.fromJson(chat.getUserList(), new TypeToken<HashSet<String>>() {
+        }.getType());
+        List<ChatMessage> chatMessageList = new ArrayList<>(userList.size() - 1);
+        List<UserInfoVo> userInfoVoList = userRep.getUserInfo(userId);
+        UserInfoVo userInfo = userInfoVoList.get(0);
+        String message = "";
+        List<UserInfoVo> userInfoList = null;
+        if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_NAME)) {
+            message = chat.getChatName();
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PIC)) {
+            message = chat.getChatPic();
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_ADD)) {
+            userInfoList = userRep.getUserListInfo(userListOld);
+            message = gson.toJson(userInfoList);
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_REMOVE)) {
+            userInfoList = userRep.getUserListInfo(userListOld);
+            message = gson.toJson(userInfoList);
+        }
+        for (String receiverId : userList) {
+            if (receiverId.equals(userId)) continue;
+            ChatMessage chatMessage = new ChatMessage();
+            chatMessage.setChatId(chat.getChatId());
+            chatMessage.setSenderId(userId);
+            chatMessage.setUserId(receiverId);
+            chatMessage.setSend(false);
+            chatMessage.setMessage(message);
+            chatMessage.setType(type);
+            chatMessage.setSendTime(chat.getUpdateTime());
+            chatMessage.setNickname(userInfo.getNickname());
+            chatMessage.setAvatar(userInfo.getAvatar());
+            chatMessageList.add(chatMessage);
+        }
+        if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_NAME)) {
+            chat.setLastMessage(userInfo.getNickname() + "修改聊天室名称为“" + message + "”");
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PIC)) {
+            chat.setLastMessage(userInfo.getNickname() + "修改聊天室头像");
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_ADD)) {
+            String temp = "";
+            for (int i = 0; i < userInfoList.size() - 1; i++) {
+                temp = temp + userInfoList.get(i).getNickname() + "、";
+            }
+            temp = temp + userInfoList.get(userInfoList.size() - 1).getNickname();
+            chat.setLastMessage(userInfo.getNickname() + "邀请" + temp + "加入了聊天室");
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_REMOVE)) {
+            String temp = "";
+            for (int i = 0; i < userInfoList.size() - 1; i++) {
+                temp = temp + userInfoList.get(i).getNickname() + "、";
+            }
+            temp = temp + userInfoList.get(userInfoList.size() - 1).getNickname();
+            chat.setLastMessage(userInfo.getNickname() + "将" + temp + "移出了聊天室");
+        }
+        chat.setUpdateTime(chat.getUpdateTime());
+        chatRep.save(chat);
+        chatMessageRep.save(chatMessageList);
+        handler.sendChatMessage(chatMessageList);
     }
 
     public void releaseChat(String userId, String chatId) throws PlatformException {

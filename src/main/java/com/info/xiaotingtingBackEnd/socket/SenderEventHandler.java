@@ -94,7 +94,7 @@ public class SenderEventHandler extends BaseSocketEventHandler {
             SocketIOClient socketIOClient = clientHashMap.get(chatMessage.getUserId());
             if (socketIOClient == null) {
                 logger.info("sendOderResultToUser socketIOClient不存在");
-                return;
+                continue;
             }
             socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MESSAGE, chatMessage);
         }
