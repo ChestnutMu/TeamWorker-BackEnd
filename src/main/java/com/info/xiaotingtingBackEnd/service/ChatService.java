@@ -177,6 +177,11 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
         } else if (type.equals(ChatConstants.TYPE_MESSAGE_CHANGE_PEOPLE_REMOVE)) {
             userInfoList = userRep.getUserListInfo(userListOld);
             message = gson.toJson(userInfoList);
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_PEOPLE_OUT)) {
+            Map<String, String> map = new HashMap<>();
+            map.put("adminId", chat.getAdminId());
+            map.put("userList", chat.getUserList());
+            message = gson.toJson(map);
         }
         for (String receiverId : userList) {
             if (receiverId.equals(userId)) continue;
@@ -210,8 +215,9 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             }
             temp = temp + userInfoList.get(userInfoList.size() - 1).getNickname();
             chat.setLastMessage(userInfo.getNickname() + "将" + temp + "移出了聊天室");
+        } else if (type.equals(ChatConstants.TYPE_MESSAGE_PEOPLE_OUT)) {
+            chat.setLastMessage(userInfo.getNickname() + "退出了聊天室");
         }
-        chat.setUpdateTime(chat.getUpdateTime());
         chatRep.save(chat);
         chatMessageRep.save(chatMessageList);
         handler.sendChatMessage(chatMessageList);
@@ -258,5 +264,23 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
                 throw new PlatformException(-1, "你不属于该聊天室");
         }
         return chats;
+    }
+
+    public void goOutChat(String chatId, String userId) throws PlatformException {
+        Chat chat = chatRep.findOne(chatId);
+        if (!chat.getUserList().contains(userId))
+            throw new PlatformException(-1, "你不在该聊天室");
+        List<String> userListOld = gson.fromJson(chat.getUserList(), new TypeToken<ArrayList<String>>() {
+        }.getType());
+        userListOld.remove(userId);
+        chat.setUpdateTime(new Date());
+        if (userListOld.isEmpty()) {
+            chatRep.delete(chatId);
+            return;
+        } else if (chat.getAdminId().equals(userId)) {
+            chat.setAdminId(userListOld.get(0));
+            chat.setUserList(gson.toJson(userListOld));
+        }
+        sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_PEOPLE_OUT, null);
     }
 }

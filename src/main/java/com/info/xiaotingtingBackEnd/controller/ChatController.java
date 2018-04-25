@@ -135,4 +135,22 @@ public class ChatController {
     }
 
 
+    /**
+     * 退出聊天室
+     *
+     * @param userId
+     * @param params
+     * @return
+     * @throws PlatformException
+     */
+    @RequestMapping(value = "goOutChat", method = RequestMethod.POST)
+    public ApiResponse<Object> goOutChat(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String chatId = params.get("chatId");
+        if (DataCheckUtil.isEmpty(chatId))
+            throw new PlatformException(-1, "聊天室id不能为空");
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        chatService.goOutChat(chatId, userId);
+        return apiResponse;
+    }
+
 }
