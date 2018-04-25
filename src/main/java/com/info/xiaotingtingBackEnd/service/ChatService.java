@@ -268,8 +268,8 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
 
     public void goOutChat(String chatId, String userId) throws PlatformException {
         Chat chat = chatRep.findOne(chatId);
-        if (!chat.getUserList().contains(userId))
-            throw new PlatformException(-1, "你不在该聊天室");
+        if (chat == null || !chat.getUserList().contains(userId))
+            throw new PlatformException(2, "你不在该聊天室");
         List<String> userListOld = gson.fromJson(chat.getUserList(), new TypeToken<ArrayList<String>>() {
         }.getType());
         userListOld.remove(userId);
@@ -279,8 +279,8 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             return;
         } else if (chat.getAdminId().equals(userId)) {
             chat.setAdminId(userListOld.get(0));
-            chat.setUserList(gson.toJson(userListOld));
         }
+        chat.setUserList(gson.toJson(userListOld));
         sendChatMessageChangeInfo(userId, chat, ChatConstants.TYPE_MESSAGE_PEOPLE_OUT, null);
     }
 }
