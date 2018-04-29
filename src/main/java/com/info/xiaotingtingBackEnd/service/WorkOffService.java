@@ -26,11 +26,11 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         return workOffRep;
     }
 
-    public void applyWorkOff(String userId, String teamId, String workOffName, String workOffReason, String photo, long startTime, long endTime) throws PlatformException {
+    public void applyWorkOff(String userId,String userNickname ,String userAvatar,String teamId, String workOffType, String workOffReason, String photo, long startTime, long endTime) throws PlatformException {
         if (DataCheckUtil.isEmpty(teamId))
             throw new PlatformException(-1, "必须选择团队");
-        if (DataCheckUtil.isEmpty(workOffName))
-            throw new PlatformException(-1, "请假标题不能为空");
+        if (DataCheckUtil.isEmpty(workOffType))
+            throw new PlatformException(-1, "请假类型不能为空");
         if (DataCheckUtil.isEmpty(workOffReason))
             throw new PlatformException(-1, "请假内容不能为空");
         if (startTime >= endTime)
@@ -40,8 +40,10 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
             throw new PlatformException(-1, "你不属于该团队");
         WorkOff workOff = new WorkOff();
         workOff.setUserId(userId);
+        workOff.setUserNickname(userNickname);
+        workOff.setUserAvatar(userAvatar);
         workOff.setTeamId(teamId);
-        workOff.setWorkOffName(workOffName);
+        workOff.setWorkOffType(workOffType);
         workOff.setWorkOffReason(workOffReason);
         workOff.setPhoto(photo);
         workOff.setStartTime(new Date(startTime));
@@ -51,7 +53,7 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         workOffRep.save(workOff);
     }
 
-    public void returnWorkOff(String userId, String workOffId, String handleReason) throws PlatformException {
+    public WorkOff returnWorkOff(String userId, String workOffId, String handleReason) throws PlatformException {
         WorkOff workOff = workOffRep.findOne(workOffId);
         if (workOff == null)
             throw new PlatformException(-1, "请求条不存在");
@@ -64,10 +66,10 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         workOff.setStatus(WorkOffConstants.STATUS_WORK_OFF_RETURN);
         workOff.setHandleTime(new Date());
         workOff.setHandleReason(handleReason);
-        workOffRep.save(workOff);
+        return workOffRep.save(workOff);
     }
 
-    public void handleWorkOff(String userId, String workOffId, String handleReason, int handleStatus) throws PlatformException {
+    public WorkOff handleWorkOff(String userId, String nickname,String avatar,String workOffId, String handleReason, int handleStatus) throws PlatformException {
         WorkOff workOff = workOffRep.findOne(workOffId);
         if (workOff == null)
             throw new PlatformException(-1, "请求条不存在");
@@ -81,10 +83,12 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
         if (handleStatus != WorkOffConstants.STATUS_WORK_OFF_PASS && handleStatus != WorkOffConstants.STATUS_WORK_OFF_UNPASS)
             throw new PlatformException(-1, "处理状态不对");
         workOff.setAdminId(userId);
+        workOff.setAdminNickname(nickname);
+        workOff.setAdminAvatar(avatar);
         workOff.setStatus(handleStatus);
         workOff.setHandleReason(handleReason);
         workOff.setHandleTime(new Date());
-        workOffRep.save(workOff);
+        return workOffRep.save(workOff);
     }
 
     public void delWorkOff(String userId, String workOffId) throws PlatformException {

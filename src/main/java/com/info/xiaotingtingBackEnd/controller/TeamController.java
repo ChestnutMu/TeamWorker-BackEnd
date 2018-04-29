@@ -1,16 +1,20 @@
 package com.info.xiaotingtingBackEnd.controller;
 
+import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Team;
 import com.info.xiaotingtingBackEnd.model.TeamRelation;
+import com.info.xiaotingtingBackEnd.model.User;
 import com.info.xiaotingtingBackEnd.model.vo.TeamUserVo;
 import com.info.xiaotingtingBackEnd.model.vo.TeamVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.service.DepartmentService;
 import com.info.xiaotingtingBackEnd.service.TeamService;
+import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +48,29 @@ public class TeamController {
     public ApiResponse<Object> buildTeam(@RequestHeader("uid") String userId, @RequestBody TeamVo teamVo) throws PlatformException {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         teamService.buildTeam(userId, teamVo.getTeam(), teamVo.getUserList());
+        return apiResponse;
+    }
+
+    @RequestMapping(value = "updateTeamInformation", method = RequestMethod.POST)
+    public ApiResponse<Team> updateMyInformation(@RequestBody Team team) {
+        ApiResponse<Team> apiResponse = new ApiResponse<>();
+        Team result = teamService.findOne(team.getTeamId());
+        if (!DataCheckUtil.isEmpty(team.getTeamBadge())) {
+            result.setTeamBadge(team.getTeamBadge());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamName())) {
+            result.setTeamName(team.getTeamName());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamDesc())) {
+            result.setTeamDesc(team.getTeamDesc());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamIndustry())) {
+            result.setTeamIndustry(team.getTeamIndustry());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamRegion())) {
+            result.setTeamRegion(team.getTeamRegion());
+        }
+        result.setUpdateTime(new Date());
+        result = teamService.save(result);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("修改成功");
+        apiResponse.setData(result);
         return apiResponse;
     }
 

@@ -203,13 +203,13 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
     }
 
     /**
-     * 检查团队及团队人员是否有权限查看打卡记录
+     * 检查用户是否有权限查看团队成员的数据
      *
      * @param teamId
      * @param userId
      * @param teamUserId
      */
-    public void checkTeamAuthForPunchClockRecords(String teamId, String userId, String teamUserId) throws PlatformException {
+    public void checkPermission(String teamId, String userId, String teamUserId) throws PlatformException {
         if (DataCheckUtil.isEmpty(teamId))
             throw new PlatformException(-1, "必须是团队成员");
         TeamRelation teamRelationAdmin = getTeamRelation(userId, teamId);

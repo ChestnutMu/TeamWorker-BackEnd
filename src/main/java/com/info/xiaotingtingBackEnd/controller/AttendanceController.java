@@ -98,7 +98,7 @@ public class AttendanceController {
         String teamId = params.get("teamId");
         String teamUserId = params.get("teamUserId");
         if (!userId.equals(teamUserId))//如果是查看自己账户记录则不限制
-            teamService.checkTeamAuthForPunchClockRecords(teamId, userId, teamUserId);
+            teamService.checkPermission(teamId, userId, teamUserId);
         long startTime = Long.parseLong(params.get("startTime"));
         long endTime = Long.parseLong(params.get("endTime"));
         SearchCondition searchCondition = new SearchCondition();

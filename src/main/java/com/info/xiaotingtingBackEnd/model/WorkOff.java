@@ -31,13 +31,19 @@ public class WorkOff implements Serializable {
     /*用户id*/
     private String userId;
 
+    /*用户昵称*/
+    private String userNickname;
+
+    /*用户头像*/
+    private String userAvatar;
+
     /*团队id*/
     private String teamId;
 
-    /*标题*/
-    private String workOffName;
+    /*请假类型*/
+    private String workOffType;
 
-    /*内容*/
+    /*请假理由*/
     private String workOffReason;
 
     /*图片*/
@@ -54,6 +60,13 @@ public class WorkOff implements Serializable {
 
     /*处理id人*/
     private String adminId;
+
+    /*处理人昵称*/
+    private String adminNickname;
+
+    /*处理人头像*/
+    private String adminAvatar;
+
 
     /*处理信息*/
     private String handleReason;
@@ -80,6 +93,22 @@ public class WorkOff implements Serializable {
         this.userId = userId;
     }
 
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
+    }
+
     public String getTeamId() {
         return teamId;
     }
@@ -88,12 +117,12 @@ public class WorkOff implements Serializable {
         this.teamId = teamId;
     }
 
-    public String getWorkOffName() {
-        return workOffName;
+    public String getWorkOffType() {
+        return workOffType;
     }
 
-    public void setWorkOffName(String workOffName) {
-        this.workOffName = workOffName;
+    public void setWorkOffType(String workOffType) {
+        this.workOffType = workOffType;
     }
 
     public String getWorkOffReason() {
@@ -142,6 +171,22 @@ public class WorkOff implements Serializable {
 
     public void setAdminId(String adminId) {
         this.adminId = adminId;
+    }
+
+    public String getAdminNickname() {
+        return adminNickname;
+    }
+
+    public void setAdminNickname(String adminNickname) {
+        this.adminNickname = adminNickname;
+    }
+
+    public String getAdminAvatar() {
+        return adminAvatar;
+    }
+
+    public void setAdminAvatar(String adminAvatar) {
+        this.adminAvatar = adminAvatar;
     }
 
     public String getHandleReason() {

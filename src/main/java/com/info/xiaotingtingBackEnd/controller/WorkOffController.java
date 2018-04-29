@@ -2,7 +2,6 @@ package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.constants.WorkOffConstants;
-import com.info.xiaotingtingBackEnd.model.TeamRelation;
 import com.info.xiaotingtingBackEnd.model.WorkOff;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
@@ -67,8 +66,12 @@ public class WorkOffController {
     public ApiResponse<Object> applyWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         /*团队id*/
         String teamId = params.get("teamId");
-        /*标题*/
-        String workOffName = params.get("workOffName");
+        /*用户昵称*/
+        String userNickname = params.get("userNickname");
+        /*用户头像*/
+        String userAvatar = params.get("userAvatar");
+        /*类型*/
+        String workOffType = params.get("workOffType");
         /*内容*/
         String workOffReason = params.get("workOffReason");
         /*图片*/
@@ -77,7 +80,7 @@ public class WorkOffController {
         long startTime = Long.parseLong(params.get("startTime"));
         /*结束时间*/
         long endTime = Long.parseLong(params.get("endTime"));
-        workOffService.applyWorkOff(userId, teamId, workOffName, workOffReason, photo, startTime, endTime);
+        workOffService.applyWorkOff(userId, userNickname, userAvatar, teamId, workOffType, workOffReason, photo, startTime, endTime);
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "申请成功");
         return response;
     }
@@ -91,11 +94,12 @@ public class WorkOffController {
      * @throws PlatformException
      */
     @RequestMapping(value = "returnWorkOff", method = RequestMethod.POST)
-    public ApiResponse<Object> returnWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    public ApiResponse<WorkOff> returnWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String workOffId = params.get("workOffId");
         String handleReason = params.get("handleReason");
-        workOffService.returnWorkOff(userId, workOffId, handleReason);
+        WorkOff workOff = workOffService.returnWorkOff(userId, workOffId, handleReason);
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "回收请假条成功");
+        response.setData(workOff);
         return response;
     }
 
@@ -108,12 +112,15 @@ public class WorkOffController {
      * @throws PlatformException
      */
     @RequestMapping(value = "handleWorkOff", method = RequestMethod.POST)
-    public ApiResponse<Object> handleWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    public ApiResponse<WorkOff> handleWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String nickname = params.get("nickname");
+        String avatar = params.get("avatar");
         String workOffId = params.get("workOffId");
         String handleReason = params.get("handleReason");
         String handleStatus = params.get("handleStatus");
-        workOffService.handleWorkOff(userId, workOffId, handleReason, Integer.parseInt(handleStatus));
+        WorkOff workOff = workOffService.handleWorkOff(userId,nickname,avatar, workOffId, handleReason, Integer.parseInt(handleStatus));
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "处理请假条成功");
+        response.setData(workOff);
         return response;
     }
 
@@ -127,10 +134,12 @@ public class WorkOffController {
      */
     @RequestMapping(value = "getWorkOffs", method = RequestMethod.POST)
     public ApiResponse<List<WorkOff>> getWorkOffs(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String teamId = params.get("teamId");
         String status = params.get("status");
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setSearchCondition(params);
         searchCondition.addSearchBean("userId", userId, SearchBean.OPERATOR_EQ);
+        searchCondition.addSearchBean("teamId", teamId, SearchBean.OPERATOR_EQ);
         if (!DataCheckUtil.isEmpty(status))
             searchCondition.addSearchBean("status", Integer.parseInt(status), SearchBean.OPERATOR_EQ);
         searchCondition.addSortBean("commitTime", "asc", SearchBean.OPERATOR_SORT);
@@ -151,7 +160,7 @@ public class WorkOffController {
         String teamId = params.get("teamId");
         String teamUserId = params.get("teamUserId");
         if (!userId.equals(teamUserId))
-            teamService.checkTeamAuthForPunchClockRecords(teamId, userId, teamUserId);
+            teamService.checkPermission(teamId, userId, teamUserId);
         String status = params.get("status");
         SearchCondition searchCondition = new SearchCondition();
         searchCondition.setSearchCondition(params);
