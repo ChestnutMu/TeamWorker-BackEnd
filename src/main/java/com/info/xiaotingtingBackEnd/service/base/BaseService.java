@@ -47,10 +47,31 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
     public AttendanceRep attendanceRep;
 
     @Autowired
+    public DayReportRep dayReportRep;
+
+    @Autowired
+    public WeekReportRep weekReportRep;
+
+    @Autowired
+    public MonthReportRep monthReportRep;
+
+    @Autowired
+    public PerformanceRep performanceRep;
+
+    @Autowired
     public AddressRep addressRep;
 
     @Autowired
     public WorkOffRep workOffRep;
+
+    @Autowired
+    public UseGoodRep useGoodRep;
+
+    @Autowired
+    public PurchaseRep purchaseRep;
+
+    @Autowired
+    public ReimbursementRep reimbursementRep;
 
     @Autowired
     public UserRelationRep userRelationRep;

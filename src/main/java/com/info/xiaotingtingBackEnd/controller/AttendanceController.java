@@ -82,7 +82,7 @@ public class AttendanceController {
             searchCondition.addSearchBean("teamId", teamId, SearchBean.OPERATOR_EQ);
         searchCondition.addSearchBean("punchInTime", new Date(startTime), SearchBean.OPERATOR_GE);
         searchCondition.addSearchBean("punchInTime", new Date(endTime), SearchBean.OPERATOR_LE);
-        searchCondition.addSortBean("punchInTime", "desc", SearchBean.OPERATOR_SORT);
+        searchCondition.addSortBean("punchInTime", "asc", SearchBean.OPERATOR_SORT);
         ApiResponse<List<Attendance>> response = attendanceService.getPageBySearchCondition(searchCondition);
         return response;
     }
@@ -109,7 +109,7 @@ public class AttendanceController {
             searchCondition.addSearchBean("teamId", teamId, SearchBean.OPERATOR_EQ);
         searchCondition.addSearchBean("punchInTime", new Date(startTime), SearchBean.OPERATOR_GE);
         searchCondition.addSearchBean("punchInTime", new Date(endTime), SearchBean.OPERATOR_LE);
-        searchCondition.addSortBean("punchInTime", "desc", SearchBean.OPERATOR_SORT);
+        searchCondition.addSortBean("punchInTime", "asc", SearchBean.OPERATOR_SORT);
         ApiResponse<List<Attendance>> response = attendanceService.getPageBySearchCondition(searchCondition);
         return response;
     }

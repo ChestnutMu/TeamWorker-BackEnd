@@ -36,7 +36,7 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void buildTeam(String userId, Team team, String userJson) throws PlatformException {
+    public Team buildTeam(String userId, Team team, String userJson) throws PlatformException {
         if (DataCheckUtil.isEmpty(team.getTeamName()))
             throw new PlatformException(-1, "团队名字不能为空");
         if (DataCheckUtil.isEmpty(team.getTeamIndustry()))
@@ -80,6 +80,7 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
             ex.printStackTrace();
             throw new PlatformException(-1, "团队人员不能重复");
         }
+        return team;
     }
 
 
@@ -222,5 +223,27 @@ public class TeamService extends BaseService<Team, String, TeamRep> {
             if (null == teamRelation)
                 throw new PlatformException(-1, "该成员不是团队成员");
         }
+    }
+
+    public Team updateTeamInformation(String userId, Team team) throws PlatformException {
+        TeamRelation teamRelation = teamRelationRep.findOne(new TeamRelation.TeamRelationId(team.getTeamId(), userId));
+        if (teamRelation==null)
+            throw new PlatformException(-1,"你不属于该团队");
+        if (teamRelation.getType() != TeamConstants.TYPE_TEAM_OWNER && teamRelation.getType() != TeamConstants.TYPE_TEAM_ADMIN)
+            throw new PlatformException(-1, "你没有修改权限");
+        Team result = teamRep.findOne(team.getTeamId());
+        if (!DataCheckUtil.isEmpty(team.getTeamBadge())) {
+            result.setTeamBadge(team.getTeamBadge());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamName())) {
+            result.setTeamName(team.getTeamName());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamDesc())) {
+            result.setTeamDesc(team.getTeamDesc());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamIndustry())) {
+            result.setTeamIndustry(team.getTeamIndustry());
+        } else if (!DataCheckUtil.isEmpty(team.getTeamRegion())) {
+            result.setTeamRegion(team.getTeamRegion());
+        }
+        result.setUpdateTime(new Date());
+        return teamRep.save(result);
     }
 }

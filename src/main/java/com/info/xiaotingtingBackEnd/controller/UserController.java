@@ -128,9 +128,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "updateMyInformation", method = RequestMethod.POST)
-    public ApiResponse<User> updateMyInformation(@RequestBody User user) {
+    public ApiResponse<User> updateMyInformation(@RequestHeader("uid") String userId, @RequestBody User user) {
         ApiResponse<User> apiResponse = new ApiResponse<>();
-        User result = userService.findOne(user.getUserId());
+        User result = userService.findOne(userId);
         if (!DataCheckUtil.isEmpty(user.getAvatar())) {
             result.setAvatar(user.getAvatar());
         } else if (!DataCheckUtil.isEmpty(user.getNickname())) {

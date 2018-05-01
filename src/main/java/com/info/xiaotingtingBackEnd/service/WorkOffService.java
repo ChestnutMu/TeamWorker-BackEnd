@@ -56,13 +56,13 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
     public WorkOff returnWorkOff(String userId, String workOffId, String handleReason) throws PlatformException {
         WorkOff workOff = workOffRep.findOne(workOffId);
         if (workOff == null)
-            throw new PlatformException(-1, "请求条不存在");
+            throw new PlatformException(-1, "请假条不存在");
         if (!workOff.getUserId().equals(userId))
-            throw new PlatformException(-1, "请求条不属于你");
+            throw new PlatformException(-1, "请假条不属于你");
         if (workOff.getStatus() == WorkOffConstants.STATUS_WORK_OFF_RETURN)
-            throw new PlatformException(-1, "请求条已回收");
+            throw new PlatformException(-1, "请假条已回收");
         if (workOff.getStatus() != WorkOffConstants.STATUS_WORK_OFF_WAITING)
-            throw new PlatformException(-1, "请求条已被处理");
+            throw new PlatformException(-1, "请假条已被处理");
         workOff.setStatus(WorkOffConstants.STATUS_WORK_OFF_RETURN);
         workOff.setHandleTime(new Date());
         workOff.setHandleReason(handleReason);
@@ -72,7 +72,7 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
     public WorkOff handleWorkOff(String userId, String nickname,String avatar,String workOffId, String handleReason, int handleStatus) throws PlatformException {
         WorkOff workOff = workOffRep.findOne(workOffId);
         if (workOff == null)
-            throw new PlatformException(-1, "请求条不存在");
+            throw new PlatformException(-1, "请假条不存在");
         if (workOff.getUserId().equals(userId))
             throw new PlatformException(-1, "不能处理自己的请假条");
         TeamRelation teamRelation = teamRelationRep.findOne(new TeamRelation.TeamRelationId(workOff.getTeamId(), userId));
@@ -94,46 +94,23 @@ public class WorkOffService extends BaseService<WorkOff, String, WorkOffRep> {
     public void delWorkOff(String userId, String workOffId) throws PlatformException {
         WorkOff workOff = workOffRep.findOne(workOffId);
         if (workOff == null)
-            throw new PlatformException(-1, "请求条不存在");
+            throw new PlatformException(-1, "请假条不存在");
         if (!workOff.getUserId().equals(userId))
-            throw new PlatformException(-1, "请求条不属于你");
+            throw new PlatformException(-1, "请假条不属于你");
         if (workOff.getStatus() == WorkOffConstants.STATUS_WORK_OFF_RETURN) {
             workOffRep.delete(workOff);
             return;
         }
         if (workOff.getStatus() == WorkOffConstants.STATUS_WORK_OFF_WAITING)
-            throw new PlatformException(-1, "请求条还在等待处理，不能删除");
+            throw new PlatformException(-1, "请假条还在等待处理，不能删除");
         long passTime = System.currentTimeMillis() - workOff.getEndTime().getTime();
         if (passTime > 30 * 86400 * 1000L) {
             workOffRep.delete(workOff);
             return;
         } else {
-            throw new PlatformException(-1, "请求条必须结束后一个月才能删除");
+            throw new PlatformException(-1, "请假条必须结束后一个月才能删除");
         }
 
     }
 
-//    public void saveAndSendApplication(WorkOff workOff) {
-//        workOffRep.save(workOff);
-//
-//        Message message = new Message();
-//        message.setChatId(EntityUtil.getIdByTimeStampAndRandom());
-//        message.setMessageType(1);
-//        message.setSend(false);
-//        message.setRead(false);
-//        message.setSenderId(workOff.getUserId());
-//        message.setReceiverId(workOff.getApproverId());
-//        message.setChatName("工作通知");
-//        message.setContent(workOff.getUserName() + "的请假需要您的审批");
-//        message.setTime(new Date());
-//        handler.sendMessage(message);
-//    }
-//
-//    public ApiResponse approveWorkOff(WorkOff workOff) {
-//        workOffRep.save(workOff);
-//        ApiResponse workOffApiResponse = new ApiResponse<>();
-//        workOffApiResponse.setStatus(HttpResponseCodes.SUCCESS);
-//        workOffApiResponse.setMessage("已处理该请假");
-//        return workOffApiResponse;
-//    }
 }

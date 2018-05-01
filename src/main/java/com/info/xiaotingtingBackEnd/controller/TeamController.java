@@ -45,29 +45,17 @@ public class TeamController {
      * @throws PlatformException
      */
     @RequestMapping(value = "buildTeam", method = RequestMethod.POST)
-    public ApiResponse<Object> buildTeam(@RequestHeader("uid") String userId, @RequestBody TeamVo teamVo) throws PlatformException {
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        teamService.buildTeam(userId, teamVo.getTeam(), teamVo.getUserList());
+    public ApiResponse<Team> buildTeam(@RequestHeader("uid") String userId, @RequestBody TeamVo teamVo) throws PlatformException {
+        ApiResponse<Team> apiResponse = new ApiResponse<>();
+        Team result = teamService.buildTeam(userId, teamVo.getTeam(), teamVo.getUserList());
+        apiResponse.setData(result);
         return apiResponse;
     }
 
     @RequestMapping(value = "updateTeamInformation", method = RequestMethod.POST)
-    public ApiResponse<Team> updateMyInformation(@RequestBody Team team) {
+    public ApiResponse<Team> updateTeamInformation(@RequestHeader("uid") String userId, @RequestBody Team team) throws PlatformException {
         ApiResponse<Team> apiResponse = new ApiResponse<>();
-        Team result = teamService.findOne(team.getTeamId());
-        if (!DataCheckUtil.isEmpty(team.getTeamBadge())) {
-            result.setTeamBadge(team.getTeamBadge());
-        } else if (!DataCheckUtil.isEmpty(team.getTeamName())) {
-            result.setTeamName(team.getTeamName());
-        } else if (!DataCheckUtil.isEmpty(team.getTeamDesc())) {
-            result.setTeamDesc(team.getTeamDesc());
-        } else if (!DataCheckUtil.isEmpty(team.getTeamIndustry())) {
-            result.setTeamIndustry(team.getTeamIndustry());
-        } else if (!DataCheckUtil.isEmpty(team.getTeamRegion())) {
-            result.setTeamRegion(team.getTeamRegion());
-        }
-        result.setUpdateTime(new Date());
-        result = teamService.save(result);
+        Team result = teamService.updateTeamInformation(userId, team);
         apiResponse.setStatus(HttpResponseCodes.SUCCESS);
         apiResponse.setMessage("修改成功");
         apiResponse.setData(result);

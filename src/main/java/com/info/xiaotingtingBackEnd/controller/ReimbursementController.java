@@ -1,14 +1,14 @@
 package com.info.xiaotingtingBackEnd.controller;
 
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
-import com.info.xiaotingtingBackEnd.constants.WorkOffConstants;
-import com.info.xiaotingtingBackEnd.model.WorkOff;
+import com.info.xiaotingtingBackEnd.constants.ReimbursementConstants;
+import com.info.xiaotingtingBackEnd.model.Reimbursement;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
 import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
+import com.info.xiaotingtingBackEnd.service.ReimbursementService;
 import com.info.xiaotingtingBackEnd.service.TeamService;
-import com.info.xiaotingtingBackEnd.service.WorkOffService;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,99 +20,97 @@ import java.util.Map;
  * Copyright (c) 2018, Chestnut All rights reserved
  * Author: Chestnut
  * CreateTime：at 2018/4/2 17:47:27
- * Description：请假
+ * Description：报销
  * Email: xiaoting233zhang@126.com
  */
 @RestController
-@RequestMapping("workoff")
-public class WorkOffController {
+@RequestMapping("reimbursement")
+public class ReimbursementController {
 
     @Autowired
-    WorkOffService workOffService;
+    ReimbursementService reimbursementService;
 
     @Autowired
     TeamService teamService;
 
     /**
-     * 申请请假
+     * 申请报销
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "applyWorkOff", method = RequestMethod.POST)
-    public ApiResponse<Object> applyWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    @RequestMapping(value = "applyReimbursement", method = RequestMethod.POST)
+    public ApiResponse<Object> applyReimbursement(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         /*团队id*/
         String teamId = params.get("teamId");
         /*用户昵称*/
         String userNickname = params.get("userNickname");
         /*用户头像*/
         String userAvatar = params.get("userAvatar");
-        /*类型*/
-        String workOffType = params.get("workOffType");
-        /*内容*/
-        String workOffReason = params.get("workOffReason");
+        /*报销金额*/
+        String reimbursementMoney = params.get("reimbursementMoney");
+        /*报销类型*/
+        String reimbursementType = params.get("reimbursementType");
+        /*报销明细*/
+        String reimbursementDetail = params.get("reimbursementDetail");
         /*图片*/
         String photo = params.get("photo");
-        /*开始时间*/
-        long startTime = Long.parseLong(params.get("startTime"));
-        /*结束时间*/
-        long endTime = Long.parseLong(params.get("endTime"));
-        workOffService.applyWorkOff(userId, userNickname, userAvatar, teamId, workOffType, workOffReason, photo, startTime, endTime);
+        reimbursementService.applyReimbursement(userId, userNickname, userAvatar, teamId, reimbursementMoney, reimbursementType,reimbursementDetail, photo);
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "申请成功");
         return response;
     }
 
     /**
-     * 回收请假条（只要还没处理）
+     * 回收报销申请（只要还没处理）
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "returnWorkOff", method = RequestMethod.POST)
-    public ApiResponse<WorkOff> returnWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
-        String workOffId = params.get("workOffId");
+    @RequestMapping(value = "returnReimbursement", method = RequestMethod.POST)
+    public ApiResponse<Reimbursement> returnReimbursement(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String reimbursementId = params.get("reimbursementId");
         String handleReason = params.get("handleReason");
-        WorkOff workOff = workOffService.returnWorkOff(userId, workOffId, handleReason);
-        ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "回收请假条成功");
-        response.setData(workOff);
+        Reimbursement reimbursement = reimbursementService.returnReimbursement(userId, reimbursementId, handleReason);
+        ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "回收报销申请成功");
+        response.setData(reimbursement);
         return response;
     }
 
     /**
-     * 处理请假条（只要还没处理）
+     * 处理报销申请（只要还没处理）
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "handleWorkOff", method = RequestMethod.POST)
-    public ApiResponse<WorkOff> handleWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    @RequestMapping(value = "handleReimbursement", method = RequestMethod.POST)
+    public ApiResponse<Reimbursement> handleReimbursement(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String nickname = params.get("nickname");
         String avatar = params.get("avatar");
-        String workOffId = params.get("workOffId");
+        String reimbursementId = params.get("reimbursementId");
         String handleReason = params.get("handleReason");
         String handleStatus = params.get("handleStatus");
-        WorkOff workOff = workOffService.handleWorkOff(userId,nickname,avatar, workOffId, handleReason, Integer.parseInt(handleStatus));
+        Reimbursement reimbursement = reimbursementService.handleReimbursementId(userId,nickname,avatar, reimbursementId, handleReason, Integer.parseInt(handleStatus));
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "处理请假条成功");
-        response.setData(workOff);
+        response.setData(reimbursement);
         return response;
     }
 
     /**
-     * 获取个人请假条列表
+     * 获取个人报销申请列表
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "getWorkOffs", method = RequestMethod.POST)
-    public ApiResponse<List<WorkOff>> getWorkOffs(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    @RequestMapping(value = "getReimbursements", method = RequestMethod.POST)
+    public ApiResponse<List<Reimbursement>> getReimbursements(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String teamId = params.get("teamId");
         String status = params.get("status");
         SearchCondition searchCondition = new SearchCondition();
@@ -122,20 +120,20 @@ public class WorkOffController {
         if (!DataCheckUtil.isEmpty(status))
             searchCondition.addSearchBean("status", Integer.parseInt(status), SearchBean.OPERATOR_EQ);
         searchCondition.addSortBean("commitTime", "asc", SearchBean.OPERATOR_SORT);
-        ApiResponse<List<WorkOff>> response = workOffService.getPageBySearchCondition(searchCondition);
+        ApiResponse<List<Reimbursement>> response = reimbursementService.getPageBySearchCondition(searchCondition);
         return response;
     }
 
     /**
-     * 获取团队请假条列表
+     * 获取报销申请列表
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "getWorkOffsForTeam", method = RequestMethod.POST)
-    public ApiResponse<List<WorkOff>> getWorkOffsForTeam(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+    @RequestMapping(value = "getReimbursementsForTeam", method = RequestMethod.POST)
+    public ApiResponse<List<Reimbursement>> getReimbursementsForTeam(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String teamId = params.get("teamId");
         String teamUserId = params.get("teamUserId");
         if (!userId.equals(teamUserId))
@@ -148,30 +146,30 @@ public class WorkOffController {
             searchCondition.addSearchBean("userId", teamUserId, SearchBean.OPERATOR_EQ);
         if (!DataCheckUtil.isEmpty(status)) {
             int temp = Integer.parseInt(status);
-            if (temp == WorkOffConstants.STATUS_WORK_OFF_RETURN)
+            if (temp == ReimbursementConstants.STATUS_REIMBURSEMENT_RETURN)
                 throw new PlatformException(-1, "查看状态不正确");
             searchCondition.addSearchBean("status", Integer.parseInt(status), SearchBean.OPERATOR_EQ);
         } else {
-            searchCondition.addSearchBean("status", WorkOffConstants.STATUS_WORK_OFF_RETURN, SearchBean.OPERATOR_NE);
+            searchCondition.addSearchBean("status", ReimbursementConstants.STATUS_REIMBURSEMENT_RETURN, SearchBean.OPERATOR_NE);
         }
         searchCondition.addSortBean("commitTime", "asc", SearchBean.OPERATOR_SORT);
-        ApiResponse<List<WorkOff>> response = workOffService.getPageBySearchCondition(searchCondition);
+        ApiResponse<List<Reimbursement>> response = reimbursementService.getPageBySearchCondition(searchCondition);
         return response;
     }
 
 
     /**
-     * 删除请假条（回收的以及处理完后请假结束时间已经过去一个月则可以删除）
+     * 删除报销申请（回收的以及处理完后报销申请已经过去一个月则可以删除）
      *
      * @param userId
      * @param params
      * @return
      * @throws PlatformException
      */
-    @RequestMapping(value = "delWorkOff", method = RequestMethod.POST)
-    public ApiResponse<Object> delWorkOff(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
-        String workOffId = params.get("workOffId");
-        workOffService.delWorkOff(userId, workOffId);
+    @RequestMapping(value = "delReimbursement", method = RequestMethod.POST)
+    public ApiResponse<Object> delReimbursement(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String reimbursementId = params.get("reimbursementId");
+        reimbursementService.delReimbursement(userId, reimbursementId);
         ApiResponse response = new ApiResponse<>(HttpResponseCodes.SUCCESS, "处理请假条成功");
         return response;
     }
