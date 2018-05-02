@@ -35,5 +35,10 @@ public class SenderProtocol {
      * 发送对象 List<ChatMessage>
      */
     public static final int MSG_SEND_CHAT_MANY_MESSAGE = 2001;
+    /**
+     * 发送客户端消息成功
+     * 发送对象 id
+     */
+    public static final int MSG_SEND_CHAT_MESSAGE_DONE = 2002;
 
 }

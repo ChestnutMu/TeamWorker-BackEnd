@@ -68,7 +68,7 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
         return chat;
     }
 
-    public void sendChatMessage(String chatId, String userId, String message) throws PlatformException {
+    public void sendChatMessage(String chatId, String userId, String message, String chatMessageId) throws PlatformException {
         Chat chat = chatRep.findOne(chatId);
         if (chat == null)
             throw new PlatformException(-1, "聊天室不存在");
@@ -105,6 +105,7 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
         chatRep.save(chat);
         chatMessageRep.save(chatMessageList);
         handler.sendChatMessage(chatMessageList);
+        handler.sendChatMessageDone(userId, chatMessageId);
     }
 
     public void hasSendChatMessage(String chatMessageId) {

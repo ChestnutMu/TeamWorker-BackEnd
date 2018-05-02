@@ -124,12 +124,13 @@ public class ChatController {
     @RequestMapping(value = "sendChatMessage", method = RequestMethod.POST)
     public ApiResponse<Object> sendChatMessage(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String chatId = params.get("chatId");
+        String chatMessageId = params.get("chatMessageId");
         String message = params.get("message");
         if (DataCheckUtil.isEmpty(chatId))
             throw new PlatformException(-1, "聊天室id不能为空");
         if (DataCheckUtil.isEmpty(message))
             throw new PlatformException(-1, "消息不能为空");
-        chatService.sendChatMessage(chatId, userId, message);
+        chatService.sendChatMessage(chatId, userId, message, chatMessageId);
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         return apiResponse;
     }

@@ -109,4 +109,19 @@ public class SenderEventHandler extends BaseSocketEventHandler {
         }
         socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MANY_MESSAGE, chatMessageList);
     }
+
+    /**
+     * 发送消息完成
+     *
+     * @param uid
+     * @param chatMessageId
+     */
+    public void sendChatMessageDone(String uid, String chatMessageId) {
+        SocketIOClient socketIOClient = clientHashMap.get(uid);
+        if (socketIOClient == null) {
+            logger.info("sendOderResultToUser socketIOClient不存在");
+            return;
+        }
+        socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MESSAGE_DONE, chatMessageId);
+    }
 }
