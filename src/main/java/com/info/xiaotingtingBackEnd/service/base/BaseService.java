@@ -101,6 +101,9 @@ public abstract class BaseService<T, ID extends Serializable, TR extends BaseRep
     public ChatMessageRep chatMessageRep;
 
     @Autowired
+    public TeamNotificationRep teamNotificationRep;
+
+    @Autowired
     public SenderEventHandler handler;
 
 

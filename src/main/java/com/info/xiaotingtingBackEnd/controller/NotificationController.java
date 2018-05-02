@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.constants.HttpResponseCodes;
 import com.info.xiaotingtingBackEnd.model.Message;
+import com.info.xiaotingtingBackEnd.model.TeamNotification;
+import com.info.xiaotingtingBackEnd.model.TeamRelation;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
 import com.info.xiaotingtingBackEnd.pojo.ApiResponse;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
@@ -40,9 +42,6 @@ public class NotificationController {
     @RequestMapping(value = "sendNotification", method = RequestMethod.POST)
     public ApiResponse<Object> sendNotification(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String teamId = params.get("teamId");
-//        String senderNickname = params.get("senderNickname");
-//        String senderAvatar = params.get("senderAvatar");
-//        String receiverIds = params.get("receiverIds");
         String title = params.get("title");
         String content = params.get("content");
         String photo = params.get("photo");
@@ -57,4 +56,12 @@ public class NotificationController {
 
     }
 
+    @RequestMapping(value = "getTeamNotificationList", method = RequestMethod.POST)
+    public ApiResponse<List<TeamNotification>> getTeamNotificationList(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
+        String teamId = params.get("teamId");
+        List<TeamNotification> teamNotificationList = notificationService.getTeamNotificationList(teamId, userId);
+        ApiResponse<List<TeamNotification>> apiResponse = new ApiResponse<>();
+        apiResponse.setData(teamNotificationList);
+        return apiResponse;
+    }
 }
