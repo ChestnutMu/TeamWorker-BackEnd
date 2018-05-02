@@ -24,7 +24,10 @@ public class BaseSocketEventHandler {
     protected final SocketIOServer server;
 
     protected static final String TAG_USER_SEND_MESSAGE = "tag_user_send_message";
+
     protected static final String TAG_USER_RECEIVER_MESSAGE = "tag_user_receiver_message";
+
+    protected static final String TAG_USER_RECEIVER_NOTIFICATION = "tag_user_receiver_notification";
 
     protected static Map<String, SocketIOClient> clientHashMap = new ConcurrentHashMap<>();
 

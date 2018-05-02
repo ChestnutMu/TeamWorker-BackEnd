@@ -30,6 +30,7 @@ public class SenderProtocol {
      * 发送对象 ChatMessage
      */
     public static final int MSG_SEND_CHAT_MESSAGE = 2000;
+
     /**
      * 发送客户端多条聊天室消息
      * 发送对象 List<ChatMessage>
@@ -41,4 +42,15 @@ public class SenderProtocol {
      */
     public static final int MSG_SEND_CHAT_MESSAGE_DONE = 2002;
 
+    /**
+     * 发送通知
+     * 发送对象 Notification
+     */
+    public static final int MSG_SEND_NOTIFICATION = 3000;
+
+    /**
+     * 发送多条通知
+     * 发送对象 List<Notification>
+     */
+    public static final int MSG_SEND_MULTI_NOTIFICATION = 3001;
 }

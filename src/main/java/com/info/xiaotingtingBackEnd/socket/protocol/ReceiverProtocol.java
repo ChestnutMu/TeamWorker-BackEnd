@@ -12,9 +12,10 @@ public class ReceiverProtocol {
      * msgId 协议
      */
     public static final int MSG_CONNECTONION_MESSAGE = 1001;//连接
-    public static final int MSG_SEND_MESSAGE = 1002;//发消息
-    public static final int MSG_ISREAD_MESSAGE = 1003;//已读
-    public static final int MSG_ISSEND_MESSAGE = 1006;//已接收
+
+    public static final int MSG_ISSEND_MESSAGE = 1006;//已接收聊天室消息
+
+    public static final int MSG_ISSEND_NOTIFICATION = 3001;//已接收通知
 
     public static final int MSG_ISSEND_CHAT_MESSAGE = 2000;//已接收聊天室消息 发送对象 chatMessageId
 }

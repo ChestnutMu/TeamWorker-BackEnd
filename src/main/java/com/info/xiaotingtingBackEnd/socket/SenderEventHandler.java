@@ -2,10 +2,7 @@ package com.info.xiaotingtingBackEnd.socket;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.info.xiaotingtingBackEnd.model.ChatMessage;
-import com.info.xiaotingtingBackEnd.model.Message;
-import com.info.xiaotingtingBackEnd.model.NewFriendRequest;
-import com.info.xiaotingtingBackEnd.model.User;
+import com.info.xiaotingtingBackEnd.model.*;
 import com.info.xiaotingtingBackEnd.socket.protocol.SenderProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -123,5 +120,26 @@ public class SenderEventHandler extends BaseSocketEventHandler {
             return;
         }
         socketIOClient.sendEvent(TAG_USER_RECEIVER_MESSAGE, SenderProtocol.MSG_SEND_CHAT_MESSAGE_DONE, chatMessageId);
+    }
+
+    public void sendNotification(List<Notification> notificationList) {
+        for (Notification notification : notificationList) {
+            SocketIOClient socketIOClient = clientHashMap.get(notification.getReceiverId());
+            if (socketIOClient == null) {
+                logger.info("sendOderResultToUser socketIOClient不存在");
+                continue;
+            }
+            socketIOClient.sendEvent(TAG_USER_RECEIVER_NOTIFICATION, SenderProtocol.MSG_SEND_NOTIFICATION, notification);
+        }
+    }
+
+    public void sendAllNotification(String uid, List<Notification> notificationList) {
+        if (notificationList.isEmpty()) return;
+        SocketIOClient socketIOClient = clientHashMap.get(uid);
+        if (socketIOClient == null) {
+            logger.info("sendOderResultToUser socketIOClient不存在");
+            return;
+        }
+        socketIOClient.sendEvent(TAG_USER_RECEIVER_NOTIFICATION, SenderProtocol.MSG_SEND_MULTI_NOTIFICATION, notificationList);
     }
 }

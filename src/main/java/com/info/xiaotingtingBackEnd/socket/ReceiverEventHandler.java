@@ -7,8 +7,9 @@ import com.corundumstudio.socketio.annotation.OnDisconnect;
 import com.corundumstudio.socketio.annotation.OnEvent;
 import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.model.ChatMessage;
+import com.info.xiaotingtingBackEnd.model.Notification;
 import com.info.xiaotingtingBackEnd.service.ChatService;
-import com.info.xiaotingtingBackEnd.service.MessageService;
+import com.info.xiaotingtingBackEnd.service.NotificationService;
 import com.info.xiaotingtingBackEnd.socket.protocol.ReceiverProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ import java.util.Map;
 public class ReceiverEventHandler extends BaseSocketEventHandler {
 
     @Autowired
-    MessageService messageService;
+    NotificationService notificationService;
 
     @Autowired
     ChatService chatService;
@@ -87,26 +88,14 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
                     clientHashMap.put(uid, client);
                 }
                 checkNotifyMessage(uid);
+                checkNotifyNotification(uid);
                 break;
             }
-            case ReceiverProtocol.MSG_SEND_MESSAGE://客户端发送消息
-            {
-                Map<String, String> params = gson.fromJson(obj, new TypeToken<Map<String, String>>() {
-                }.getType());
-                String chatId = params.get("chatId");
-                String chatName = params.get("chatName");
-                String content = params.get("content");
-                List<String> uidList = gson.fromJson(params.get("uids"), new TypeToken<List<String>>() {
-                }.getType());
-
-                messageService.sendMessage(chatId, chatName, uid, content, uidList);
-            }
-            break;
-            case ReceiverProtocol.MSG_ISREAD_MESSAGE://已读消息
-                messageService.hasReadMessage(obj);
+            case ReceiverProtocol.MSG_ISSEND_NOTIFICATION://已接收通知消息
+                notificationService.hasSendNotification(obj);
                 break;
             case ReceiverProtocol.MSG_ISSEND_MESSAGE://已接收消息
-                messageService.hasSendMessage(obj);
+                notificationService.hasSendNotification(obj);
                 break;
             case ReceiverProtocol.MSG_ISSEND_CHAT_MESSAGE://已接收聊天室消息
                 chatService.hasSendChatMessage(obj);
@@ -124,6 +113,16 @@ public class ReceiverEventHandler extends BaseSocketEventHandler {
     private void checkNotifyMessage(String uid) {
         List<ChatMessage> chatMessageList = chatService.getChatMessageList(uid);
         handler.sendAllChatMessage(uid, chatMessageList);
+    }
+
+    /**
+     * 检查是否有通知发送给用户
+     *
+     * @param uid
+     */
+    private void checkNotifyNotification(String uid) {
+        List<Notification> notificationList = notificationService.getNotificationList(uid);
+        handler.sendAllNotification(uid, notificationList);
     }
 
 
