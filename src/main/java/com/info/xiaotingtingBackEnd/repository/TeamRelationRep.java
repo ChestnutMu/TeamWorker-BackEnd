@@ -29,4 +29,12 @@ public interface TeamRelationRep extends BaseRepository<TeamRelation, TeamRelati
     void deleteAllByTeamId(String teamId);
 
     Long countAllByTeamIdAndUserId(String teamId, String userId);
+
+
+    @Query(value = "select new java.lang.String(tr.userId) " +
+            " from TeamRelation tr " +
+            "where tr.teamId = :teamId ",
+            countQuery = "select count(tr.userId) from TeamRelation tr " +
+                    "where tr.teamId = :teamId ")
+    List<String> getUserIdListByTeamId(@Param("teamId") String teamId);
 }

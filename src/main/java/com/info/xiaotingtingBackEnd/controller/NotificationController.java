@@ -38,12 +38,11 @@ public class NotificationController {
      * @return
      */
     @RequestMapping(value = "sendNotification", method = RequestMethod.POST)
-    public ApiResponse<Object> sendNotification(@RequestBody Map<String, String> params) throws PlatformException {
+    public ApiResponse<Object> sendNotification(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         String teamId = params.get("teamId");
-        String senderId = params.get("senderId");
-        String senderNickname = params.get("senderNickname");
-        String senderAvatar = params.get("senderAvatar");
-        String receiverIds = params.get("receiverIds");
+//        String senderNickname = params.get("senderNickname");
+//        String senderAvatar = params.get("senderAvatar");
+//        String receiverIds = params.get("receiverIds");
         String title = params.get("title");
         String content = params.get("content");
         String photo = params.get("photo");
@@ -52,7 +51,7 @@ public class NotificationController {
             throw new PlatformException(-1, "通知标题不能为空");
         if (DataCheckUtil.isEmpty(content))
             throw new PlatformException(-1, "通知内容不能为空");
-        notificationService.sendNotification(teamId,senderId,senderNickname,senderAvatar,receiverIds,title,content,photo);
+        notificationService.sendNotification(teamId, userId, title, content, photo);
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         return apiResponse;
 

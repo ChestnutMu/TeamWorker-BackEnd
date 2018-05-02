@@ -2,10 +2,8 @@ package com.info.xiaotingtingBackEnd.service;
 
 import com.google.gson.reflect.TypeToken;
 import com.info.xiaotingtingBackEnd.constants.ChatConstants;
-import com.info.xiaotingtingBackEnd.model.Chat;
-import com.info.xiaotingtingBackEnd.model.ChatMessage;
-import com.info.xiaotingtingBackEnd.model.Message;
-import com.info.xiaotingtingBackEnd.model.Notification;
+import com.info.xiaotingtingBackEnd.constants.TeamConstants;
+import com.info.xiaotingtingBackEnd.model.*;
 import com.info.xiaotingtingBackEnd.model.vo.MessageVo;
 import com.info.xiaotingtingBackEnd.model.vo.UserInfoVo;
 import com.info.xiaotingtingBackEnd.pojo.PlatformException;
@@ -36,20 +34,21 @@ public class NotificationService extends BaseService<Notification, String, Notif
      *
      * @param teamId
      * @param senderId
-     * @param senderNickname
-     * @param receiverIds
-     * @param senderAvatar
      * @param title
      * @param content
      * @param photo
      * @throws PlatformException
      */
-    public void sendNotification(String teamId, String senderId, String senderNickname, String senderAvatar, String receiverIds, String title, String content, String photo) throws PlatformException {
-        Set<String> userList = gson.fromJson(receiverIds, new TypeToken<HashSet<String>>() {
-        }.getType());
-        if (userList.size() <= 0) {
-            throw new PlatformException(-1, "发送通知没有接受者");
-        }
+    public void sendNotification(String teamId, String senderId, String title, String content, String photo) throws PlatformException {
+        TeamRelation teamRelation = teamRelationRep.findOne(new TeamRelation.TeamRelationId(teamId, senderId));
+        if (null == teamRelation)
+            throw new PlatformException(-1, "你不属于该团队");
+        if (!teamRelation.getType().equals(TeamConstants.TYPE_TEAM_ADMIN) || !teamRelation.getType().equals(TeamConstants.TYPE_TEAM_OWNER))
+            throw new PlatformException(-1, "没有发通知权限");
+        List<String> userList = teamRelationRep.getUserIdListByTeamId(teamId);
+
+        List<UserInfoVo> userInfoVoList = userRep.getUserInfo(senderId);
+        UserInfoVo userInfoVo = userInfoVoList.get(0);
         List<Notification> notificationList = new ArrayList<>(userList.size() - 1);
         Date now = new Date();
         for (String receiverId : userList) {
@@ -57,8 +56,8 @@ public class NotificationService extends BaseService<Notification, String, Notif
             Notification notification = new Notification();
             notification.setTeamId(teamId);
             notification.setSenderId(senderId);
-            notification.setSenderNickname(senderNickname);
-            notification.setSenderAvatar(senderAvatar);
+            notification.setSenderNickname(userInfoVo.getNickname());
+            notification.setSenderAvatar(userInfoVo.getAvatar());
             notification.setReceiverId(receiverId);
             notification.setTitle(title);
             notification.setContent(content);
