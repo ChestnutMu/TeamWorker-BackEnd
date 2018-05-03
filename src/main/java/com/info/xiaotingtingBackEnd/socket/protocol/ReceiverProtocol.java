@@ -15,7 +15,7 @@ public class ReceiverProtocol {
 
     public static final int MSG_ISSEND_MESSAGE = 1006;//已接收聊天室消息
 
-    public static final int MSG_ISSEND_NOTIFICATION = 3001;//已接收通知
-
     public static final int MSG_ISSEND_CHAT_MESSAGE = 2000;//已接收聊天室消息 发送对象 chatMessageId
+
+    public static final int MSG_ISSEND_NOTIFICATION = 3001;//已接收通知
 }

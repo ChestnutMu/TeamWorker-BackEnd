@@ -43,7 +43,7 @@ public class NotificationService extends BaseService<Notification, String, Notif
         TeamRelation teamRelation = teamRelationRep.findOne(new TeamRelation.TeamRelationId(teamId, senderId));
         if (null == teamRelation)
             throw new PlatformException(-1, "你不属于该团队");
-        if (!teamRelation.getType().equals(TeamConstants.TYPE_TEAM_ADMIN) || !teamRelation.getType().equals(TeamConstants.TYPE_TEAM_OWNER))
+        if (!teamRelation.getType().equals(TeamConstants.TYPE_TEAM_ADMIN) && !teamRelation.getType().equals(TeamConstants.TYPE_TEAM_OWNER))
             throw new PlatformException(-1, "没有发通知权限");
         List<String> userList = teamRelationRep.getUserIdListByTeamId(teamId);
 
@@ -66,6 +66,17 @@ public class NotificationService extends BaseService<Notification, String, Notif
             notification.setSend(false);
             notificationList.add(notification);
         }
+        //保存团队公告
+        TeamNotification teamNotification = new TeamNotification();
+        teamNotification.setTeamId(teamId);
+        teamNotification.setSenderNickname(userInfoVo.getNickname());
+        teamNotification.setSenderAvatar(userInfoVo.getAvatar());
+        teamNotification.setTitle(title);
+        teamNotification.setContent(content);
+        teamNotification.setPhoto(photo);
+        teamNotification.setTime(now);
+        teamNotificationRep.save(teamNotification);
+        //保存团队中所有人接收到的公告
         notificationRep.save(notificationList);
         handler.sendNotification(notificationList);
     }
@@ -83,6 +94,20 @@ public class NotificationService extends BaseService<Notification, String, Notif
     public List<Notification> getNotificationList(String userId) {
         List<Notification> notificationList = notificationRep.findAllByReceiverIdAndSendOrderByTimeAsc(userId, false);
         return notificationList;
+    }
+
+    /**
+     * 获取团队中的所有公告
+     *
+     * @param teamId
+     * @return
+     */
+    public List<TeamNotification> getTeamNotificationList(String teamId, String userId) throws PlatformException {
+        TeamRelation teamRelation = teamRelationRep.findOne(new TeamRelation.TeamRelationId(teamId, userId));
+        if (null == teamRelation)
+            throw new PlatformException(-1, "你不属于该团队");
+        List<TeamNotification> teamNotificationList = teamNotificationRep.findAllByTeamIdOrderByTimeDesc(teamId);
+        return teamNotificationList;
     }
 
     @Override
