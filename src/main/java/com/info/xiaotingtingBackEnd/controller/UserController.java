@@ -153,11 +153,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "updatePassword", method = RequestMethod.POST)
-    public ApiResponse<Object> updatePassword(@RequestHeader("uid") String userId, @RequestBody User user) throws PlatformException {
+    public ApiResponse<Object> updatePassword(@RequestHeader("uid") String userId, @RequestBody Map<String, String> params) throws PlatformException {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         User result = userService.findOne(userId);
-        if (!DataCheckUtil.isEmpty(user.getPassword())) {
-            result.setPassword(user.getPassword());
+        String oldPassword = params.get("oldPassword");
+        String newPassword = params.get("newPassword");
+        if (!DataCheckUtil.isEmpty(result.getPassword()) && !result.getPassword().equals(oldPassword)) {
+            throw new PlatformException(1, "密码错误");
+        }
+        if (!DataCheckUtil.isEmpty(newPassword)) {
+            result.setPassword(newPassword);
         } else {
             throw new PlatformException(-1, "参数错误");
         }
