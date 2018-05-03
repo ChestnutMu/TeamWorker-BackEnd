@@ -152,6 +152,21 @@ public class UserController {
         return apiResponse;
     }
 
+    @RequestMapping(value = "updatePassword", method = RequestMethod.POST)
+    public ApiResponse<Object> updatePassword(@RequestHeader("uid") String userId, @RequestBody User user) throws PlatformException {
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        User result = userService.findOne(userId);
+        if (!DataCheckUtil.isEmpty(user.getPassword())) {
+            result.setPassword(user.getPassword());
+        } else {
+            throw new PlatformException(-1, "参数错误");
+        }
+        userService.save(result);
+        apiResponse.setStatus(HttpResponseCodes.SUCCESS);
+        apiResponse.setMessage("修改成功");
+        return apiResponse;
+    }
+
     @RequestMapping(value = "getUserInfo", method = RequestMethod.POST)
     public ApiResponse<User> getUserInfo(@RequestBody Map<String, String> params) {
         User result = userService.findOne(params.get("userId"));
