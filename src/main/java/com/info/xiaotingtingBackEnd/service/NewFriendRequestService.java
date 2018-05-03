@@ -124,10 +124,10 @@ public class NewFriendRequestService extends BaseService<NewFriendRequest, Strin
             }
         }
         //删除双人聊天室
-        Set<String> userList = new HashSet<>();
-        userList.add(userId);
-        userList.add(friendId);
-        String userJson = gson.toJson(userList);
-        chatRep.deleteByUserListAndChatType(userJson, ChatConstants.TYPE_CHAT_DOUBLE);
+//        Set<String> userList = new HashSet<>();
+//        userList.add(userId);
+//        userList.add(friendId);
+//        String userJson = gson.toJson(userList);
+//        chatRep.deleteByUserListAndChatType(userJson, ChatConstants.TYPE_CHAT_DOUBLE);
     }
 }

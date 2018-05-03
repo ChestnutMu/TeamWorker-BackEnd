@@ -11,6 +11,7 @@ import com.info.xiaotingtingBackEnd.repository.base.SearchBean;
 import com.info.xiaotingtingBackEnd.repository.base.SearchCondition;
 import com.info.xiaotingtingBackEnd.service.base.BaseService;
 import com.info.xiaotingtingBackEnd.util.DataCheckUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +25,10 @@ import java.util.*;
  */
 @Service
 public class ChatService extends BaseService<Chat, String, ChatRep> {
+
+    @Autowired
+    UserService userService;
+
     @Override
     public ChatRep getRepo() {
         return chatRep;
@@ -74,10 +79,15 @@ public class ChatService extends BaseService<Chat, String, ChatRep> {
             throw new PlatformException(-1, "聊天室不存在");
         if (!chat.getUserList().contains(userId))
             throw new PlatformException(1, "你已不在该群聊");
-        Set<String> userList = gson.fromJson(chat.getUserList(), new TypeToken<HashSet<String>>() {
+        List<String> userList = gson.fromJson(chat.getUserList(), new TypeToken<ArrayList<String>>() {
         }.getType());
         if (userList.size() <= 0) {
             throw new PlatformException(-1, "聊天室必须有人");
+        }
+        if (chat.getChatType().equals(ChatConstants.TYPE_CHAT_DOUBLE)) {//如果是双人则判断是否为好友
+            if (!userService.isMyFriend(userList.get(0), userList.get(1))) {
+                throw new PlatformException(-1, "已不是好友关系");
+            }
         }
         List<ChatMessage> chatMessageList = new ArrayList<>(userList.size() - 1);
         Date now = new Date();
